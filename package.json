@@ -1,0 +1,30 @@
+{
+  "name": "pshyapp",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "sync:content": "tsx scripts/sync-content.ts",
+    "check:images": "tsx scripts/check-images.ts",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/vercel": "^11.0.7",
+    "astro": "^7.2.4",
+    "eslint": "^10.9.0",
+    "eslint-plugin-astro": "^1.7.0",
+    "prettier": "^3.9.6"
+  },
+  "devDependencies": {
+    "prettier-plugin-astro": "^0.14.1",
+    "tsx": "^4.23.12"
+  }
+}

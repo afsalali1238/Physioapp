@@ -1,0 +1,438 @@
+<title>Home Exercise Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&family=Public+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+:root{
+  --ground:#EDEFF2;
+  --surface:#FFFFFF;
+  --surface-2:#E3E6EC;
+  --ink:#191C24;
+  --ink-2:#4E5563;
+  --ink-3:#828A99;
+  --line:#D8DCE4;
+  --line-2:#BEC4D0;
+  --accent:#5E3A66;
+  --accent-ink:#FFFFFF;
+  --accent-soft:#EDE4EF;
+  --accent-line:#B694BC;
+  --amber:#8A6118;
+  --amber-soft:#F3EAD6;
+  --ok:#2F6146;
+
+  --f-q:"Literata",Georgia,"Times New Roman",serif;
+  --f-u:"Public Sans","Segoe UI",Helvetica,Arial,sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#111318;
+    --surface:#191C22;
+    --surface-2:#232733;
+    --ink:#E9EBF0;
+    --ink-2:#A9B0BE;
+    --ink-3:#79808E;
+    --line:#2B303A;
+    --line-2:#3D4450;
+    --accent:#C9A0D1;
+    --accent-ink:#191C22;
+    --accent-soft:#2C2233;
+    --accent-line:#6A4E74;
+    --amber:#D8AE63;
+    --amber-soft:#2F2718;
+    --ok:#6FBE95;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111318;
+  --surface:#191C22;
+  --surface-2:#232733;
+  --ink:#E9EBF0;
+  --ink-2:#A9B0BE;
+  --ink-3:#79808E;
+  --line:#2B303A;
+  --line-2:#3D4450;
+  --accent:#C9A0D1;
+  --accent-ink:#191C22;
+  --accent-soft:#2C2233;
+  --accent-line:#6A4E74;
+  --amber:#D8AE63;
+  --amber-soft:#2F2718;
+  --ok:#6FBE95;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--f-u);font-size:16px;line-height:1.55;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:640px;margin:0 auto;padding:0 clamp(14px,4vw,22px) 40px;}
+
+/* progress */
+.prog{
+  position:sticky;top:0;z-index:30;background:var(--ground);
+  border-bottom:1px solid var(--line);
+}
+.prog-in{
+  max-width:640px;margin:0 auto;padding:10px clamp(14px,4vw,22px) 11px;
+  display:flex;align-items:center;gap:12px;
+}
+.bar{flex:1;height:5px;border-radius:99px;background:var(--surface-2);overflow:hidden;}
+.bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .25s ease;}
+.pct{
+  font-size:12.5px;font-weight:600;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+
+/* intro */
+.intro{padding:34px 0 6px;}
+.eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 12px;
+}
+.intro h1{
+  font-family:var(--f-q);font-weight:600;
+  font-size:clamp(27px,7vw,36px);line-height:1.15;letter-spacing:-.015em;
+  margin:0 0 14px;text-wrap:balance;
+}
+.intro p{margin:0 0 12px;color:var(--ink-2);font-size:16px;max-width:56ch;}
+.intro p b{color:var(--ink);font-weight:600;}
+.meta{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;
+}
+.pill{
+  font-size:12.5px;font-weight:600;color:var(--ink-2);
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:99px;padding:5px 12px;
+}
+
+/* section */
+.sec{
+  margin:34px 0 4px;padding-bottom:8px;
+  border-bottom:1px solid var(--line-2);
+  display:flex;align-items:baseline;gap:10px;
+}
+.sec h2{
+  font-family:var(--f-u);font-weight:700;font-size:12px;
+  letter-spacing:.15em;text-transform:uppercase;margin:0;color:var(--ink-2);
+}
+.sec span{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums;margin-inline-start:auto;}
+
+/* question */
+.q{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:18px;margin-top:12px;
+}
+.q.done{border-color:var(--accent-line);}
+.qh{display:flex;gap:11px;align-items:baseline;margin-bottom:4px;}
+.qn{
+  font-size:12.5px;font-weight:700;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;flex:none;padding-top:3px;
+}
+.q.done .qn{color:var(--accent);}
+.qt{
+  font-family:var(--f-q);font-weight:500;font-size:18.5px;line-height:1.35;
+  margin:0;letter-spacing:-.005em;text-wrap:balance;
+}
+.qhelp{margin:6px 0 0 27px;font-size:13.5px;color:var(--ink-3);}
+.qhelp.warn{color:var(--amber);}
+
+.opts{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0 0 27px;}
+.opt{
+  font:inherit;font-size:14.5px;font-weight:500;text-align:start;
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid transparent;border-radius:9px;
+  padding:9px 13px;cursor:pointer;line-height:1.35;
+  min-height:40px;
+}
+.opt:hover{border-color:var(--line-2);}
+.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.opt[aria-pressed="true"]{
+  background:var(--accent);color:var(--accent-ink);border-color:var(--accent);
+}
+.hint{margin:9px 0 0 27px;font-size:12.5px;color:var(--ink-3);}
+
+.ta, .ti{
+  display:block;width:calc(100% - 27px);margin:13px 0 0 27px;
+  font:inherit;font-size:15.5px;line-height:1.5;
+  color:var(--ink);background:var(--surface-2);
+  border:1px solid transparent;border-radius:9px;
+  padding:11px 12px;resize:vertical;
+}
+.ti{font-size:14.5px;}
+.ta::placeholder,.ti::placeholder{color:var(--ink-3);}
+.ta:focus,.ti:focus{outline:none;border-color:var(--accent);background:var(--surface);}
+
+/* finish */
+.finish{
+  margin-top:30px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);padding:20px;
+}
+.finish h2{font-family:var(--f-q);font-weight:600;font-size:21px;margin:0 0 8px;}
+.finish p{margin:0 0 16px;color:var(--ink-2);font-size:15px;}
+.btn{
+  font:inherit;font-family:var(--f-u);font-weight:600;font-size:16px;
+  background:var(--accent);color:var(--accent-ink);
+  border:none;border-radius:10px;padding:14px 20px;width:100%;
+  cursor:pointer;min-height:50px;
+}
+.btn:hover{filter:brightness(1.08);}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
+.btn.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--line-2);margin-top:9px;}
+.status{margin:12px 0 0;font-size:14px;font-weight:600;color:var(--ok);min-height:20px;}
+.out{
+  display:none;width:100%;margin-top:14px;min-height:220px;
+  font-family:ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.5;
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid var(--line-2);border-radius:9px;padding:12px;
+}
+.out.show{display:block;}
+.foot{margin-top:22px;font-size:12.5px;color:var(--ink-3);}
+
+@media (prefers-reduced-motion: reduce){*{transition:none !important;}}
+</style>
+
+<div class="prog">
+  <div class="prog-in">
+    <div class="bar"><i id="fill"></i></div>
+    <span class="pct" id="pct">0 of 16</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="intro">
+    <p class="eyebrow">Before I start building</p>
+    <h1>The home exercise app — a few things only you can answer</h1>
+    <p>You asked for an app that gives your patients their exercises with pictures, so they actually know what to do at home. Before I build the wrong thing, I need to understand how you work now.</p>
+    <p><b>Mostly tapping.</b> Four questions need a sentence or two. Nothing is saved anywhere except your own phone — when you're done, hit the button at the bottom and send me the text.</p>
+    <div class="meta">
+      <span class="pill">16 questions</span>
+      <span class="pill">About 10 minutes</span>
+      <span class="pill">Nothing is submitted online</span>
+    </div>
+  </section>
+
+  <main id="form"></main>
+
+  <section class="finish">
+    <h2>That's everything</h2>
+    <p>Copy your answers and paste them into WhatsApp. If anything didn't have the right option, just add a note at the end.</p>
+    <button class="btn" id="copy" type="button">Copy my answers</button>
+    <button class="btn ghost" id="show" type="button">Show the text instead</button>
+    <p class="status" id="status"></p>
+    <textarea class="out" id="out" readonly aria-label="Your answers as text"></textarea>
+    <p class="foot">Your answers stay in this browser until you clear it. Reopening this link brings back what you filled in.</p>
+  </section>
+</div>
+
+<script>
+const Q = [
+{s:"What you do today", n:1, type:"many",
+ q:"Right now, what does a patient leave with after a session?",
+ help:"Pick everything that happens, even the messy ones.",
+ o:["A printed exercise sheet","A QR code to scan","Photos or videos I send on WhatsApp","A YouTube link","I explain it verbally only","An app or software we pay for","Nothing consistent — it depends"]},
+
+{s:"What you do today", n:2, type:"text",
+ q:"What annoys you most about how you do it now?",
+ ph:"e.g. the printed sheets are generic, patients lose them, the pictures don't match what I actually taught…"},
+
+{s:"What you do today", n:3, type:"many", extra:"Anything missing from this list?",
+ q:"Which conditions do you see most? Pick your top few.",
+ help:"These get built first. The rest can come later.",
+ o:["Low back pain","Neck pain","Frozen shoulder / shoulder pain","Knee osteoarthritis","After knee replacement","After hip replacement","Tennis or golfer's elbow","Carpal tunnel","Plantar fasciitis","Ankle sprain","Sciatica","Post-fracture rehab","Sports injuries","Postural / desk-related pain","Pregnancy or postnatal","Stroke or neuro rehab"]},
+
+{s:"How you prescribe", n:4, type:"one",
+ q:"For the same condition, do you give the same exercises to every patient?",
+ help:"This one decides more about the app than anything else here.",
+ o:["Almost always the same set","Same base set, but I add or drop one or two","I build it fresh for each patient"]},
+
+{s:"How you prescribe", n:5, type:"one",
+ q:"How often does a patient's programme change?",
+ o:["Rarely — they get one set and continue","Every two or three visits","Almost every visit"]},
+
+{s:"How you prescribe", n:6, type:"one",
+ q:"Do you need to know whether they actually did the exercises at home?",
+ help:"Be honest here — building this and not using it is worse than not building it.",
+ o:["No — I just ask them at the next visit","Nice to have, but I wouldn't check often","Yes — I'd look before every appointment","Yes — I'd want to see it regularly"]},
+
+{s:"Your patients", n:7, type:"many",
+ q:"What languages do your patients need?",
+ o:["English","Arabic","Hindi or Urdu","Malayalam","Tagalog","Russian","Other — I'll note it below"]},
+
+{s:"Your patients", n:8, type:"one",
+ q:"How comfortable is your typical patient with a phone?",
+ o:["Confident — they'll manage on their own","They'll need me to show them once","Many will struggle without family help","Very mixed — young and elderly both"]},
+
+{s:"Your patients", n:9, type:"one",
+ q:"What do patients understand best when you show them an exercise?",
+ o:["A photo of a real person doing it","A clean drawing or illustration","A short looping video","A picture showing which muscle it works"]},
+
+{s:"Each exercise", n:10, type:"many",
+ q:"Does it matter who is shown in the pictures?",
+ help:"Tap anything that applies to your patients.",
+ o:["Clothing must be modest","Female patients need a female demonstrator","Should look like our patient population","It doesn't matter to my patients"]},
+
+{s:"Each exercise", n:11, type:"many",
+ q:"What has to be on every exercise, without fail?",
+ o:["Name of the exercise","Picture","How many reps and sets","How long to hold","Whether it stretches or strengthens","Which muscle it works","Why it helps, in plain words","The common mistake to avoid","When to stop"]},
+
+{s:"Each exercise", n:12, type:"text",
+ q:"Is there anything you would NOT want a patient reading without you there?",
+ ph:"e.g. don't mention surgery names, don't give red-flag lists that scare people, don't put progressions they'll try too early…"},
+
+{s:"Each exercise", n:13, type:"text",
+ q:"What do patients ask you most often after they've left the clinic?",
+ ph:"The messages and calls you get. If the app answered these, it would earn its place."},
+
+{s:"Handing it over", n:14, type:"many",
+ q:"How would you actually give this to a patient?",
+ o:["QR code printed on the clinic wall","QR on a card I hand them","I send a link on WhatsApp","A printed sheet too, for older patients"]},
+
+{s:"Handing it over", n:15, type:"one",
+ q:"Do you want to be able to change the exercises yourself later?",
+ help:"Editing it yourself is a much bigger build than me updating it for you.",
+ o:["Yes — I want to add and edit anytime","I'd send you the changes","Set it up once and leave it"]},
+
+{s:"Handing it over", n:16, type:"text",
+ q:"Three months from now, how will you know this worked?",
+ ph:"In your own words. One sentence is fine."}
+];
+
+const KEY = "physio-brief-v1";
+let A = {};
+try{ const raw = localStorage.getItem(KEY); if(raw) A = JSON.parse(raw) || {}; }catch(e){ A = {}; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(A)); }catch(e){} }
+
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function answered(q){
+  const v = A[q.n];
+  if(q.type==="text") return typeof v==="string" && v.trim().length>0;
+  if(q.type==="many") return Array.isArray(v) && v.length>0;
+  return typeof v==="string" && v.length>0;
+}
+
+function build(){
+  const form = document.getElementById("form");
+  let html = "", lastSec = "";
+  Q.forEach(q=>{
+    if(q.s !== lastSec){
+      lastSec = q.s;
+      const count = Q.filter(x=>x.s===q.s).length;
+      html += `<div class="sec"><h2>${esc(q.s)}</h2><span>${count}</span></div>`;
+    }
+    const help = q.help ? `<p class="qhelp${q.n===6?" warn":""}">${esc(q.help)}</p>` : "";
+    let ctl = "";
+    if(q.type==="text"){
+      ctl = `<textarea class="ta" rows="3" data-n="${q.n}" placeholder="${esc(q.ph||"")}"></textarea>`;
+    }else{
+      ctl = `<div class="opts" role="group">` + q.o.map(o=>
+        `<button class="opt" type="button" data-n="${q.n}" data-v="${esc(o)}" aria-pressed="false">${esc(o)}</button>`
+      ).join("") + `</div>`;
+      if(q.type==="many") ctl += `<p class="hint">Tap as many as apply.</p>`;
+      if(q.extra) ctl += `<input class="ti" type="text" data-n="${q.n}" data-extra="1" placeholder="${esc(q.extra)}">`;
+    }
+    html += `<section class="q" id="q${q.n}">
+      <div class="qh"><span class="qn">${String(q.n).padStart(2,"0")}</span><h3 class="qt">${esc(q.q)}</h3></div>
+      ${help}${ctl}
+    </section>`;
+  });
+  form.innerHTML = html;
+
+  // restore
+  Q.forEach(q=>{
+    const v = A[q.n];
+    if(q.type==="text"){
+      const el = form.querySelector(`textarea[data-n="${q.n}"]`);
+      if(el && typeof v==="string") el.value = v;
+    }else{
+      const picked = q.type==="many" ? (Array.isArray(v)?v:[]) : (v?[v]:[]);
+      form.querySelectorAll(`.opt[data-n="${q.n}"]`).forEach(b=>{
+        if(picked.indexOf(b.dataset.v)>-1) b.setAttribute("aria-pressed","true");
+      });
+      if(q.extra){
+        const ex = form.querySelector(`input[data-n="${q.n}"][data-extra]`);
+        if(ex && A["x"+q.n]) ex.value = A["x"+q.n];
+      }
+    }
+  });
+
+  form.addEventListener("click", e=>{
+    const b = e.target.closest(".opt"); if(!b) return;
+    const n = +b.dataset.n, q = Q.find(x=>x.n===n), v = b.dataset.v;
+    if(q.type==="one"){
+      form.querySelectorAll(`.opt[data-n="${n}"]`).forEach(o=>o.setAttribute("aria-pressed","false"));
+      b.setAttribute("aria-pressed","true");
+      A[n] = v;
+    }else{
+      const on = b.getAttribute("aria-pressed")==="true";
+      b.setAttribute("aria-pressed", on ? "false" : "true");
+      const cur = Array.isArray(A[n]) ? A[n] : [];
+      A[n] = on ? cur.filter(x=>x!==v) : cur.concat([v]);
+      if(!A[n].length) delete A[n];
+    }
+    save(); tick();
+  });
+
+  form.addEventListener("input", e=>{
+    const el = e.target;
+    if(el.matches("textarea[data-n]")){ A[+el.dataset.n] = el.value; }
+    else if(el.matches("input[data-extra]")){ A["x"+el.dataset.n] = el.value; }
+    else return;
+    save(); tick();
+  });
+}
+
+function tick(){
+  let done = 0;
+  Q.forEach(q=>{
+    const ok = answered(q);
+    if(ok) done++;
+    const el = document.getElementById("q"+q.n);
+    if(el) el.classList.toggle("done", ok);
+  });
+  document.getElementById("fill").style.width = Math.round(done/Q.length*100)+"%";
+  document.getElementById("pct").textContent = done+" of "+Q.length;
+}
+
+function text(){
+  const lines = ["HOME EXERCISE APP — BRIEF", ""];
+  let lastSec = "";
+  Q.forEach(q=>{
+    if(q.s!==lastSec){ lastSec=q.s; lines.push("— "+q.s.toUpperCase()+" —"); }
+    const v = A[q.n];
+    let a;
+    if(q.type==="many") a = Array.isArray(v)&&v.length ? v.join(", ") : "(not answered)";
+    else a = (typeof v==="string" && v.trim()) ? v.trim() : "(not answered)";
+    lines.push(q.n+". "+q.q);
+    lines.push("   "+a);
+    if(q.extra && A["x"+q.n]) lines.push("   also: "+A["x"+q.n]);
+    lines.push("");
+  });
+  return lines.join("\n");
+}
+
+const out = document.getElementById("out");
+const status = document.getElementById("status");
+
+document.getElementById("copy").addEventListener("click", async ()=>{
+  const t = text();
+  let ok = false;
+  try{ await navigator.clipboard.writeText(t); ok = true; }catch(e){}
+  if(!ok){
+    out.value = t; out.classList.add("show"); out.select();
+    try{ ok = document.execCommand("copy"); }catch(e){}
+  }
+  status.textContent = ok ? "Copied. Paste it into WhatsApp." : "Couldn't copy automatically — select the text below and copy it.";
+  if(!ok){ out.value = t; out.classList.add("show"); }
+});
+
+document.getElementById("show").addEventListener("click", ()=>{
+  out.value = text(); out.classList.add("show"); out.scrollIntoView({behavior:"smooth",block:"nearest"});
+  status.textContent = "";
+});
+
+build(); tick();
+</script>
