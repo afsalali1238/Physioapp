@@ -1,5 +1,6 @@
 ---
-
+import '../styles/tokens.css';
+import '../styles/base.css';
 ---
 
 <html lang="en">
@@ -9,9 +10,62 @@
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>M02 Theme Test</title>
+		<style>
+			.test-card {
+				background-color: var(--surface);
+				padding: 24px;
+				margin: 24px auto;
+				max-width: 600px;
+				border-radius: 14px;
+				border: 1px solid var(--line);
+			}
+			.test-heading {
+				font-family: var(--f-display);
+				color: var(--ink);
+				margin-top: 0;
+			}
+			.test-label {
+				font-family: var(--f-display);
+				color: var(--mobility);
+				background-color: var(--mobility-bg);
+				padding: 4px 8px;
+				border-radius: 4px;
+				font-size: 14px;
+			}
+			.test-dosage {
+				font-family: var(--f-mono);
+				background-color: var(--surface-2);
+				padding: 8px;
+				margin-top: 16px;
+				border-radius: 8px;
+			}
+			.controls {
+				display: flex;
+				gap: 8px;
+				margin: 24px auto;
+				max-width: 600px;
+			}
+			button {
+				padding: 8px 16px;
+				cursor: pointer;
+				font-family: var(--f-body);
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<div class="controls">
+			<button onclick="document.documentElement.removeAttribute('data-theme')">System (Unstamped)</button>
+			<button onclick="document.documentElement.setAttribute('data-theme', 'light')">Force Light</button>
+			<button onclick="document.documentElement.setAttribute('data-theme', 'dark')">Force Dark</button>
+		</div>
+
+		<div class="test-card">
+			<span class="test-label">MOBILITY</span>
+			<h1 class="test-heading">Design System Test</h1>
+			<p>This page tests the tokens.css and base.css setup. If this text is readable and changes correctly with the buttons above, M02 is successful.</p>
+			<div class="test-dosage">HOLD 30s | REPEAT 3 times</div>
+		</div>
 	</body>
 </html>
+
