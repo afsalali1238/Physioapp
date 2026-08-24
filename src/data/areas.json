@@ -4,7 +4,35 @@
     "area_id": "neck",
     "section": "exercise",
     "name_en": "Neck",
+    "name_ar": "الرقبة",
     "order": 1,
+    "status": "published"
+  },
+  {
+    "id": "exercise-shoulder",
+    "area_id": "shoulder",
+    "section": "exercise",
+    "name_en": "Shoulder",
+    "name_ar": "الكتف",
+    "order": 2,
+    "status": "published"
+  },
+  {
+    "id": "stretching-neck",
+    "area_id": "neck",
+    "section": "stretching",
+    "name_en": "Neck",
+    "name_ar": "الرقبة",
+    "order": 1,
+    "status": "published"
+  },
+  {
+    "id": "stretching-shoulder",
+    "area_id": "shoulder",
+    "section": "stretching",
+    "name_en": "Shoulder",
+    "name_ar": "الكتف",
+    "order": 2,
     "status": "published"
   }
 ]

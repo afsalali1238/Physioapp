@@ -16,6 +16,14 @@ if (!SHEET_ID) {
 const getSheetUrl = (sheetName: string) => `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&sheet=${sheetName}`;
 
 async function fetchCsv(sheetName: string) {
+  // --- TEMPORARY LOCAL OVERRIDE FOR TESTING ---
+  const localPath = path.join(process.cwd(), `local-${sheetName}.csv`);
+  if (fs.existsSync(localPath)) {
+    console.log(`[DEV] Loading ${sheetName} from local file instead of Google Sheets.`);
+    return fs.readFileSync(localPath, 'utf8');
+  }
+  // --------------------------------------------
+  
   const url = getSheetUrl(sheetName);
   const response = await fetch(url);
   if (!response.ok) {
@@ -30,7 +38,11 @@ function parseAndClean(csv: string) {
   return parsed.data.map((row: any) => {
     const cleanRow: any = {};
     for (const [key, value] of Object.entries(row)) {
-      let val = (value as string).trim();
+      if (value === undefined || value === null) {
+        cleanRow[key] = undefined;
+        continue;
+      }
+      let val = String(value).trim();
       if (val === '') {
         cleanRow[key] = undefined;
       } else if (val.toUpperCase() === 'TRUE') {
