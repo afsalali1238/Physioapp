@@ -146,3 +146,8 @@ Extracted design tokens into src/styles/tokens.css and base styles (including Go
 **2026-08-24 · Antigravity**
 Implemented Zod schemas in src/content.config.ts (Note: renamed from src/content/config.ts to comply with Astro 5 Content Layer API). Since the Astro file() loader requires every array element to have a unique \id\ field, the M04 sync script must generate a synthetic \id\ for the areas collection (e.g., \[section]-[area_id]\) before writing to areas.json.
 
+
+### D-019 · M04 Implementation details
+**2026-08-24 · Antigravity**
+Extracted Zod schemas into src/lib/schemas.ts so they can be imported directly by the sync-content.ts Node script without triggering Astro's ESM loader issues (ERR_UNSUPPORTED_ESM_URL_SCHEME). The sync script correctly validates the Google Sheet data before writing.
+

@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+import { getImage } from '../lib/images';
+
+interface Props {
+  imageId?: string;
+  alt: string;
+  eager?: boolean;
+}
+
+const { imageId, alt, eager = false } = Astro.props;
+
+let imgSrc = null;
+let isSvg = false;
+
+if (imageId) {
+  imgSrc = await getImage(imageId);
+  if (imgSrc && typeof imgSrc.src === 'string' && imgSrc.src.endsWith('.svg')) {
+    isSvg = true;
+  }
+}
+---
+
+{imgSrc ? (
+  isSvg ? (
+    <img 
+      src={imgSrc.src} 
+      alt={alt} 
+      width={imgSrc.width} 
+      height={imgSrc.height} 
+      loading={eager ? 'eager' : 'lazy'} 
+      class="exercise-image" 
+    />
+  ) : (
+    <Image 
+      src={imgSrc} 
+      alt={alt} 
+      widths={[400, 800, 1200]} 
+      format="webp"
+      loading={eager ? 'eager' : 'lazy'}
+      class="exercise-image"
+    />
+  )
+) : (
+  <div class="image-placeholder">
+    <span>Image pending</span>
+  </div>
+)}
+
+<style>
+  .exercise-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background-color: var(--slot);
+    display: block;
+    /* Token borders etc will be handled by the card wrapper, but we round corners just in case */
+    border-radius: 8px;
+  }
+  .image-placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: var(--slot);
+    border: 1px dashed var(--slot-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    text-align: center;
+    color: var(--ink-3);
+    font-size: 14px;
+    border-radius: 8px;
+  }
+</style>

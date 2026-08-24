@@ -1,6 +1,7 @@
 ---
 import '../styles/tokens.css';
 import '../styles/base.css';
+import ExerciseImage from '../components/ExerciseImage.astro';
 ---
 
 <html lang="en">
@@ -23,7 +24,7 @@ import '../styles/base.css';
 			.test-heading {
 				font-family: var(--f-display);
 				color: var(--ink);
-				margin-top: 0;
+				margin-top: 16px;
 			}
 			.test-label {
 				font-family: var(--f-display);
@@ -61,10 +62,15 @@ import '../styles/base.css';
 		</div>
 
 		<div class="test-card">
-			<span class="test-label">MOBILITY</span>
-			<h1 class="test-heading">Design System Test</h1>
-			<p>This page tests the tokens.css and base.css setup. If this text is readable and changes correctly with the buttons above, M02 is successful.</p>
-			<div class="test-dosage">HOLD 30s | REPEAT 3 times</div>
+			<ExerciseImage imageId="ex-neck-02" alt="A person sitting upright on a chair, drawing the chin straight back with the head level." eager={true} />
+			
+			<div style="margin-top: 16px;">
+			  <span class="test-label">ACTIVATION</span>
+			</div>
+			
+			<h1 class="test-heading">Chin Tuck</h1>
+			<p>This page tests the tokens.css, base.css setup, and now ExerciseImage.astro (M05).</p>
+			<div class="test-dosage">HOLD 5s | REPEAT 10 times</div>
 		</div>
 	</body>
 </html>

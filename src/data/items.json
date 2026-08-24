@@ -1,18 +1,23 @@
 [
   {
-    "id": "ex-neck-broken",
+    "id": "ex-neck-02",
     "section": "exercise",
     "area_id": "neck",
-    "order": 1,
+    "order": 2,
     "status": "published",
-    "name_en": "Broken Exercise",
+    "name_en": "Chin Tuck",
     "type": "activation",
-    "start_position_en": "Sit upright.",
-    "movement_en": "Gently draw chin back.",
-    "return_en": "Release slowly.",
-    "safety_en": "Stop if dizzy.",
+    "start_position_en": "Sit upright with your feet flat on the floor and your shoulders relaxed.",
+    "movement_en": "Gently draw your chin straight back, as if making a double chin. Keep your eyes level.",
+    "return_en": "Release slowly and return your head to a comfortable position.",
+    "safety_en": "Stop if you feel dizzy or get pain down your arm.",
     "target_muscles_en": "Deep neck flexors",
     "hold_seconds": 5,
-    "image_id": "ex-neck-broken"
+    "reps": 10,
+    "sets": 1,
+    "each_side": false,
+    "frequency_en": "Twice a day",
+    "image_id": "ex-neck-02",
+    "image_alt_en": "A person sitting upright on a chair, drawing the chin straight back with the head level."
   }
 ]
