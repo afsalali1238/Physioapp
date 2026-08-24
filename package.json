@@ -19,11 +19,15 @@
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/vercel": "^11.0.7",
     "astro": "^7.2.4",
+    "dotenv": "^17.4.2",
     "eslint": "^10.9.0",
     "eslint-plugin-astro": "^1.7.0",
-    "prettier": "^3.9.6"
+    "papaparse": "^5.6.0",
+    "prettier": "^3.9.6",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@types/papaparse": "^5.5.2",
     "prettier-plugin-astro": "^0.14.1",
     "tsx": "^4.23.12"
   }
