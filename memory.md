@@ -181,3 +181,8 @@ Scaffolded i18n structure with en.json, established the logic for QR code genera
 **2026-08-24 · Antigravity**
 Added Astro's ClientRouter for native page transitions, made the Disclaimer dismissible (saving state to localStorage), and added a clarifying UX note below the 'Mark as done' button explaining that progress is saved locally.
 
+
+### D-026 · Modern Color Palette
+**2026-08-24 · Antigravity**
+Updated tokens.css with a modern, vibrant color palette replacing the muted clinical tones with brighter blues and distinct pill colors for better user experience.
+

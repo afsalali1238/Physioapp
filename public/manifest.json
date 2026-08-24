@@ -1,0 +1,16 @@
+{
+  "name": "Physiotherapy Patient Library",
+  "short_name": "Physio App",
+  "description": "Your prescribed stretches and exercises.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F3F4F6",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -70,3 +70,25 @@ export const itemSchema = z.object({
     }
   }
 });
+
+/**
+ * Frontmatter for the legal content files in `src/content/legal/`.
+ *
+ * These are loaded with the glob loader, so `id` comes from the filename and is
+ * not declared here. Wording lives in the markdown body precisely so the clinic
+ * can change it without a code change (MODULES.md M12).
+ */
+export const legalSchema = z.object({
+  title: z.string().min(1),
+  /** One short line safe to show in the persistent page banner. */
+  shortLine: z.string().min(1),
+  order: z.number().int(),
+  /**
+   * Who signed this wording off. RESEARCH-FINDINGS §4 records that the clinic's
+   * Medical Director is accountable for content approval, so an unsigned legal
+   * page is a launch blocker rather than a detail — `check:compliance` reports
+   * every `null`.
+   */
+  approvedBy: z.string().nullable().default(null),
+  approvedDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().default(null)
+});
