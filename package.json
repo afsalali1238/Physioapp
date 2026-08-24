@@ -7,12 +7,15 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "npm run check:compliance",
     "build": "astro build",
     "preview": "astro preview",
     "lint": "eslint .",
     "format": "prettier --write .",
     "sync:content": "tsx scripts/sync-content.ts",
     "check:images": "tsx scripts/check-images.ts",
+    "check:compliance": "tsx scripts/check-compliance.ts",
+    "check:all": "npm run check:compliance && npm run check:images && npm run lint",
     "qr": "tsx scripts/generate-qr.ts",
     "astro": "astro"
   },

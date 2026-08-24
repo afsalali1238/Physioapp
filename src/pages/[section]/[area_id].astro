@@ -41,7 +41,12 @@ const pageTitle = `${area.name_en} ${section === 'stretching' ? 'Stretches' : 'E
     {items.map((item, index) => (
       <article class="item" id={item.data.id}>
         <div class={`figure ${item.data.type || ''}`}>
-          <ExerciseImage imageId={item.data.image_id} alt={item.data.image_alt_en} eager={index === 0} />
+          <ExerciseImage
+            imageId={item.data.image_id}
+            alt={item.data.image_alt_en}
+            imageStatus={item.data.image_status}
+            eager={index === 0}
+          />
         </div>
         
         <div class="ibody">

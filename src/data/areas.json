@@ -1,5 +1,13 @@
 [
   {
+    "id": "exercise-lower-back",
+    "area_id": "lower-back",
+    "section": "exercise",
+    "name_en": "Lower Back",
+    "order": 3,
+    "status": "draft"
+  },
+  {
     "id": "exercise-neck",
     "area_id": "neck",
     "section": "exercise",
@@ -16,6 +24,14 @@
     "name_ar": "الكتف",
     "order": 2,
     "status": "published"
+  },
+  {
+    "id": "stretching-lower-back",
+    "area_id": "lower-back",
+    "section": "stretching",
+    "name_en": "Lower Back",
+    "order": 3,
+    "status": "draft"
   },
   {
     "id": "stretching-neck",

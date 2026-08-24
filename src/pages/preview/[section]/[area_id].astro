@@ -46,7 +46,13 @@ const pageTitle = `[PREVIEW] ${area.name_en} ${section === 'stretching' ? 'Stret
       <article class={`item ${item.status === 'draft' ? 'draft-item' : ''}`} id={item.id}>
         {item.status === 'draft' && <div class="draft-badge">DRAFT</div>}
         <div class={`figure ${item.type || ''}`}>
-          <ExerciseImage imageId={item.image_id} alt={item.image_alt_en} eager={index === 0} />
+          <ExerciseImage
+            imageId={item.image_id}
+            alt={item.image_alt_en}
+            imageStatus={item.image_status}
+            eager={index === 0}
+            preview
+          />
         </div>
         
         <div class="ibody">

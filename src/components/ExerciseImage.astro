@@ -1,75 +1,164 @@
 ---
+/**
+ * The demonstration image for one item. MODULES.md M08.
+ *
+ * IMAGE-PIPELINE.md's delivery contract is one line: **only `approved` ships.**
+ * That was previously enforced nowhere — the component rendered whatever file it
+ * found on disk, whatever the sheet said about it.
+ *
+ * That is not a theoretical gap. IMAGE-TEST-VERDICT.md records `ex-neck-02.jpg`
+ * as "FAIL — worst of the set": the head sits slightly *forward* of the
+ * shoulders, which is the posture the chin tuck exists to correct, so the picture
+ * shows the opposite of the instruction printed beside it. A patient who reads
+ * the picture instead of the words — which is most patients, that is why the
+ * picture is there — would practise the wrong thing. The nine rejected renders
+ * are still sitting in src/assets/images/.
+ *
+ * So an image now has to be signed off to reach a patient. Anything short of
+ * `approved` renders as a labelled empty slot: the instructions are complete
+ * prose on their own (CONTENT-SCHEMA.md requires start position, movement,
+ * direction/return and safety), so text-only is degraded, not unsafe.
+ *
+ * `preview` inverts this. The preview route exists for the physiotherapist to
+ * review unapproved work, so there it renders with the status shown.
+ */
 import { Image } from 'astro:assets';
 import { getImage } from '../lib/images';
 
 interface Props {
   imageId?: string;
-  alt: string;
+  alt?: string;
+  /** From the sheet. Undefined means the clinician has not recorded a status. */
+  imageStatus?: 'pending' | 'generated' | 'approved';
   eager?: boolean;
+  /** Clinician review mode: show unapproved images, flagged. */
+  preview?: boolean;
 }
 
-const { imageId, alt, eager = false } = Astro.props;
+const { imageId, alt, imageStatus, eager = false, preview = false } = Astro.props;
 
-let imgSrc = null;
-let isSvg = false;
+const approved = imageStatus === 'approved';
+const mayRender = Boolean(imageId) && (approved || preview);
 
-if (imageId) {
-  imgSrc = await getImage(imageId);
-  if (imgSrc && typeof imgSrc.src === 'string' && imgSrc.src.endsWith('.svg')) {
-    isSvg = true;
-  }
-}
+/**
+ * Non-negotiable #5: alt text describes the position. An image with no usable
+ * alt text is not renderable — a screen-reader user would get a silent gap where
+ * the demonstration should be. `check:compliance` fails the build for this, so
+ * reaching here means the gate was bypassed; fall back to the slot rather than
+ * emit `alt=""` on clinical content.
+ */
+const usableAlt = typeof alt === 'string' && alt.trim().length > 0 ? alt.trim() : null;
+
+const resolved = mayRender && usableAlt ? await getImage(imageId!) : null;
+const isSvg = typeof resolved?.src === 'string' && resolved.src.endsWith('.svg');
+
+const slotReason = !imageId
+  ? 'No image yet'
+  : !usableAlt
+    ? 'Image withheld — no description'
+    : !resolved
+      ? 'Image file missing'
+      : 'Image awaiting approval';
 ---
 
-{imgSrc ? (
-  isSvg ? (
-    <img 
-      src={imgSrc.src} 
-      alt={alt} 
-      width={imgSrc.width} 
-      height={imgSrc.height} 
-      loading={eager ? 'eager' : 'lazy'} 
-      class="exercise-image" 
-    />
+{
+  resolved ? (
+    <figure class="shot">
+      {isSvg ? (
+        <img
+          src={resolved.src}
+          alt={usableAlt}
+          width={resolved.width}
+          height={resolved.height}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding={eager ? 'sync' : 'async'}
+          class="shot__img"
+        />
+      ) : (
+        <Image
+          src={resolved}
+          alt={usableAlt!}
+          widths={[400, 800, 1200]}
+          sizes="(min-width: 780px) 740px, 100vw"
+          format="webp"
+          loading={eager ? 'eager' : 'lazy'}
+          decoding={eager ? 'sync' : 'async'}
+          class="shot__img"
+        />
+      )}
+      {preview && !approved && (
+        <figcaption class="shot__flag">
+          Not approved — {imageStatus ?? 'no status'}
+        </figcaption>
+      )}
+    </figure>
   ) : (
-    <Image 
-      src={imgSrc} 
-      alt={alt} 
-      widths={[400, 800, 1200]} 
-      format="webp"
-      loading={eager ? 'eager' : 'lazy'}
-      class="exercise-image"
-    />
+    <div class="slot" role="img" aria-label={usableAlt ?? slotReason}>
+      <span>{slotReason}</span>
+      <small>Follow the written steps below.</small>
+    </div>
   )
-) : (
-  <div class="image-placeholder">
-    <span>Image pending</span>
-  </div>
-)}
+}
 
 <style>
-  .exercise-image {
+  .shot {
+    margin: 0;
+    position: relative;
+  }
+
+  .shot__img {
     width: 100%;
     height: auto;
     aspect-ratio: 4 / 3;
-    object-fit: cover;
+    /*
+     * `contain`, never `cover`. A cropped clinical photograph can cut off the
+     * hand placement or the end range that the exercise is about. Letterboxing
+     * against the slot colour is the lesser cost.
+     */
+    object-fit: contain;
     background-color: var(--slot);
     display: block;
-    /* Token borders etc will be handled by the card wrapper, but we round corners just in case */
-    border-radius: 8px;
+    border-radius: var(--r-inner);
   }
-  .image-placeholder {
+
+  .shot__flag {
+    position: absolute;
+    inset-block-start: 8px;
+    inset-inline-start: 8px;
+    background: var(--warn-bg);
+    color: var(--warn);
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(var(--fs-label) * var(--scale));
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 999px;
+  }
+
+  .slot {
     width: 100%;
     aspect-ratio: 4 / 3;
     background-color: var(--slot);
     border: 1px dashed var(--slot-line);
+    border-radius: var(--r-inner);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 4px;
     padding: 16px;
     text-align: center;
     color: var(--ink-3);
-    font-size: 14px;
-    border-radius: 8px;
+  }
+
+  .slot span {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(var(--fs-meta) * var(--scale));
+  }
+
+  .slot small {
+    font-size: calc(var(--fs-micro) * var(--scale));
   }
 </style>

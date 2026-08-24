@@ -230,6 +230,60 @@ for (const item of publishedItems) {
   }
 }
 
+// ── 7. Third-party origins in source ───────────────────────────────────────
+// Non-negotiable #6: "No analytics, no third-party scripts, no fonts or assets
+// from hosts we don't control." In a health context each remote request
+// discloses the patient's IP to a third party, and under the UAE PDPL an IP
+// address is personal data.
+//
+// This is a regression guard with a real regression behind it: base.css shipped
+// an `@import` from fonts.googleapis.com. Prose in the legal pages is allowed to
+// *name* an external source (credits.md must attribute Servier Medical Art), so
+// only code and markup are scanned.
+
+const SCAN_EXTS = ['.astro', '.css', '.ts', '.js', '.mjs', '.html', '.json'];
+const SCAN_ROOTS = ['src', 'public'];
+/** Hosts we do control, plus link-only targets that issue no request. */
+const ALLOWED_HOSTS = [
+  'schema.org',
+  'www.w3.org', // XML namespaces in SVG — not fetched
+  'creativecommons.org', // licence link text
+  'smart.servier.com', // attribution link text
+];
+
+function walk(dir: string, out: string[] = []): string[] {
+  if (!existsSync(dir)) return out;
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+      walk(full, out);
+    } else if (SCAN_EXTS.some((ext) => entry.name.endsWith(ext))) {
+      out.push(full);
+    }
+  }
+  return out;
+}
+
+const originPattern = /(?:https?:)?\/\/([a-z0-9.-]+\.[a-z]{2,})/gi;
+
+for (const file of SCAN_ROOTS.flatMap((root) => walk(join(process.cwd(), root)))) {
+  const text = readFileSync(file, 'utf8');
+  const rel = file.slice(process.cwd().length + 1).replace(/\\/g, '/');
+  const seen = new Set<string>();
+
+  for (const match of text.matchAll(originPattern)) {
+    const host = match[1].toLowerCase();
+    if (ALLOWED_HOSTS.includes(host) || seen.has(host)) continue;
+    seen.add(host);
+    errors.push(
+      `✗ ${rel} references third-party origin "${host}".\n` +
+        "      Non-negotiable #6: no assets from hosts we don't control. Self-host it, or add the\n" +
+        '      host to ALLOWED_HOSTS in this script with a note on why it issues no request.',
+    );
+  }
+}
+
 // ── Report ─────────────────────────────────────────────────────────────────
 
 console.log('Compliance check — MODULES.md M12');
