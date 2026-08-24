@@ -89,7 +89,21 @@ async function main() {
         console.error(`  Column '${issue.path.join('.')}' - ${issue.message}`);
       });
     } else {
-      validatedAreas.push(result.data);
+      const bannedTerms = ["best", "guaranteed", "safest", "cure", "book now", "schedule an appointment"];
+      let foundBanned = false;
+      for (const [key, val] of Object.entries(result.data)) {
+        if (typeof val === 'string') {
+          const lower = val.toLowerCase();
+          for (const term of bannedTerms) {
+            if (lower.includes(term)) {
+              hasErrors = true;
+              foundBanned = true;
+              console.error(`ERROR in 'areas' row ${i + 2}: Column '${key}' contains banned compliance term '${term}'.`);
+            }
+          }
+        }
+      }
+      if (!foundBanned) validatedAreas.push(result.data);
     }
   }
 
@@ -105,7 +119,21 @@ async function main() {
         console.error(`  Column '${issue.path.join('.')}' - ${issue.message}`);
       });
     } else {
-      validatedItems.push(result.data);
+      const bannedTerms = ["best", "guaranteed", "safest", "cure", "book now", "schedule an appointment"];
+      let foundBanned = false;
+      for (const [key, val] of Object.entries(result.data)) {
+        if (typeof val === 'string') {
+          const lower = val.toLowerCase();
+          for (const term of bannedTerms) {
+            if (lower.includes(term)) {
+              hasErrors = true;
+              foundBanned = true;
+              console.error(`ERROR in 'items' row ${i + 2} (ID: ${row.id || 'unknown'}): Column '${key}' contains banned compliance term '${term}'.`);
+            }
+          }
+        }
+      }
+      if (!foundBanned) validatedItems.push(result.data);
     }
   }
   

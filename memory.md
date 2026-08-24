@@ -166,3 +166,8 @@ Implemented the Base.astro layout shell containing the Disclaimer, TopBar (with 
 **2026-08-24 · Antigravity**
 Implemented the Homepage, Section Index pages, and the final Card Layout component. Relied heavily on the provided prototype's HTML and CSS for visual fidelity. Handled conditional empty states ('Coming Soon') natively for Section areas with 0 active items.
 
+
+### D-023 · M10 & M11 Implementation details
+**2026-08-24 · Antigravity**
+Implemented Accessibility text-scale cycle toggles caching the state to localStorage in a try/catch, and added the 'Mark as done' state logic. Added CSS print overrides to hide all interactive elements and explicitly list the URL.
+
