@@ -176,3 +176,8 @@ Implemented Accessibility text-scale cycle toggles caching the state to localSto
 **2026-08-24 · Antigravity**
 Scaffolded i18n structure with en.json, established the logic for QR code generation with 'npm run qr' producing a printable HTML contact sheet of area links, and initialized the baseline GitHub Actions CI workflow (M16) for continuous integration.
 
+
+### D-025 · Added UX Polish
+**2026-08-24 · Antigravity**
+Added Astro's ClientRouter for native page transitions, made the Disclaimer dismissible (saving state to localStorage), and added a clarifying UX note below the 'Mark as done' button explaining that progress is saved locally.
+
