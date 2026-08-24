@@ -1,0 +1,100 @@
+---
+/**
+ * Legal pages — disclaimer, privacy, credits. MODULES.md M12.
+ *
+ * Generated from the `legal` content collection so adding a page means adding a
+ * markdown file, not writing a route.
+ */
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import BackLink from '../../components/BackLink.astro';
+import { CLINIC } from '../../config/clinic';
+import { PLACEHOLDER_MARKER } from '../../lib/compliance';
+
+export const getStaticPaths = (async () => {
+  const pages = await getCollection('legal');
+  return pages.map((page) => ({
+    params: { slug: page.id },
+    props: { page },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = { page: Awaited<ReturnType<typeof getCollection<'legal'>>>[number] };
+
+const { page } = Astro.props as Props;
+const { Content } = await render(page);
+
+const reviewed = CLINIC.lastContentReview.includes(PLACEHOLDER_MARKER)
+  ? null
+  : CLINIC.lastContentReview;
+---
+
+<Base title={`${page.data.title} | Physiotherapy`}>
+  <BackLink href="/" label="Home" />
+
+  <article class="legal">
+    <h1>{page.data.title}</h1>
+    {reviewed && <p class="legal__reviewed">Last reviewed {reviewed}</p>}
+    <Content />
+  </article>
+</Base>
+
+<style>
+  .legal {
+    padding: 8px 0 0;
+    max-width: 68ch;
+  }
+
+  .legal h1 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: calc(clamp(28px, 7.5vw, var(--fs-display)) * var(--scale));
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+
+  .legal__reviewed {
+    margin: 0 0 24px;
+    font-family: var(--f-mono);
+    font-size: calc(var(--fs-micro) * var(--scale));
+    color: var(--ink-3);
+  }
+
+  .legal :global(h2) {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: calc(var(--fs-h3) * var(--scale));
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin: 30px 0 8px;
+    text-wrap: balance;
+  }
+
+  .legal :global(p),
+  .legal :global(li) {
+    font-size: calc(var(--fs-body) * var(--scale));
+    line-height: 1.6;
+    color: var(--ink-2);
+    margin: 0 0 12px;
+  }
+
+  .legal :global(ul) {
+    margin: 0 0 12px;
+    padding-inline-start: 22px;
+  }
+
+  .legal :global(strong) {
+    color: var(--ink);
+  }
+
+  .legal :global(a) {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    /* Long URLs in the credits attribution must not force a horizontal scroll. */
+    overflow-wrap: anywhere;
+  }
+</style>

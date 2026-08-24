@@ -186,3 +186,8 @@ Added Astro's ClientRouter for native page transitions, made the Disclaimer dism
 **2026-08-24 · Antigravity**
 Updated tokens.css with a modern, vibrant color palette replacing the muted clinical tones with brighter blues and distinct pill colors for better user experience.
 
+
+### D-027 · Progressive Web App (PWA) Support
+**2026-08-24 · Antigravity**
+Implemented a native service worker (sw.js) and manifest.json to allow the app to be installed on mobile devices and provide offline caching of exercises, as recommended in the expert review.
+

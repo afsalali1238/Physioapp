@@ -1,67 +1,60 @@
 ---
+/**
+ * Persistent safety line, shown on every page above the top bar.
+ *
+ * Deliberately NOT dismissible. The previous version stored a dismissal in
+ * localStorage for 24 hours, which meant the one line of safety text a patient
+ * sees could be permanently gone after a single accidental tap — on a page whose
+ * whole purpose is to be followed unsupervised at home.
+ *
+ * `role="alert"` was also removed. That role is for messages that appear in
+ * response to something the user did; on static text it makes a screen reader
+ * interrupt itself on every page load, and it implies an urgency that the full
+ * disclaimer in the footer handles properly.
+ *
+ * The wording comes from src/content/legal/disclaimer.md so the clinic can
+ * change it without a code change (MODULES.md M12).
+ */
+import { getEntry } from 'astro:content';
+
+const disclaimer = await getEntry('legal', 'disclaimer');
+const shortLine = disclaimer?.data.shortLine ?? 'Not medical advice';
 ---
-<div class="review" id="disclaimer-banner" role="alert">
-  <span>NOT MEDICAL ADVICE · DO NOT PROCEED IF YOU FEEL SHARP PAIN</span>
-  <button id="dismiss-disclaimer" aria-label="Dismiss">✕</button>
-</div>
+
+<p class="safety-line">
+  <span class="safety-line__text">{shortLine}</span>
+  <a href="/legal/disclaimer">Read the full notice</a>
+</p>
 
 <style>
-.review {
-  background: var(--warn-bg);
-  color: var(--warn);
-  font-family: var(--f-display);
-  font-weight: 600;
-  font-size: calc(12px * var(--scale));
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  text-align: center;
-  padding: 7px 14px;
-  line-height: 1.4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-.review.hidden {
-  display: none;
-}
-#dismiss-disclaimer {
-  background: transparent;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 4px;
-  position: absolute;
-  inset-inline-end: 8px;
-}
-</style>
-
-<script>
-  function initDisclaimer() {
-    const banner = document.getElementById('disclaimer-banner');
-    const btn = document.getElementById('dismiss-disclaimer');
-    if (!banner || !btn) return;
-    
-    try {
-      const dismissedAt = localStorage.getItem('physio-disclaimer');
-      if (dismissedAt) {
-        const days = (Date.now() - parseInt(dismissedAt)) / (1000 * 60 * 60 * 24);
-        if (days < 1) {
-          banner.classList.add('hidden');
-          return;
-        }
-      }
-    } catch(e) {}
-    
-    btn.addEventListener('click', () => {
-      banner.classList.add('hidden');
-      try {
-        localStorage.setItem('physio-disclaimer', Date.now().toString());
-      } catch(e) {}
-    }, { once: true });
+  .safety-line {
+    margin: 0;
+    background: var(--warn-bg);
+    color: var(--warn);
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(var(--fs-micro) * var(--scale));
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 8px var(--pad);
+    line-height: 1.45;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    justify-content: center;
+    align-items: baseline;
   }
 
-  initDisclaimer();
-  document.addEventListener('astro:page-load', initDisclaimer);
-</script>
+  .safety-line a {
+    color: inherit;
+    /* Underlined rather than colour-only, so it is still identifiable as a link
+       for anyone who cannot distinguish it by colour. */
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    /* The 44px touch-target floor does not apply here: this is inline text
+       inside a sentence, and padding it out would break the line. It is a
+       secondary route to the same page the footer links to with a full target. */
+    white-space: nowrap;
+  }
+</style>

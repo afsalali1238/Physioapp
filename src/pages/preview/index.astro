@@ -1,0 +1,75 @@
+---
+export const prerender = false;
+import Base from '../../layouts/Base.astro';
+import { getPreviewData } from '../../lib/sheets';
+import { getLocale, useTranslations } from '../../lib/locale';
+import type { Area } from '../../lib/types';
+
+const lang = getLocale(Astro.url);
+const t = useTranslations(lang);
+
+const sheetId = process.env.SHEET_ID;
+if (!sheetId) {
+  throw new Error("Missing SHEET_ID for preview environment.");
+}
+
+const { areas } = await getPreviewData(sheetId);
+const exercises = areas.filter(a => a.section === 'exercise');
+const stretching = areas.filter(a => a.section === 'stretching');
+---
+
+<Base title="PREVIEW | Physiotherapy Library" description="Preview of draft and published content.">
+  <div class="preview-banner">PREVIEW MODE — DO NOT SHARE WITH PATIENTS</div>
+  
+  <div class="hero">
+    <h1>Preview mode</h1>
+    <p>Viewing all published and draft areas.</p>
+  </div>
+  
+  <section class="mb-4">
+    <h2 class="section-title">Stretching</h2>
+    <div class="grid">
+      {stretching.map((area: Area) => (
+        <a href={`/preview/stretching/${area.area_id}`} class="choice">
+          <span>{area.name_en} {area.status === 'draft' ? '(Draft)' : ''}</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="rtl-flip"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="mb-4">
+    <h2 class="section-title">Exercises</h2>
+    <div class="grid">
+      {exercises.map((area: Area) => (
+        <a href={`/preview/exercise/${area.area_id}`} class="choice">
+          <span>{area.name_en} {area.status === 'draft' ? '(Draft)' : ''}</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="rtl-flip"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .preview-banner {
+    background: #DC2626;
+    color: white;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px;
+    letter-spacing: 0.05em;
+  }
+  .mb-4 { margin-bottom: 24px; }
+  .section-title { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
+  .grid { display: flex; flex-direction: column; gap: 12px; }
+  .choice {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--surface); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 20px; font-weight: 600; font-size: 18px;
+    text-decoration: none;
+  }
+  .choice:hover { border-color: var(--brand); color: var(--brand); }
+</style>

@@ -2,6 +2,21 @@
 title: Important information about these exercises
 shortLine: Not medical advice · Stop if you feel sharp pain
 order: 1
+# The three lines below stay visible in the footer of every page. The rest of the
+# disclaimer is on the page too, inside an expandable section — collapsed for
+# readability, not hidden. Keep these short; they are the ones a patient in pain
+# will actually read.
+educationalLine: >-
+  These pages are educational only. They are not a diagnosis or an assessment,
+  and they do not replace being seen by a physiotherapist. They are a reminder of
+  what your physiotherapist already prescribed for you in person.
+stopContactLine: >-
+  Stop and contact the clinic if you have pain that is new, sharp or worsening,
+  dizziness, numbness, pins and needles, weakness, or shortness of breath.
+emergencyLine: >-
+  In an emergency — chest pain, difficulty breathing, collapse, loss of
+  consciousness, or loss of bladder or bowel control — do not use this page.
+  Call the emergency services.
 # Drafted against docs/RESEARCH-FINDINGS.md §4. RESEARCH-FINDINGS states plainly
 # that the clinic's Medical Director is the decision-maker on classification and
 # content approval, so this wording is a draft pending that sign-off.

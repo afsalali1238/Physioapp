@@ -1,0 +1,295 @@
+---
+/**
+ * Site footer — the regulatory surface. MODULES.md M12.
+ *
+ * RESEARCH-FINDINGS §4 requires eight things on the disclaimer, and M12 requires
+ * the disclaimer on *every* page. All eight are therefore in this footer, which
+ * Base.astro renders on every route:
+ *
+ *   1. educational only, not a substitute for diagnosis or treatment
+ *   2. a reminder of what was already prescribed, not a starting point
+ *   3. stop-and-contact condition
+ *   4. emergency clause
+ *   5. limitation of applicability
+ *   6. limitation of liability
+ *   7. clinic legal name · DHA facility licence · physiotherapist licence · last review date
+ *   8. copyright
+ *
+ * Elements 3, 4 and part of 1 stay permanently visible because they are the ones
+ * that matter to someone mid-exercise. The long prose covering 2, 5 and 6 sits in
+ * a <details> — present in the DOM on every page and reachable by a screen reader
+ * without navigating, but collapsed so the safety lines are not buried under
+ * legal text. Print styles force it open.
+ *
+ * Wording comes from src/content/legal/, identifiers from src/config/clinic.ts.
+ * Neither is hardcoded here, so the clinic can change either without touching
+ * component code.
+ */
+import { getCollection, getEntry, render } from 'astro:content';
+import { CLINIC } from '../config/clinic';
+import { PLACEHOLDER_MARKER } from '../lib/compliance';
+
+const disclaimer = await getEntry('legal', 'disclaimer');
+const legalPages = (await getCollection('legal')).sort((a, b) => a.data.order - b.data.order);
+
+const Body = disclaimer ? (await render(disclaimer)).Content : null;
+
+/**
+ * A missing identifier is shown as an explicit gap rather than silently omitted.
+ * An absent DHA licence number that looks like a design choice is worse than one
+ * that looks like an error — the error is what gets it filled in.
+ */
+function identifier(value: string): string | null {
+  return value.includes(PLACEHOLDER_MARKER) ? null : value;
+}
+
+const identifiers: readonly { label: string; value: string | null }[] = [
+  { label: 'Clinic', value: identifier(CLINIC.legalName) },
+  { label: 'DHA facility licence', value: identifier(CLINIC.dhaFacilityLicence) },
+  { label: 'Supervising physiotherapist', value: identifier(CLINIC.physiotherapistName) },
+  { label: 'Physiotherapist licence', value: identifier(CLINIC.physiotherapistLicence) },
+  { label: 'Content last reviewed', value: identifier(CLINIC.lastContentReview) },
+];
+
+const phone = identifier(CLINIC.phone);
+---
+
+<footer class="foot">
+  <div class="foot__inner">
+    {/* 4. Emergency clause — first, and visually strongest. */}
+    {disclaimer?.data.emergencyLine && (
+      <p class="foot__emergency">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+          <path d="M12 9v4" /><path d="M12 17h.01" />
+        </svg>
+        <span>
+          {disclaimer.data.emergencyLine}
+          <b>{CLINIC.emergencyNumbers}</b>.
+        </span>
+      </p>
+    )}
+
+    {/* 3. Stop-and-contact condition. */}
+    {disclaimer?.data.stopContactLine && (
+      <p class="foot__stop">
+        {disclaimer.data.stopContactLine}
+        {phone && <> Call the clinic on <a href={`tel:${phone.replace(/\s+/g, '')}`}>{phone}</a>.</>}
+      </p>
+    )}
+
+    {/* 1. Educational only. */}
+    {disclaimer?.data.educationalLine && <p class="foot__edu">{disclaimer.data.educationalLine}</p>}
+
+    {/* 2, 5, 6. The full notice, on the page but collapsed. */}
+    {Body && (
+      <details class="foot__more">
+        <summary>{disclaimer?.data.title ?? 'Full notice'}</summary>
+        <div class="foot__prose"><Body /></div>
+      </details>
+    )}
+
+    {/*
+      A collapsed <details> does not reliably expand when printed — the content
+      lives in a UA shadow slot that print stylesheets cannot force open across
+      browsers. Rather than reach for JavaScript, the notice is repeated in a
+      block that is hidden on screen and shown only on paper, so a printed
+      handout always carries the full disclaimer.
+    */}
+    {Body && (
+      <div class="foot__printonly foot__prose" aria-hidden="true">
+        <h2>{disclaimer?.data.title ?? 'Full notice'}</h2>
+        <Body />
+      </div>
+    )}
+
+    {/* 7. Clinic and licence identifiers. */}
+    <dl class="foot__ids">
+      {identifiers.map((row) => (
+        <div>
+          <dt>{row.label}</dt>
+          <dd>{row.value ?? <span class="foot__gap">not yet supplied</span>}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <nav class="foot__nav" aria-label="Legal">
+      {legalPages.map((page) => (
+        <a href={`/legal/${page.id}`}>{page.data.title}</a>
+      ))}
+    </nav>
+
+    {/* 8. Copyright. */}
+    <p class="foot__copy">
+      © {CLINIC.copyrightYear}
+      {identifier(CLINIC.legalName) ? ` ${CLINIC.legalName}` : ''}. All rights reserved.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    border-top: 1px solid var(--line);
+    background: var(--surface);
+    margin-top: 48px;
+  }
+
+  .foot__inner {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: 26px var(--pad) 40px;
+    display: grid;
+    gap: 16px;
+  }
+
+  .foot__emergency {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: start;
+    margin: 0;
+    padding: 13px 15px;
+    border-radius: 10px;
+    background: var(--warn-bg);
+    color: var(--warn);
+    font-size: calc(var(--fs-small) * var(--scale));
+    line-height: 1.5;
+  }
+  .foot__emergency svg {
+    width: 19px;
+    height: 19px;
+    margin-top: 2px;
+  }
+  .foot__emergency b {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .foot__stop,
+  .foot__edu {
+    margin: 0;
+    color: var(--ink-2);
+    font-size: calc(var(--fs-small) * var(--scale));
+    line-height: 1.55;
+  }
+  .foot__stop a {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .foot__more summary {
+    cursor: pointer;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(var(--fs-small) * var(--scale));
+    color: var(--ink);
+    /* Meets the 44px touch-target floor: patients may be one-handed or elderly. */
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .foot__more summary:focus-visible {
+    outline: 3px solid var(--brand);
+    outline-offset: 2px;
+  }
+  .foot__prose {
+    color: var(--ink-2);
+    font-size: calc(var(--fs-small) * var(--scale));
+    line-height: 1.6;
+  }
+  .foot__prose :global(h2) {
+    font-family: var(--f-display);
+    font-size: calc(var(--fs-label) * var(--scale));
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 20px 0 6px;
+  }
+  .foot__prose :global(p),
+  .foot__prose :global(li) {
+    margin: 0 0 8px;
+  }
+  .foot__prose :global(ul) {
+    margin: 0 0 8px;
+    padding-inline-start: 20px;
+  }
+
+  .foot__ids {
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 7px;
+    font-size: calc(var(--fs-micro) * var(--scale));
+  }
+  .foot__ids div {
+    display: grid;
+    grid-template-columns: minmax(0, 15em) 1fr;
+    gap: 4px 12px;
+  }
+  .foot__ids dt {
+    color: var(--ink-3);
+    font-family: var(--f-display);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .foot__ids dd {
+    margin: 0;
+    color: var(--ink-2);
+    font-family: var(--f-mono);
+  }
+  /* Unfilled identifiers are called out, not hidden. */
+  .foot__gap {
+    color: var(--warn);
+    font-family: var(--f-body);
+    font-style: italic;
+  }
+
+  .foot__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .foot__nav a {
+    color: var(--ink-2);
+    font-size: calc(var(--fs-small) * var(--scale));
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .foot__nav a:hover {
+    color: var(--ink);
+  }
+
+  .foot__copy {
+    margin: 0;
+    color: var(--ink-3);
+    font-size: calc(var(--fs-micro) * var(--scale));
+  }
+
+  @media (min-width: 560px) {
+    .foot__ids {
+      gap: 5px;
+    }
+  }
+
+  /* Shown only on paper — see the note beside the markup. */
+  .foot__printonly {
+    display: none;
+  }
+
+  @media print {
+    .foot__more,
+    .foot__nav {
+      display: none !important;
+    }
+    .foot__printonly {
+      display: block !important;
+    }
+  }
+</style>

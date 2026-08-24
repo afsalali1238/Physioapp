@@ -33,6 +33,7 @@ import {
   type Violation,
 } from '../src/lib/compliance';
 import { CLINIC, missingClinicFields } from '../src/config/clinic';
+import { validateItems, validateAreas, formatFinding } from '../src/lib/validate';
 
 const STRICT = process.env.COMPLIANCE_STRICT === '1';
 const DATA_DIR = join(process.cwd(), 'src', 'data');
@@ -102,7 +103,19 @@ for (const area of publishedAreas) {
   }
 }
 
-// ── 2. Promotional language in legal and chrome copy ────────────────────────
+// ── 2. Cross-row and clinical-governance rules ──────────────────────────────
+// CONTENT-SCHEMA.md requires the build to fail on duplicate ids and on an area
+// carrying more than eight published items, and IMAGE-PIPELINE.md requires the
+// image to belong to the item beside it. Zod cannot see across rows, so these
+// live in src/lib/validate.ts and run here as well as at sync time.
+
+for (const f of [...validateAreas(areas), ...validateItems(items, areas)]) {
+  const line = formatFinding(f);
+  if (f.level === 'error') errors.push(line);
+  else warnings.push(line);
+}
+
+// ── 3. Promotional language in legal and chrome copy ────────────────────────
 // Scanned for booking CTAs only — see the note on PROMOTIONAL_RULES for why a
 // disclaimer is allowed to use the words an exercise description may not.
 
@@ -155,7 +168,7 @@ for (const required of ['disclaimer.md', 'privacy.md', 'credits.md']) {
   }
 }
 
-// ── 3. Clinic identifiers still unfilled ───────────────────────────────────
+// ── 4. Clinic identifiers still unfilled ───────────────────────────────────
 // RESEARCH-FINDINGS §4 requires the clinic legal name, DHA facility licence,
 // the supervising physiotherapist's licence, and a last-review date on the
 // disclaimer. They are unknown to the build and must not be guessed.
@@ -178,7 +191,7 @@ if (CLINIC.lastContentReview && /^\d{4}-\d{2}-\d{2}$/.test(CLINIC.lastContentRev
   }
 }
 
-// ── 4. Legal wording not yet signed off ────────────────────────────────────
+// ── 5. Legal wording not yet signed off ────────────────────────────────────
 // RESEARCH-FINDINGS §4: "The Medical Director is accountable and must approve
 // content."
 
@@ -192,7 +205,7 @@ for (const doc of legalDocs) {
   }
 }
 
-// ── 5. Published items pointing at unapproved images ───────────────────────
+// ── 6. Published items pointing at unapproved images ───────────────────────
 // IMAGE-PIPELINE.md's delivery contract: "Only `approved` ships."
 //
 // This is not a hypothetical. IMAGE-TEST-VERDICT.md records ex-neck-02 as

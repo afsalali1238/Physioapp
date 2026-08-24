@@ -84,6 +84,13 @@ export const legalSchema = z.object({
   shortLine: z.string().min(1),
   order: z.number().int(),
   /**
+   * The three safety elements that stay visible in the footer of every page,
+   * rather than inside the collapsed section. Only the disclaimer supplies them.
+   */
+  educationalLine: z.string().optional(),
+  stopContactLine: z.string().optional(),
+  emergencyLine: z.string().optional(),
+  /**
    * Who signed this wording off. RESEARCH-FINDINGS §4 records that the clinic's
    * Medical Director is accountable for content approval, so an unsigned legal
    * page is a launch blocker rather than a detail — `check:compliance` reports
