@@ -151,3 +151,8 @@ Implemented Zod schemas in src/content.config.ts (Note: renamed from src/content
 **2026-08-24 · Antigravity**
 Extracted Zod schemas into src/lib/schemas.ts so they can be imported directly by the sync-content.ts Node script without triggering Astro's ESM loader issues (ERR_UNSUPPORTED_ESM_URL_SCHEME). The sync script correctly validates the Google Sheet data before writing.
 
+
+### D-020 · M05 Implementation details
+**2026-08-24 · Antigravity**
+Implemented ExerciseImage component routing raster images through astro:assets <Image> tag for optimization. The image check script successfully reports missing and orphan images.
+

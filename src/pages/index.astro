@@ -1,77 +1,67 @@
 ---
-import '../styles/tokens.css';
-import '../styles/base.css';
+import Base from '../layouts/Base.astro';
+import BackLink from '../components/BackLink.astro';
 import ExerciseImage from '../components/ExerciseImage.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>M02 Theme Test</title>
-		<style>
-			.test-card {
-				background-color: var(--surface);
-				padding: 24px;
-				margin: 24px auto;
-				max-width: 600px;
-				border-radius: 14px;
-				border: 1px solid var(--line);
-			}
-			.test-heading {
-				font-family: var(--f-display);
-				color: var(--ink);
-				margin-top: 16px;
-			}
-			.test-label {
-				font-family: var(--f-display);
-				color: var(--mobility);
-				background-color: var(--mobility-bg);
-				padding: 4px 8px;
-				border-radius: 4px;
-				font-size: 14px;
-			}
-			.test-dosage {
-				font-family: var(--f-mono);
-				background-color: var(--surface-2);
-				padding: 8px;
-				margin-top: 16px;
-				border-radius: 8px;
-			}
-			.controls {
-				display: flex;
-				gap: 8px;
-				margin: 24px auto;
-				max-width: 600px;
-			}
-			button {
-				padding: 8px 16px;
-				cursor: pointer;
-				font-family: var(--f-body);
-			}
-		</style>
-	</head>
-	<body>
-		<div class="controls">
-			<button onclick="document.documentElement.removeAttribute('data-theme')">System (Unstamped)</button>
-			<button onclick="document.documentElement.setAttribute('data-theme', 'light')">Force Light</button>
-			<button onclick="document.documentElement.setAttribute('data-theme', 'dark')">Force Dark</button>
-		</div>
+<Base title="Home Exercise Library">
+  <BackLink href="#" label="Back to Library" />
+  
+  <div class="test-card" style="margin-top: 16px;">
+    <ExerciseImage imageId="ex-neck-02" alt="A person sitting upright on a chair, drawing the chin straight back with the head level." eager={true} />
+    
+    <div style="margin-top: 16px;">
+      <span class="test-label">ACTIVATION</span>
+    </div>
+    
+    <h1 class="test-heading">Chin Tuck</h1>
+    <p>This page tests the Base layout shell (M06) along with the existing components.</p>
+    <div class="test-dosage">HOLD 5s | REPEAT 10 times</div>
+  </div>
 
-		<div class="test-card">
-			<ExerciseImage imageId="ex-neck-02" alt="A person sitting upright on a chair, drawing the chin straight back with the head level." eager={true} />
-			
-			<div style="margin-top: 16px;">
-			  <span class="test-label">ACTIVATION</span>
-			</div>
-			
-			<h1 class="test-heading">Chin Tuck</h1>
-			<p>This page tests the tokens.css, base.css setup, and now ExerciseImage.astro (M05).</p>
-			<div class="test-dosage">HOLD 5s | REPEAT 10 times</div>
-		</div>
-	</body>
-</html>
+  <div class="controls">
+    <button onclick="document.documentElement.removeAttribute('data-theme')">System (Unstamped)</button>
+    <button onclick="document.documentElement.setAttribute('data-theme', 'light')">Force Light</button>
+    <button onclick="document.documentElement.setAttribute('data-theme', 'dark')">Force Dark</button>
+  </div>
+</Base>
 
+<style>
+  .test-card {
+    background-color: var(--surface);
+    padding: 24px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+  }
+  .test-heading {
+    font-family: var(--f-display);
+    color: var(--ink);
+    margin-top: 16px;
+    line-height: 1.1;
+  }
+  .test-label {
+    font-family: var(--f-display);
+    color: var(--mobility);
+    background-color: var(--mobility-bg);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  .test-dosage {
+    font-family: var(--f-mono);
+    background-color: var(--surface-2);
+    padding: 8px;
+    margin-top: 16px;
+    border-radius: 8px;
+  }
+  .controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  button {
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: var(--f-body);
+  }
+</style>
