@@ -1,5 +1,13 @@
 [
   {
+    "id": "exercise-hip",
+    "area_id": "hip",
+    "section": "exercise",
+    "name_en": "Hip",
+    "order": 5,
+    "status": "draft"
+  },
+  {
     "id": "exercise-knee",
     "area_id": "knee",
     "section": "exercise",
@@ -32,6 +40,14 @@
     "name_ar": "الكتف",
     "order": 2,
     "status": "published"
+  },
+  {
+    "id": "stretching-hip",
+    "area_id": "hip",
+    "section": "stretching",
+    "name_en": "Hip",
+    "order": 5,
+    "status": "draft"
   },
   {
     "id": "stretching-knee",
