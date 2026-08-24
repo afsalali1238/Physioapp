@@ -1,5 +1,21 @@
 [
   {
+    "id": "exercise-ankle",
+    "area_id": "ankle",
+    "section": "exercise",
+    "name_en": "Ankle",
+    "order": 6,
+    "status": "draft"
+  },
+  {
+    "id": "exercise-elbow",
+    "area_id": "elbow",
+    "section": "exercise",
+    "name_en": "Elbow",
+    "order": 8,
+    "status": "draft"
+  },
+  {
     "id": "exercise-hip",
     "area_id": "hip",
     "section": "exercise",
@@ -42,6 +58,30 @@
     "status": "published"
   },
   {
+    "id": "exercise-wrist",
+    "area_id": "wrist",
+    "section": "exercise",
+    "name_en": "Wrist",
+    "order": 7,
+    "status": "draft"
+  },
+  {
+    "id": "stretching-ankle",
+    "area_id": "ankle",
+    "section": "stretching",
+    "name_en": "Ankle",
+    "order": 6,
+    "status": "draft"
+  },
+  {
+    "id": "stretching-elbow",
+    "area_id": "elbow",
+    "section": "stretching",
+    "name_en": "Elbow",
+    "order": 8,
+    "status": "draft"
+  },
+  {
     "id": "stretching-hip",
     "area_id": "hip",
     "section": "stretching",
@@ -82,5 +122,13 @@
     "name_ar": "الكتف",
     "order": 2,
     "status": "published"
+  },
+  {
+    "id": "stretching-wrist",
+    "area_id": "wrist",
+    "section": "stretching",
+    "name_en": "Wrist",
+    "order": 7,
+    "status": "draft"
   }
 ]
