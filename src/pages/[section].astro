@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import BackLink from '../components/BackLink.astro';
+
+export async function getStaticPaths() {
+  return [
+    { params: { section: 'stretching' }, props: { title: 'Stretching', lede: 'Choose the part of your body you want to stretch.' } },
+    { params: { section: 'exercise' }, props: { title: 'Exercise Protocols', lede: 'Choose the part of your body you want to work on.' } }
+  ];
+}
+
+const { section } = Astro.params;
+const { title, lede } = Astro.props;
+
+const allAreas = await getCollection('areas');
+const areas = allAreas
+  .filter(area => area.data.section === section && area.data.status === 'published')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const allItems = await getCollection('items');
+const activeItems = allItems.filter(item => item.data.section === section && item.data.status === 'published');
+
+const areasWithCounts = areas.map(area => {
+  const count = activeItems.filter(item => item.data.area_id === area.data.area_id).length;
+  return { ...area.data, count };
+});
+---
+
+<Base title={`${title} | Physiotherapy`}>
+  <BackLink href="/" label="Home" />
+
+  <div class="hero">
+    <h1>{title}</h1>
+    <p>{lede}</p>
+  </div>
+
+  <div class="areas">
+    {areasWithCounts.map(area => (
+      area.count > 0 ? (
+        <a href={`/${section}/${area.area_id}`} class="area">
+          {area.name_en}
+          <span class="n">{area.count} {area.count === 1 ? 'item' : 'items'}</span>
+        </a>
+      ) : (
+        <div class="area soon">
+          {area.name_en}
+          <span class="n">Coming soon</span>
+        </div>
+      )
+    ))}
+  </div>
+</Base>
+
+<style>
+/* hero */
+.hero { padding: 8px 0 24px; }
+.hero h1 {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: calc(clamp(28px, 7.5vw, 40px) * var(--scale));
+  line-height: 1.08;
+  letter-spacing: -.02em;
+  margin: 0 0 10px;
+  text-wrap: balance;
+}
+.hero p { margin: 0; color: var(--ink-2); max-width: 56ch; font-size: calc(17px * var(--scale)); }
+
+/* area grid */
+.areas { display: grid; gap: 9px; grid-template-columns: 1fr; margin-top: 10px; }
+@media(min-width: 560px) { .areas { grid-template-columns: 1fr 1fr; } }
+.area {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 15px 17px; text-decoration: none; color: inherit; min-height: 62px;
+  font-size: calc(17.5px * var(--scale)); font-weight: 600;
+  transition: border-color .12s ease;
+}
+.area:hover { border-color: var(--line-2); }
+.area:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+.area .n { font-family: var(--f-mono); font-size: calc(12px * var(--scale)); color: var(--ink-3); font-weight: 500; font-variant-numeric: tabular-nums; }
+.area.soon { background: transparent; border-style: dashed; color: var(--ink-3); font-weight: 500; cursor: default; }
+.area.soon:hover { border-color: var(--line); }
+.area.soon .n { font-size: calc(11px * var(--scale)); letter-spacing: .08em; text-transform: uppercase; font-family: var(--f-display); }
+</style>

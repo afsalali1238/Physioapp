@@ -156,3 +156,8 @@ Extracted Zod schemas into src/lib/schemas.ts so they can be imported directly b
 **2026-08-24 · Antigravity**
 Implemented ExerciseImage component routing raster images through astro:assets <Image> tag for optimization. The image check script successfully reports missing and orphan images.
 
+
+### D-021 · M06 Implementation details
+**2026-08-24 · Antigravity**
+Implemented the Base.astro layout shell containing the Disclaimer, TopBar (with text size control stub), a skip-to-content link, and standard HTML landmarks. BackLink.astro correctly mirrors its SVG arrow icon in RTL contexts.
+
