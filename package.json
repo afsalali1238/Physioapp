@@ -13,6 +13,7 @@
     "format": "prettier --write .",
     "sync:content": "tsx scripts/sync-content.ts",
     "check:images": "tsx scripts/check-images.ts",
+    "qr": "tsx scripts/generate-qr.ts",
     "astro": "astro"
   },
   "dependencies": {
@@ -28,7 +29,9 @@
   },
   "devDependencies": {
     "@types/papaparse": "^5.5.2",
+    "@types/qrcode": "^1.5.6",
     "prettier-plugin-astro": "^0.14.1",
+    "qrcode": "^1.5.4",
     "tsx": "^4.23.12"
   }
 }
