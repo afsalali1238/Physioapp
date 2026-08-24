@@ -1,0 +1,10 @@
+[
+  {
+    "id": "exercise-neck",
+    "area_id": "neck",
+    "section": "exercise",
+    "name_en": "Neck",
+    "order": 1,
+    "status": "published"
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "ex-neck-broken",
+    "section": "exercise",
+    "area_id": "neck",
+    "order": 1,
+    "status": "published",
+    "name_en": "Broken Exercise",
+    "type": "activation",
+    "start_position_en": "Sit upright.",
+    "movement_en": "Gently draw chin back.",
+    "return_en": "Release slowly.",
+    "safety_en": "Stop if dizzy.",
+    "target_muscles_en": "Deep neck flexors",
+    "hold_seconds": 5,
+    "image_id": "ex-neck-broken"
+  }
+]
