@@ -1,5 +1,13 @@
 [
   {
+    "id": "exercise-knee",
+    "area_id": "knee",
+    "section": "exercise",
+    "name_en": "Knee",
+    "order": 4,
+    "status": "draft"
+  },
+  {
     "id": "exercise-lower-back",
     "area_id": "lower-back",
     "section": "exercise",
@@ -24,6 +32,14 @@
     "name_ar": "الكتف",
     "order": 2,
     "status": "published"
+  },
+  {
+    "id": "stretching-knee",
+    "area_id": "knee",
+    "section": "stretching",
+    "name_en": "Knee",
+    "order": 4,
+    "status": "draft"
   },
   {
     "id": "stretching-lower-back",
