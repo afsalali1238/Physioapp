@@ -121,6 +121,13 @@ const pageTitle = `${area.name_en} ${section === 'stretching' ? 'Stretches' : 'E
               <span>{item.data.safety_en}</span>
             </div>
           )}
+          
+          <div style="margin-top: 16px;">
+            <button type="button" class="tick" aria-pressed="false" data-item-id={item.data.id}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tick-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span class="tick-label">Mark as done</span>
+            </button>
+          </div>
         </div>
       </article>
     ))}
@@ -221,4 +228,57 @@ const pageTitle = `${area.name_en} ${section === 'stretching' ? 'Stretches' : 'E
   font-size: calc(15px * var(--scale)); line-height: 1.45;
 }
 .safety svg { width: 18px; height: 18px; flex: none; margin-top: 2px; }
+
+/* tick */
+.tick {
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+  font-family: var(--f-display); font-weight: 600; font-size: calc(14.5px * var(--scale));
+  color: var(--ink-2); background: transparent; border: 1px solid var(--line-2);
+  border-radius: 10px; padding: 11px 14px; min-height: 46px; width: 100%;
+  justify-content: center;
+}
+.tick:hover { border-color: var(--ink-3); }
+.tick:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+.tick[aria-pressed="true"] { background: var(--strengthen-bg); color: var(--strengthen); border-color: var(--strengthen); }
 </style>
+
+<script>
+  (function() {
+    function getTodayKey() {
+      const d = new Date();
+      return `physio-done-${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+    }
+    const storageKey = getTodayKey();
+    let doneItems = [];
+    try {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) doneItems = JSON.parse(stored);
+    } catch(e) {}
+
+    document.querySelectorAll('.tick').forEach((btn) => {
+      const id = btn.getAttribute('data-item-id');
+      const label = btn.querySelector('.tick-label');
+      
+      if (id && doneItems.includes(id)) {
+        btn.setAttribute('aria-pressed', 'true');
+        if (label) label.textContent = 'Done';
+      }
+
+      btn.addEventListener('click', () => {
+        const isPressed = btn.getAttribute('aria-pressed') === 'true';
+        if (isPressed) {
+          btn.setAttribute('aria-pressed', 'false');
+          if (label) label.textContent = 'Mark as done';
+          doneItems = doneItems.filter(x => x !== id);
+        } else {
+          btn.setAttribute('aria-pressed', 'true');
+          if (label) label.textContent = 'Done';
+          if (id && !doneItems.includes(id)) doneItems.push(id);
+        }
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(doneItems));
+        } catch(e) {}
+      });
+    });
+  })();
+</script>

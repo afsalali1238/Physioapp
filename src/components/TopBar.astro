@@ -59,12 +59,28 @@
 </style>
 
 <script>
-  const btn = document.getElementById('textSizeBtn');
-  const sizes = ['1', '1.15', '1.3'];
-  let currentSizeIdx = 0;
-  
-  btn?.addEventListener('click', () => {
-    currentSizeIdx = (currentSizeIdx + 1) % sizes.length;
-    document.documentElement.style.setProperty('--scale', sizes[currentSizeIdx]);
-  });
+  (function() {
+    const btn = document.getElementById('textSizeBtn');
+    if (!btn) return;
+    const sizes = ['1', '1.15', '1.3'];
+    let currentSizeIdx = 0;
+    
+    try {
+      const stored = localStorage.getItem('physio-scale');
+      if (stored) {
+        currentSizeIdx = sizes.indexOf(stored);
+        if (currentSizeIdx === -1) currentSizeIdx = 0;
+        document.documentElement.style.setProperty('--scale', sizes[currentSizeIdx]);
+      }
+    } catch(e) {}
+    
+    btn.addEventListener('click', () => {
+      currentSizeIdx = (currentSizeIdx + 1) % sizes.length;
+      const newScale = sizes[currentSizeIdx];
+      document.documentElement.style.setProperty('--scale', newScale);
+      try {
+        localStorage.setItem('physio-scale', newScale);
+      } catch(e) {}
+    });
+  })();
 </script>

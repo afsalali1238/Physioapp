@@ -161,3 +161,8 @@ Implemented ExerciseImage component routing raster images through astro:assets <
 **2026-08-24 · Antigravity**
 Implemented the Base.astro layout shell containing the Disclaimer, TopBar (with text size control stub), a skip-to-content link, and standard HTML landmarks. BackLink.astro correctly mirrors its SVG arrow icon in RTL contexts.
 
+
+### D-022 · M07, M08, M09 Implementation details
+**2026-08-24 · Antigravity**
+Implemented the Homepage, Section Index pages, and the final Card Layout component. Relied heavily on the provided prototype's HTML and CSS for visual fidelity. Handled conditional empty states ('Coming Soon') natively for Section areas with 0 active items.
+

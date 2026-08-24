@@ -37,3 +37,14 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+@media print{
+  .top,.review,.tools,.tick,.back,.guide,.starthere,.skip-link{display:none !important;}
+  body{background:#fff !important;color:#000 !important;font-size:11pt;}
+  .wrap{max-width:none;padding:0;}
+  .item{break-inside:avoid;border:1px solid #999;margin-bottom:10pt;}
+  .figure{aspect-ratio:auto;height:130pt;border-bottom:1px solid #999;}
+  .hero h1{font-size:20pt;}
+  a[href^="http"]:after { content: " (" attr(href) ")"; font-size: 90%; color: #333; }
+}
+
