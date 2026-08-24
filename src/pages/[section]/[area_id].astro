@@ -122,11 +122,12 @@ const pageTitle = `${area.name_en} ${section === 'stretching' ? 'Stretches' : 'E
             </div>
           )}
           
-          <div style="margin-top: 16px;">
-            <button type="button" class="tick" aria-pressed="false" data-item-id={item.data.id}>
+          <div style="margin-top: 16px; text-align: center;">
+            <button type="button" class="tick" aria-pressed="false" data-item-id={item.data.id} aria-live="polite">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tick-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
               <span class="tick-label">Mark as done</span>
             </button>
+            <p class="local-note">Progress is saved locally on this browser.</p>
           </div>
         </div>
       </article>
@@ -240,6 +241,12 @@ const pageTitle = `${area.name_en} ${section === 'stretching' ? 'Stretches' : 'E
 .tick:hover { border-color: var(--ink-3); }
 .tick:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
 .tick[aria-pressed="true"] { background: var(--strengthen-bg); color: var(--strengthen); border-color: var(--strengthen); }
+
+.local-note {
+  font-size: calc(11px * var(--scale));
+  color: var(--ink-3);
+  margin: 6px 0 0 0;
+}
 </style>
 
 <script>

@@ -1,7 +1,8 @@
 ---
 ---
-<div class="review" role="alert">
-  NOT MEDICAL ADVICE · DO NOT PROCEED IF YOU FEEL SHARP PAIN
+<div class="review" id="disclaimer-banner" role="alert">
+  <span>NOT MEDICAL ADVICE · DO NOT PROCEED IF YOU FEEL SHARP PAIN</span>
+  <button id="dismiss-disclaimer" aria-label="Dismiss">✕</button>
 </div>
 
 <style>
@@ -16,5 +17,51 @@
   text-align: center;
   padding: 7px 14px;
   line-height: 1.4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.review.hidden {
+  display: none;
+}
+#dismiss-disclaimer {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  position: absolute;
+  inset-inline-end: 8px;
 }
 </style>
+
+<script>
+  function initDisclaimer() {
+    const banner = document.getElementById('disclaimer-banner');
+    const btn = document.getElementById('dismiss-disclaimer');
+    if (!banner || !btn) return;
+    
+    try {
+      const dismissedAt = localStorage.getItem('physio-disclaimer');
+      if (dismissedAt) {
+        const days = (Date.now() - parseInt(dismissedAt)) / (1000 * 60 * 60 * 24);
+        if (days < 1) {
+          banner.classList.add('hidden');
+          return;
+        }
+      }
+    } catch(e) {}
+    
+    btn.addEventListener('click', () => {
+      banner.classList.add('hidden');
+      try {
+        localStorage.setItem('physio-disclaimer', Date.now().toString());
+      } catch(e) {}
+    }, { once: true });
+  }
+
+  initDisclaimer();
+  document.addEventListener('astro:page-load', initDisclaimer);
+</script>

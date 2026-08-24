@@ -171,3 +171,8 @@ Implemented the Homepage, Section Index pages, and the final Card Layout compone
 **2026-08-24 · Antigravity**
 Implemented Accessibility text-scale cycle toggles caching the state to localStorage in a try/catch, and added the 'Mark as done' state logic. Added CSS print overrides to hide all interactive elements and explicitly list the URL.
 
+
+### D-024 · M13, M14, M16 Implementation details
+**2026-08-24 · Antigravity**
+Scaffolded i18n structure with en.json, established the logic for QR code generation with 'npm run qr' producing a printable HTML contact sheet of area links, and initialized the baseline GitHub Actions CI workflow (M16) for continuous integration.
+
