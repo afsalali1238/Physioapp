@@ -16,14 +16,6 @@ if (!SHEET_ID) {
 const getSheetUrl = (sheetName: string) => `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&sheet=${sheetName}`;
 
 async function fetchCsv(sheetName: string) {
-  // --- TEMPORARY LOCAL OVERRIDE FOR TESTING ---
-  const localPath = path.join(process.cwd(), `local-${sheetName}.csv`);
-  if (fs.existsSync(localPath)) {
-    console.log(`[DEV] Loading ${sheetName} from local file instead of Google Sheets.`);
-    return fs.readFileSync(localPath, 'utf8');
-  }
-  // --------------------------------------------
-  
   const url = getSheetUrl(sheetName);
   const response = await fetch(url);
   if (!response.ok) {
