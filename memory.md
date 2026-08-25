@@ -191,3 +191,8 @@ Updated tokens.css with a modern, vibrant color palette replacing the muted clin
 **2026-08-24 · Antigravity**
 Implemented a native service worker (sw.js) and manifest.json to allow the app to be installed on mobile devices and provide offline caching of exercises, as recommended in the expert review.
 
+
+### D-028 · Phase 1 Complete and Handover
+**2026-08-25 · Antigravity**
+Removed the temporary local CSV overrides. The platform is now fully connected to the live Google Sheets document. Handed over to the clinician for Phase 2 content entry via the generated SHEET-GUIDE.md.
+
