@@ -30,7 +30,7 @@
  * the joint move, and how far".
  */
 
-import { J, type Point } from './skeleton';
+import { J, type Point } from './skeleton.ts';
 
 /** Sagittal is the side view. Many neck and spine exercises are only legible there. */
 export type PoseView = 'front' | 'side';

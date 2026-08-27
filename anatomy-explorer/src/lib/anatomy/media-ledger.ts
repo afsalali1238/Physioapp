@@ -30,7 +30,7 @@ export const MEDIA_LEDGER: readonly MediaLedgerEntry[] = [
     assetId: 'fallback-body-map-2d', path: '/anatomy/fallback-body-map.svg', kind: 'anatomy-model',
     status: 'draft', sourceUrl: 'Original code-native fallback derived from the shared body geometry', generationMethod: 'original',
     license: 'Internal Web Distribution License', attribution: 'Anatomy Explorer Anatomy Team',
-    fileHash: '', bytes: 0, replacementRequired: true, referenceSources: [], reviewedBy: '', reviewedDate: '', notes: 'Accessible fallback; clinician visual review pending.',
+    fileHash: '3456cce3f8127b0e3ed8f9dad1adceabe52a01449c1e7f3ce0f6fa53583cf9b6', bytes: 984, replacementRequired: true, referenceSources: [], reviewedBy: '', reviewedDate: '', notes: 'Accessible fallback; clinician visual review pending.',
   },
   {
     assetId: 'locator-fullbody-3d', path: '/anatomy/models/human-body-locator.glb', kind: 'anatomy-model',
@@ -61,14 +61,14 @@ export const MEDIA_LEDGER: readonly MediaLedgerEntry[] = [
     assetId: 'ex-neck-02-motion', path: '/exercise-media/prototypes/ex-neck-02/ex-neck-02-motion.mp4', kind: 'exercise-motion',
     status: 'prototype', sourceUrl: 'Deterministic pose interpolation from the internal joint-angle figure', generationMethod: 'manual',
     license: 'Internal prototype only', attribution: 'Anatomy Explorer prototype production',
-    fileHash: '7c23c9263e63a21e3b8e99b5f20dd8014df6aafab66f9b212bc7d7b3c6b8ea74', bytes: 15337,
+    fileHash: '6414de80a073ec08f9a63548abadcae82881ccef18721310ccd4c48687da5dec', bytes: 18691,
     replacementRequired: true, referenceSources: [], reviewedBy: '', reviewedDate: '', notes: 'Internal movement-fidelity review only.',
   },
   {
     assetId: 'ex-neck-02-poster', path: '/exercise-media/prototypes/ex-neck-02/ex-neck-02-poster.png', kind: 'exercise-poster',
     status: 'prototype', sourceUrl: 'Frame rendered from the deterministic prototype motion', generationMethod: 'manual',
     license: 'Internal prototype only', attribution: 'Anatomy Explorer prototype production',
-    fileHash: '24ba3ee776853c98456916f38902663a381ac5a8a8cb05f05b29e6f6b15bb95a', bytes: 9731,
+    fileHash: '313a385a71482a142a1900a5d45dce195fac3c51503839e2fc3e7d5ac8376fb9', bytes: 10376,
     replacementRequired: true, referenceSources: [], reviewedBy: '', reviewedDate: '', notes: 'Poster-first fallback for internal review only.',
   },
 ];

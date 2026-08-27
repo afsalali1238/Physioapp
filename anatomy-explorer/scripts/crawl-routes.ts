@@ -66,7 +66,7 @@ export function auditDist(
   expectedRoutes.add('/clinic/');
   expectedRoutes.add('/stretching/');
   expectedRoutes.add('/exercise/');
-  expectedRoutes.add('/preview/');
+  // expectedRoutes.add('/preview/'); // Skipped: SSR
 
   // 2. Compatibility routes (e.g. /find-my-pain/)
   expectedRoutes.add('/find-my-pain/');
@@ -91,14 +91,13 @@ export function auditDist(
   }
 
   // 5. Preview routes (for draft inspection)
-  for (const area of areas) {
-    expectedRoutes.add(`/preview/${area.section}/${area.area_id}/`);
-  }
+  // Skipped: preview routes are SSR (prerender = false) to support live sheet data.
 
   // Resolve route path to HTML file in dist
   const routeToFile = (route: string): string => {
     const normalized = route.replace(/^\/+|\/+$/g, '');
     if (!normalized) return path.join(distDir, 'index.html');
+    if (path.extname(normalized)) return path.join(distDir, ...normalized.split('/'));
     return path.join(distDir, ...normalized.split('/'), 'index.html');
   };
 
@@ -228,6 +227,8 @@ export function auditDist(
       }
 
       const cleanPath = href.split('#')[0].split('?')[0] || '/';
+      if (cleanPath.startsWith('/preview') || cleanPath === '/preview') continue;
+
       const targetFile = routeToFile(cleanPath);
       if (!fs.existsSync(targetFile)) {
         errors.push(`✗ Route "${route}" contains broken internal link to "${cleanPath}" (file not found).`);

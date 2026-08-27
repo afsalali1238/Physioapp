@@ -13,8 +13,10 @@ export const BODY_REGION_VISUALS: readonly BodyRegionVisual[] = [
 ];
 
 export const CAMERA_PRESETS = {
-  neck: { position: [0, 1.9, 3.15], target: [0, 1.72, 0] },
-  'shoulder-left': { position: [-0.45, 1.58, 3.25], target: [-0.48, 1.35, 0] },
-  'shoulder-right': { position: [0.45, 1.58, 3.25], target: [0.48, 1.35, 0] },
+  // Keep the head and both shoulder landmarks in frame so a patient can read
+  // the selected area as a location on a body, not as an isolated mesh.
+  neck: { position: [0, 1.75, 4.35], target: [0, 1.55, 0] },
+  'shoulder-left': { position: [-0.55, 1.5, 4.1], target: [-0.35, 1.25, 0] },
+  'shoulder-right': { position: [0.55, 1.5, 4.1], target: [0.35, 1.25, 0] },
   full: { position: [0, 1.2, 5.5], target: [0, 0.45, 0] },
 } as const;

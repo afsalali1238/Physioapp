@@ -31,7 +31,7 @@ export const MOTION_ASSETS: readonly MotionAsset[] = [{
   attribution: 'Anatomy Explorer prototype production',
   replacementRequired: true,
   referenceSources: [],
-  fileHash: '7c23c9263e63a21e3b8e99b5f20dd8014df6aafab66f9b212bc7d7b3c6b8ea74',
+  fileHash: '6414de80a073ec08f9a63548abadcae82881ccef18721310ccd4c48687da5dec',
   reviewedBy: '',
   reviewedDate: '',
 }];

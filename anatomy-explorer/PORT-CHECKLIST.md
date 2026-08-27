@@ -37,7 +37,7 @@ indefinitely. This is a parity checklist, not a deletion plan.
 - [x] Resolve whether direct handbook routes require the same blocking safety gate as locator routes.
 - [x] Implement and source-review compliance coverage for anatomy regions, zones, education labels, alt text, and patient-visible fields.
 - [x] Implement a rendered-route crawler for canonical routes, compatibility routes, legal pages, print views, QR targets, and preview isolation.
-- [ ] Command-verify compliance coverage and complete a successful post-build rendered-route crawl.
+- [x] Command-verify compliance coverage and complete a successful post-build rendered-route crawl.
 - [x] Implement a draft one-region Three.js neck vertical slice with semantic fallback.
 - Complete rendered desktop/mobile/canvas/accessibility QA and clinician visual approval for the slice.
 

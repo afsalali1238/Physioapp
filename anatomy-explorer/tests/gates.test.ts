@@ -17,8 +17,10 @@ import { BAD_ASSETS_FIXTURE } from './fixtures/bad-assets';
 import { auditMediaLedger, MEDIA_LEDGER } from '../src/lib/anatomy/media-ledger';
 import { BODY_REGION_VISUALS } from '../src/lib/anatomy/model-registry';
 import { validateModelRegionVisuals } from '../src/lib/anatomy/model-registry-validation';
+import { CAMERA_PRESETS } from '../src/lib/anatomy/model-registry';
 import { getApprovedMotion, MOTION_ASSETS } from '../src/lib/motion/motion-registry';
 import { validateMotionAssets } from '../src/lib/motion/motion-validation';
+import { NECK_MOTION_FRAME, validateMotionFrame } from '../src/lib/motion/motion-framing';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -152,6 +154,7 @@ describe('Module S0 — Executable Gates & Release Evidence', () => {
   describe('3. Visual Asset Registry & Media Gate (check-assets.ts)', () => {
     it('keeps prototype motion out of patient publication lookup', () => {
       assert.deepEqual(validateMotionAssets(MOTION_ASSETS), []);
+      assert.deepEqual(validateMotionFrame(NECK_MOTION_FRAME), []);
       assert.equal(getApprovedMotion('ex-neck-02'), undefined);
       assert.ok(MOTION_ASSETS.every((asset) => asset.status === 'prototype' && asset.replacementRequired));
     });
@@ -282,6 +285,8 @@ describe('Module S0 — Executable Gates & Release Evidence', () => {
       );
       assert.deepEqual(errors, []);
       assert.ok(BODY_REGION_VISUALS.every((visual) => !visual.regionId.includes('mesh')));
+      assert.ok(CAMERA_PRESETS.neck.position[2] >= 4, 'Neck focus must leave enough distance to frame the head and shoulders.');
+      assert.ok(CAMERA_PRESETS['shoulder-left'].position[2] >= 4, 'Shoulder focus must preserve body context.');
     });
 
     it('validates education entries and catches compliance violations in map labels', () => {

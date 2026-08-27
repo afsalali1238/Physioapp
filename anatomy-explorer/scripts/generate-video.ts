@@ -1,6 +1,7 @@
-import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { copyFileSync, mkdirSync, existsSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { chromium } from 'playwright';
+import { NECK_MOTION_FRAME } from '../src/lib/motion/motion-framing.ts';
 
 // Dynamic import for TS module
 const poseModule = await import('../src/lib/anatomy/geometry/pose.ts');
@@ -13,7 +14,9 @@ function figureSvg(pose, view, colour) {
   const limbs = f.limbs
     .map((l) => `<path d="${limbPath(l.points)}" stroke="${colour}" stroke-width="${l.width}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`)
     .join('');
-  return `<svg viewBox="0 0 200 570" width="400" height="1140" style="margin-top:-100px;">
+  // Neck motion is too small to read in a full-body frame. Crop to the head,
+  // shoulders and upper torso without changing any joint or motion values.
+  return `<svg viewBox="${NECK_MOTION_FRAME.viewBox}" width="${NECK_MOTION_FRAME.width}" height="${NECK_MOTION_FRAME.height}" aria-label="Prototype side-view movement figure">
     <g opacity="1">
       ${limbs}
       <path d="${torsoPath(f.torso)}" fill="${colour}"/>
@@ -29,7 +32,7 @@ const item = {
 };
 
 async function main() {
-  const dir = 'public/exercise-media/prototypes/ex-neck-02/frames';
+  const dir = 'build-artifacts/motion/ex-neck-02/frames';
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true });
   }
@@ -68,12 +71,15 @@ async function main() {
   }
   await browser.close();
 
+  const poster = 'public/exercise-media/prototypes/ex-neck-02/ex-neck-02-poster.png';
+  copyFileSync(`${dir}/frame_000.png`, poster);
+
   console.log('Frames generated. Stitching with ffmpeg...');
   const outVideo = 'public/exercise-media/prototypes/ex-neck-02/ex-neck-02-motion.mp4';
   
   // Create video using ffmpeg
   try {
-    execSync(`ffmpeg -y -framerate 30 -i ${dir}/frame_%03d.png -c:v libx264 -pix_fmt yuv420p ${outVideo}`, { stdio: 'inherit' });
+    execSync(`ffmpeg -y -framerate 30 -i "${dir}/frame_%03d.png" -c:v libx264 -pix_fmt yuv420p "${outVideo}"`, { stdio: 'inherit' });
     console.log('Video generated at ' + outVideo);
   } catch (e) {
     console.error('ffmpeg failed:', e.message);
