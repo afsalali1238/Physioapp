@@ -3,6 +3,7 @@ import path from 'path';
 import Papa from 'papaparse';
 import * as dotenv from 'dotenv';
 import { areaSchema, itemSchema } from '../src/lib/schemas';
+import { COMPLIANCE_RULES, scanText, formatViolation } from '../src/lib/compliance';
 import { execSync } from 'child_process';
 
 dotenv.config();
@@ -93,16 +94,15 @@ async function main() {
         console.error(`  Column '${issue.path.join('.')}' - ${issue.message}`);
       });
     } else {
-      const bannedTerms = ["best", "guaranteed", "safest", "cure", "book now", "schedule an appointment"];
       let foundBanned = false;
       for (const [key, val] of Object.entries(result.data)) {
         if (typeof val === 'string') {
-          const lower = val.toLowerCase();
-          for (const term of bannedTerms) {
-            if (lower.includes(term)) {
-              hasErrors = true;
-              foundBanned = true;
-              console.error(`ERROR in 'areas' row ${i + 2}: Column '${key}' contains banned compliance term '${term}'.`);
+          const violations = scanText(val, key, COMPLIANCE_RULES);
+          if (violations.length > 0) {
+            hasErrors = true;
+            foundBanned = true;
+            for (const v of violations) {
+              console.error(`ERROR in 'areas' row ${i + 2}: ${formatViolation(`Column '${key}'`, v)}`);
             }
           }
         }
@@ -123,16 +123,15 @@ async function main() {
         console.error(`  Column '${issue.path.join('.')}' - ${issue.message}`);
       });
     } else {
-      const bannedTerms = ["best", "guaranteed", "safest", "cure", "book now", "schedule an appointment"];
       let foundBanned = false;
       for (const [key, val] of Object.entries(result.data)) {
         if (typeof val === 'string') {
-          const lower = val.toLowerCase();
-          for (const term of bannedTerms) {
-            if (lower.includes(term)) {
-              hasErrors = true;
-              foundBanned = true;
-              console.error(`ERROR in 'items' row ${i + 2} (ID: ${row.id || 'unknown'}): Column '${key}' contains banned compliance term '${term}'.`);
+          const violations = scanText(val, key, COMPLIANCE_RULES);
+          if (violations.length > 0) {
+            hasErrors = true;
+            foundBanned = true;
+            for (const v of violations) {
+              console.error(`ERROR in 'items' row ${i + 2} (ID: ${row.id || 'unknown'}): ${formatViolation(`Column '${key}'`, v)}`);
             }
           }
         }
