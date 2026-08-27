@@ -1,0 +1,23 @@
+[
+  {
+    "id": "ex-neck-banned-01",
+    "section": "exercise",
+    "area_id": "neck",
+    "order": 1,
+    "status": "published",
+    "name_en": "Best Neck Exercise in Dubai",
+    "type": "strengthening",
+    "start_position_en": "Sit upright and book an appointment today at our clinic for sciatica treatment.",
+    "movement_en": "Draw your chin back to cure cervical spondylosis completely.",
+    "return_en": "Return to start.",
+    "safety_en": "Guaranteed 100% cure for neck arthritis.",
+    "target_muscles_en": "Neck muscles",
+    "hold_seconds": 5,
+    "reps": 10,
+    "sets": 1,
+    "image_id": "ex-neck-banned-01",
+    "image_alt_en": "Person sitting upright on a chair drawing chin straight back with head level.",
+    "reviewed_by": "Physiotherapist",
+    "reviewed_date": "2026-08-26"
+  }
+]

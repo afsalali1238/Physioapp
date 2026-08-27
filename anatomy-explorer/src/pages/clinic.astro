@@ -1,0 +1,652 @@
+---
+/**
+ * Clinic Mode — Tablet-friendly physiotherapist handoff panel.
+ * Module H1: Fast area & exercise selection, link sharing, QR display, and print handouts.
+ */
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import BackLink from '../components/BackLink.astro';
+import { SECTION_COPY, areaPath } from '../lib/section';
+
+const [areas, items] = await Promise.all([
+  getCollection('areas'),
+  getCollection('items'),
+]);
+
+const publishedAreas = areas
+  .filter((a) => a.data.status === 'published')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const publishedItems = items
+  .filter((i) => i.data.status === 'published')
+  .sort((a, b) => a.data.order - b.data.order);
+
+// Build structured catalog by area and section
+const areaMap = new Map<string, {
+  area: typeof publishedAreas[0]['data'];
+  stretches: typeof publishedItems;
+  exercises: typeof publishedItems;
+}>();
+
+for (const a of publishedAreas) {
+  const areaKey = a.data.area_id;
+  if (!areaMap.has(areaKey)) {
+    areaMap.set(areaKey, {
+      area: a.data,
+      stretches: [],
+      exercises: [],
+    });
+  }
+}
+
+for (const item of publishedItems) {
+  const entry = areaMap.get(item.data.area_id);
+  if (entry) {
+    if (item.data.section === 'stretching') {
+      entry.stretches.push(item);
+    } else {
+      entry.exercises.push(item);
+    }
+  }
+}
+
+const catalog = Array.from(areaMap.values()).filter(
+  (entry) => entry.stretches.length > 0 || entry.exercises.length > 0
+);
+---
+
+<Base
+  title="Clinic Mode | Physiotherapist Handoff"
+  description="Physiotherapist tool to quickly share exercises, QR codes, and print handouts."
+>
+  <BackLink href="/" label="Back to Handbook Home" />
+
+  <div class="clinic-header">
+    <div class="badge">Clinic Mode</div>
+    <h1>Physiotherapist Handoff</h1>
+    <p class="lede">
+      Select an exercise or body area to share with your patient via direct link, QR code, or printed handout.
+    </p>
+  </div>
+
+  <div class="search-bar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <input
+      type="search"
+      id="clinicSearchInput"
+      class="clinic-search"
+      placeholder="Filter by body area, exercise name, or type..."
+      autocomplete="off"
+    />
+  </div>
+
+  <div id="clinicCatalog" class="clinic-catalog">
+    {catalog.map((entry) => (
+      <section class="area-block" data-area-name={entry.area.name_en.toLowerCase()}>
+        <header class="area-block-head">
+          <div class="area-info">
+            <span class="crumb">Body Area</span>
+            <h2>{entry.area.name_en}</h2>
+          </div>
+          <div class="area-actions">
+            <button
+              type="button"
+              class="btn-action btn-share-area"
+              data-name={`${entry.area.name_en} Area Handbook`}
+              data-url={`/area/${entry.area.area_id}`}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              <span>QR & Link</span>
+            </button>
+            <a href={`/area/${entry.area.area_id}`} class="btn-action btn-view" target="_blank" rel="noopener">
+              <span>View Area</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+        </header>
+
+        {entry.stretches.length > 0 && (
+          <div class="section-group">
+            <h3 class="section-heading">Stretching ({entry.stretches.length})</h3>
+            <div class="items-grid">
+              {entry.stretches.map((item) => {
+                const targetUrl = `${areaPath('stretching', item.data.area_id)}#${item.data.id}`;
+                return (
+                  <article
+                    class="clinic-card"
+                    data-search={`${entry.area.name_en} ${item.data.name_en} stretching ${item.data.type || ''}`.toLowerCase()}
+                  >
+                    <div class="card-top">
+                      {item.data.type && <span class={`chip ${item.data.type}`}>{item.data.type.replace(/-/g, ' ')}</span>}
+                      <h4>{item.data.name_en}</h4>
+                    </div>
+
+                    <div class="card-dose">
+                      {item.data.hold_seconds && <span>Hold: {item.data.hold_seconds}s</span>}
+                      {item.data.reps && <span>Reps: {item.data.reps}</span>}
+                      {item.data.sets && <span>Sets: {item.data.sets}</span>}
+                    </div>
+
+                    <div class="card-actions">
+                      <button
+                        type="button"
+                        class="btn-card-action btn-copy-link"
+                        data-url={targetUrl}
+                        title="Copy direct exercise link"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span>Copy</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        class="btn-card-action btn-show-qr"
+                        data-name={item.data.name_en}
+                        data-url={targetUrl}
+                        title="Show QR Code"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="3" width="7" height="7"></rect>
+                          <rect x="14" y="3" width="7" height="7"></rect>
+                          <rect x="14" y="14" width="7" height="7"></rect>
+                          <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span>QR</span>
+                      </button>
+
+                      <a
+                        href={targetUrl}
+                        class="btn-card-action btn-open-target"
+                        target="_blank"
+                        rel="noopener"
+                        title="Open in patient view"
+                      >
+                        <span>Open</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                          <polyline points="15 3 21 3 21 9"></polyline>
+                          <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                      </a>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {entry.exercises.length > 0 && (
+          <div class="section-group">
+            <h3 class="section-heading">Exercise Protocols ({entry.exercises.length})</h3>
+            <div class="items-grid">
+              {entry.exercises.map((item) => {
+                const targetUrl = `${areaPath('exercise', item.data.area_id)}#${item.data.id}`;
+                return (
+                  <article
+                    class="clinic-card"
+                    data-search={`${entry.area.name_en} ${item.data.name_en} exercise ${item.data.type || ''}`.toLowerCase()}
+                  >
+                    <div class="card-top">
+                      {item.data.type && <span class={`chip ${item.data.type}`}>{item.data.type.replace(/-/g, ' ')}</span>}
+                      <h4>{item.data.name_en}</h4>
+                    </div>
+
+                    <div class="card-dose">
+                      {item.data.hold_seconds && <span>Hold: {item.data.hold_seconds}s</span>}
+                      {item.data.reps && <span>Reps: {item.data.reps}</span>}
+                      {item.data.sets && <span>Sets: {item.data.sets}</span>}
+                    </div>
+
+                    <div class="card-actions">
+                      <button
+                        type="button"
+                        class="btn-card-action btn-copy-link"
+                        data-url={targetUrl}
+                        title="Copy direct exercise link"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span>Copy</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        class="btn-card-action btn-show-qr"
+                        data-name={item.data.name_en}
+                        data-url={targetUrl}
+                        title="Show QR Code"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="3" width="7" height="7"></rect>
+                          <rect x="14" y="3" width="7" height="7"></rect>
+                          <rect x="14" y="14" width="7" height="7"></rect>
+                          <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span>QR</span>
+                      </button>
+
+                      <a
+                        href={targetUrl}
+                        class="btn-card-action btn-open-target"
+                        target="_blank"
+                        rel="noopener"
+                        title="Open in patient view"
+                      >
+                        <span>Open</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                          <polyline points="15 3 21 3 21 9"></polyline>
+                          <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                      </a>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </section>
+    ))}
+  </div>
+
+  <div id="clinicEmptyState" class="empty-state" style="display: none;">
+    <p>No matching exercises or body areas found.</p>
+    <small>Try typing "neck", "shoulder", "stretch", or "strengthening".</small>
+  </div>
+</Base>
+
+<style>
+  .clinic-header {
+    padding: 12px 0 20px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: calc(11px * var(--scale));
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    background: var(--brand);
+    color: var(--brand-ink, #ffffff);
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+  }
+
+  .clinic-header h1 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: calc(clamp(26px, 6vw, 36px) * var(--scale));
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+
+  .lede {
+    font-size: calc(16.5px * var(--scale));
+    color: var(--ink-2);
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 0 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  }
+
+  .search-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--ink-3);
+    flex: none;
+  }
+
+  .clinic-search {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: var(--f-body);
+    font-size: calc(16px * var(--scale));
+    color: var(--ink);
+    padding: 14px 0;
+    outline: none;
+    min-height: 48px;
+  }
+
+  .clinic-catalog {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .area-block {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .area-block-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 14px;
+  }
+
+  .crumb {
+    display: block;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(10.5px * var(--scale));
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    margin-bottom: 2px;
+  }
+
+  .area-info h2 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: calc(22px * var(--scale));
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .area-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-action {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(13px * var(--scale));
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  .btn-action:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+  }
+
+  .btn-action svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .section-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .section-heading {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(14px * var(--scale));
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-2);
+    margin: 0;
+  }
+
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .clinic-card {
+    background: var(--ground);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .card-top {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .chip {
+    align-self: flex-start;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(10.5px * var(--scale));
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 999px;
+  }
+  .chip.mobility { background: var(--mobility-bg); color: var(--mobility); }
+  .chip.activation { background: var(--mobility-bg); color: var(--mobility); }
+  .chip.stretch { background: var(--stretch-bg); color: var(--stretch); }
+  .chip.strengthening { background: var(--strengthen-bg); color: var(--strengthen); }
+
+  .clinic-card h4 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: calc(16px * var(--scale));
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  .card-dose {
+    display: flex;
+    gap: 8px;
+    font-family: var(--f-mono);
+    font-size: calc(12px * var(--scale));
+    color: var(--ink-2);
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 6px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+
+  .btn-card-action {
+    flex: 1;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(12.5px * var(--scale));
+    border-radius: 6px;
+    padding: 6px 8px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  .btn-card-action:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+  }
+
+  .btn-card-action svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+
+  .empty-state p {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(18px * var(--scale));
+    margin: 0 0 6px;
+  }
+
+  .empty-state small {
+    color: var(--ink-3);
+    font-size: calc(14px * var(--scale));
+  }
+</style>
+
+<script>
+  (() => {
+    const searchInput = document.getElementById('clinicSearchInput') as HTMLInputElement | null;
+    const catalog = document.getElementById('clinicCatalog');
+    const emptyState = document.getElementById('clinicEmptyState');
+
+    if (!searchInput || !catalog || !emptyState) return;
+
+    const cards = Array.from(catalog.querySelectorAll<HTMLElement>('.clinic-card'));
+    const areaBlocks = Array.from(catalog.querySelectorAll<HTMLElement>('.area-block'));
+
+    function filterCatalog(query: string) {
+      const clean = query.trim().toLowerCase();
+      let visibleCount = 0;
+
+      if (!clean) {
+        cards.forEach((c) => (c.style.display = ''));
+        areaBlocks.forEach((a) => (a.style.display = ''));
+        emptyState!.style.display = 'none';
+        return;
+      }
+
+      areaBlocks.forEach((block) => {
+        const areaName = block.getAttribute('data-area-name') || '';
+        const areaMatches = areaName.includes(clean);
+
+        let areaCardMatches = 0;
+        const blockCards = block.querySelectorAll<HTMLElement>('.clinic-card');
+        blockCards.forEach((card) => {
+          const searchData = card.getAttribute('data-search') || '';
+          if (areaMatches || searchData.includes(clean)) {
+            card.style.display = '';
+            areaCardMatches++;
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        if (areaCardMatches > 0) {
+          block.style.display = '';
+        } else {
+          block.style.display = 'none';
+        }
+      });
+
+      emptyState!.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    searchInput.addEventListener('input', () => filterCatalog(searchInput.value));
+
+    // Handle Copy Link buttons
+    catalog.addEventListener('click', async (e) => {
+      const target = e.target as HTMLElement | null;
+      const copyBtn = target?.closest<HTMLButtonElement>('.btn-copy-link');
+      if (copyBtn) {
+        const relativeUrl = copyBtn.getAttribute('data-url');
+        if (!relativeUrl) return;
+        const fullUrl = new URL(relativeUrl, window.location.origin).href;
+        try {
+          let copied = false;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            try {
+              await navigator.clipboard.writeText(fullUrl);
+              copied = true;
+            } catch {
+              // fallback
+            }
+          }
+          if (!copied) {
+            const temp = document.createElement('textarea');
+            temp.value = fullUrl;
+            temp.style.position = 'fixed';
+            temp.style.opacity = '0';
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+          }
+          const span = copyBtn.querySelector('span');
+          if (span) {
+            const orig = span.textContent;
+            span.textContent = 'Copied!';
+            setTimeout(() => {
+              span.textContent = orig;
+            }, 2000);
+          }
+        } catch (err) {
+          console.error('Failed to copy', err);
+        }
+        return;
+      }
+
+      const qrBtn = target?.closest<HTMLButtonElement>('.btn-show-qr, .btn-share-area');
+      if (qrBtn) {
+        const name = qrBtn.getAttribute('data-name') || '';
+        const relativeUrl = qrBtn.getAttribute('data-url') || '';
+        const fullUrl = new URL(relativeUrl, window.location.origin).href;
+        window.dispatchEvent(
+          new CustomEvent('open-share-modal', {
+            detail: { name, url: fullUrl },
+          })
+        );
+      }
+    });
+  })();
+</script>

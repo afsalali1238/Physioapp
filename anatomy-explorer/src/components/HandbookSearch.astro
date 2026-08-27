@@ -1,0 +1,501 @@
+---
+/**
+ * HandbookSearch.astro — Accessible search for published body areas and exercises.
+ * Module H1: Approved-name search and keyboard navigation.
+ */
+import { getCollection } from 'astro:content';
+import { areaPath } from '../lib/section';
+
+const [areas, items] = await Promise.all([
+  getCollection('areas'),
+  getCollection('items'),
+]);
+
+const publishedItems = items.filter((i) => i.data.status === 'published');
+const publishedItemAreaKeys = new Set(publishedItems.map((i) => `${i.data.section}/${i.data.area_id}`));
+
+// Only include published areas that contain at least one published exercise/stretch
+const publishedAreas = areas.filter(
+  (a) => a.data.status === 'published' && publishedItemAreaKeys.has(`${a.data.section}/${a.data.area_id}`)
+);
+
+// Prepare search dataset
+const searchIndex = [
+  ...publishedAreas.map((a) => ({
+    type: 'area',
+    title: a.data.name_en,
+    section: a.data.section,
+    url: areaPath(a.data.section, a.data.area_id),
+    category: 'Body Areas',
+    meta: a.data.section === 'stretching' ? 'Stretching area' : 'Exercise area',
+  })),
+  ...publishedItems.map((i) => ({
+    type: 'item',
+    title: i.data.name_en,
+    section: i.data.section,
+    url: `${areaPath(i.data.section, i.data.area_id)}#${i.data.id}`,
+    category: i.data.section === 'stretching' ? 'Stretching' : 'Exercise Protocols',
+    meta: i.data.type ? i.data.type.replace(/-/g, ' ') : '',
+  })),
+];
+---
+
+<dialog id="searchDialog" class="search-dialog" aria-label="Handbook Search" aria-modal="true">
+  <div class="search-wrap">
+    <header class="search-header">
+      <div class="search-input-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="icon-search" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="search"
+          id="handbookSearchInput"
+          class="search-input"
+          placeholder="Search by body area or exercise name..."
+          autocomplete="off"
+          spellcheck="false"
+          aria-autocomplete="list"
+          aria-controls="searchResults"
+          aria-expanded="false"
+        />
+      </div>
+      <button type="button" class="btn-close" id="searchCloseBtn" aria-label="Close search">
+        Esc
+      </button>
+    </header>
+
+    <div id="searchResults" class="search-results" role="listbox" aria-label="Search results">
+      <!-- Search results dynamically rendered here via safe DOM APIs -->
+    </div>
+
+    <div id="searchAnnounce" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <footer class="search-footer">
+      <p class="search-tip">
+        <span><b>↑↓</b> to navigate</span>
+        <span><b>Enter</b> to select</span>
+        <span><b>Esc</b> to close</span>
+      </p>
+    </footer>
+  </div>
+</dialog>
+
+<!-- Pass build-time search index safely to client script -->
+<script define:vars={{ searchIndex }}>
+  window.__HANDBOOK_SEARCH_INDEX__ = searchIndex;
+</script>
+
+<style>
+  .search-dialog {
+    border: none;
+    border-radius: var(--r, 14px);
+    background: var(--surface);
+    color: var(--ink);
+    padding: 0;
+    max-width: 540px;
+    width: calc(100% - 32px);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+  }
+
+  .search-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+  }
+
+  .search-wrap {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+  }
+
+  .search-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .search-input-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    background: var(--ground);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0 12px;
+  }
+
+  .icon-search {
+    width: 18px;
+    height: 18px;
+    color: var(--ink-3);
+    flex: none;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: var(--f-body);
+    font-size: calc(16px * var(--scale));
+    color: var(--ink);
+    padding: 10px 0;
+    outline: none;
+    min-height: 44px;
+  }
+
+  .btn-close {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 4px 8px;
+    color: var(--ink-3);
+    cursor: pointer;
+  }
+
+  .btn-close:hover {
+    color: var(--ink);
+    border-color: var(--ink-2);
+  }
+
+  .search-results {
+    overflow-y: auto;
+    padding: 12px 16px;
+    min-height: 160px;
+    max-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .search-results:empty::before {
+    content: "Type an area name (e.g. Neck, Shoulder) or exercise to search.";
+    color: var(--ink-3);
+    font-size: calc(14.5px * var(--scale));
+    display: block;
+    padding: 24px 8px;
+    text-align: center;
+  }
+
+  :global(.search-group) {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  :global(.search-group-title) {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: calc(11px * var(--scale));
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    margin: 4px 0 2px 4px;
+  }
+
+  :global(.search-item) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--ink);
+    background: transparent;
+    transition: background 0.1s ease;
+  }
+
+  :global(.search-item:hover),
+  :global(.search-item.is-selected) {
+    background: var(--surface-2);
+  }
+
+  :global(.search-item.is-selected) {
+    outline: 2px solid var(--brand);
+  }
+
+  :global(.search-item-title) {
+    font-family: var(--f-body);
+    font-weight: 600;
+    font-size: calc(15.5px * var(--scale));
+  }
+
+  :global(.search-item-meta) {
+    font-family: var(--f-display);
+    font-size: calc(11px * var(--scale));
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    background: var(--ground);
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+  }
+
+  :global(.search-empty) {
+    text-align: center;
+    padding: 28px 12px;
+    color: var(--ink-2);
+    font-size: calc(15px * var(--scale));
+  }
+
+  :global(.search-empty p) {
+    margin: 0 0 6px;
+  }
+
+  :global(.search-empty small) {
+    color: var(--ink-3);
+  }
+
+  .search-footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+
+  .search-tip {
+    margin: 0;
+    display: flex;
+    gap: 16px;
+    font-size: calc(12px * var(--scale));
+    color: var(--ink-3);
+  }
+
+  .search-tip b {
+    font-family: var(--f-mono);
+    color: var(--ink-2);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+<script>
+  (() => {
+    const dialogEl = document.getElementById('searchDialog') as HTMLDialogElement | null;
+    const inputEl = document.getElementById('handbookSearchInput') as HTMLInputElement | null;
+    const resultsEl = document.getElementById('searchResults');
+    const closeBtn = document.getElementById('searchCloseBtn');
+    const announcer = document.getElementById('searchAnnounce');
+
+    if (!dialogEl || !inputEl || !resultsEl) return;
+    const dialog = dialogEl;
+    const input = inputEl;
+    const results = resultsEl;
+
+    const items: Array<{
+      type: string;
+      title: string;
+      section: string;
+      url: string;
+      category: string;
+      meta: string;
+    }> = (window as any).__HANDBOOK_SEARCH_INDEX__ || [];
+
+    let selectedIndex = -1;
+    let currentRenderedItems: HTMLAnchorElement[] = [];
+    let lastFocusedElement: HTMLElement | null = null;
+
+    function announce(msg: string) {
+      if (announcer) announcer.textContent = msg;
+    }
+
+    function renderResults(query: string) {
+      selectedIndex = -1;
+      input?.removeAttribute('aria-activedescendant');
+      const clean = query.trim().toLowerCase();
+
+      results.replaceChildren();
+      currentRenderedItems = [];
+
+      if (!clean) {
+        input?.setAttribute('aria-expanded', 'false');
+        announce('');
+        return;
+      }
+
+      const filtered = items.filter((item) =>
+        item.title.toLowerCase().includes(clean) ||
+        item.category.toLowerCase().includes(clean) ||
+        item.meta.toLowerCase().includes(clean)
+      );
+
+      if (filtered.length === 0) {
+        input?.setAttribute('aria-expanded', 'false');
+
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'search-empty';
+
+        const p = document.createElement('p');
+        p.appendChild(document.createTextNode('No matches found for "'));
+        const b = document.createElement('b');
+        b.textContent = clean;
+        p.appendChild(b);
+        p.appendChild(document.createTextNode('".'));
+
+        const small = document.createElement('small');
+        small.textContent = 'Try searching by body area (e.g. Neck, Shoulder) or exercise name.';
+
+        emptyDiv.appendChild(p);
+        emptyDiv.appendChild(small);
+        results.appendChild(emptyDiv);
+
+        announce(`No matches found for "${clean}".`);
+        return;
+      }
+
+      input?.setAttribute('aria-expanded', 'true');
+
+      // Group by category
+      const groups: { [cat: string]: typeof filtered } = {};
+      filtered.forEach((item) => {
+        if (!groups[item.category]) groups[item.category] = [];
+        groups[item.category].push(item);
+      });
+
+      let optionIndex = 0;
+      Object.keys(groups).forEach((cat) => {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'search-group';
+
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'search-group-title';
+        titleSpan.textContent = cat;
+        groupDiv.appendChild(titleSpan);
+
+        groups[cat].forEach((item) => {
+          const optId = `search-opt-${optionIndex}`;
+          optionIndex++;
+
+          const link = document.createElement('a');
+          link.href = item.url;
+          link.className = 'search-item';
+          link.setAttribute('role', 'option');
+          link.setAttribute('aria-selected', 'false');
+          link.id = optId;
+
+          const titleEl = document.createElement('span');
+          titleEl.className = 'search-item-title';
+          titleEl.textContent = item.title;
+          link.appendChild(titleEl);
+
+          if (item.meta) {
+            const metaEl = document.createElement('span');
+            metaEl.className = 'search-item-meta';
+            metaEl.textContent = item.meta;
+            link.appendChild(metaEl);
+          }
+
+          groupDiv.appendChild(link);
+          currentRenderedItems.push(link);
+        });
+
+        results.appendChild(groupDiv);
+      });
+
+      announce(`${filtered.length} result${filtered.length === 1 ? '' : 's'} found. Use up and down arrow keys to navigate.`);
+    }
+
+    input.addEventListener('input', () => {
+      renderResults(input.value);
+    });
+
+    function closeSearch() {
+      dialog?.close();
+    }
+
+    closeBtn?.addEventListener('click', closeSearch);
+
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) closeSearch();
+    });
+
+    dialog.addEventListener('close', () => {
+      input.value = '';
+      results.replaceChildren();
+      currentRenderedItems = [];
+      selectedIndex = -1;
+      input.removeAttribute('aria-activedescendant');
+      input.setAttribute('aria-expanded', 'false');
+      announce('');
+      if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+        lastFocusedElement.focus();
+      }
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (currentRenderedItems.length === 0) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = (selectedIndex + 1) % currentRenderedItems.length;
+        updateSelection();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = (selectedIndex - 1 + currentRenderedItems.length) % currentRenderedItems.length;
+        updateSelection();
+      } else if (e.key === 'Enter') {
+        if (selectedIndex >= 0 && selectedIndex < currentRenderedItems.length) {
+          e.preventDefault();
+          currentRenderedItems[selectedIndex].click();
+        }
+      }
+    });
+
+    function updateSelection() {
+      currentRenderedItems.forEach((el, idx) => {
+        if (idx === selectedIndex) {
+          el.classList.add('is-selected');
+          el.setAttribute('aria-selected', 'true');
+          input?.setAttribute('aria-activedescendant', el.id);
+          el.scrollIntoView({ block: 'nearest' });
+        } else {
+          el.classList.remove('is-selected');
+          el.setAttribute('aria-selected', 'false');
+        }
+      });
+    }
+
+    function openSearch() {
+      if (document.activeElement && document.activeElement !== document.body) {
+        lastFocusedElement = document.activeElement as HTMLElement;
+      }
+      dialog.showModal();
+      input.value = '';
+      results.replaceChildren();
+      input.focus();
+    }
+
+    window.addEventListener('open-handbook-search', () => {
+      openSearch();
+    });
+
+    // Keyboard shortcut '/' or Cmd/Ctrl+K to open search
+    window.addEventListener('keydown', (e) => {
+      if (
+        (e.key === 'k' && (e.metaKey || e.ctrlKey)) ||
+        (e.key === '/' &&
+          document.activeElement?.tagName !== 'INPUT' &&
+          document.activeElement?.tagName !== 'TEXTAREA')
+      ) {
+        e.preventDefault();
+        openSearch();
+      }
+    });
+  })();
+</script>

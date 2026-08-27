@@ -1,0 +1,163 @@
+/**
+ * Base stylesheet. Tokens live in tokens.css; this file sets element defaults.
+ *
+ * FONTS — deliberately no third-party request.
+ *
+ * This previously pulled Archivo, Source Sans 3 and IBM Plex Mono from
+ * fonts.googleapis.com via `@import`. That was removed for two reasons:
+ *
+ *   1. Non-negotiable #6 keeps the request list on our own origin. In a health
+ *      context every remote request discloses the patient's IP address to a
+ *      third party, and under the UAE PDPL an IP address is personal data. A
+ *      patient looking up a shoulder stretch should not generate a record with
+ *      anyone but us.
+ *   2. `@import` inside a stylesheet serialises the download — the browser must
+ *      fetch base.css, parse it, then fetch the font CSS, then the font files,
+ *      before text paints. On a slow connection that is a blank page.
+ *
+ * The three families are still first in each stack, so self-hosting them later
+ * is a one-step change with no component edits: run
+ *   npm i @fontsource/archivo @fontsource/source-sans-3 @fontsource/ibm-plex-mono
+ * then import the weights DESIGN-SYSTEM.md specifies (Archivo 500/600/700,
+ * Source Sans 3 400/500/600/700, IBM Plex Mono 500/600) here. Until that runs,
+ * the site renders in the system stacks below — a known visual downgrade,
+ * tracked in memory.md, not a silent one.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Text-size control: 1 | 1.15 | 1.3 (TopBar). Every font-size multiplies it. */
+  --scale: 1;
+
+  --f-display: 'Archivo', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --f-body: 'Source Sans 3', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, Menlo, monospace;
+}
+
+html {
+  /* Never let a phone silently inflate text — --scale is the only magnifier. */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: calc(var(--fs-body) * var(--scale));
+  line-height: 1.55;
+}
+
+/* Dosage figures are clinical data: keep digits in a column. */
+:root {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+*:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Print. Patients do print these, and a printed sheet leaves the site's
+ * context entirely — so navigation and controls go, and the safety wording
+ * stays (SiteFooter.astro prints the full notice).
+ */
+@media print {
+  .top,
+  .review,
+  .tools,
+  .tick,
+  .back,
+  .guide,
+  .starthere,
+  .skip-link,
+  .btn-share-page,
+  .btn-share-area,
+  .btn-item-share,
+  .btn-card-action,
+  .search-bar,
+  dialog,
+  .share-dialog,
+  .search-dialog,
+  .local-note {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  .wrap {
+    max-width: none;
+    padding: 0;
+  }
+
+  .hero {
+    border-bottom: 2pt solid #12433A;
+    padding-bottom: 8pt;
+    margin-bottom: 12pt;
+  }
+
+  .hero h1 {
+    font-size: 20pt;
+    margin: 0 0 4pt;
+    color: #12433A;
+  }
+
+  .item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1pt solid #777;
+    border-radius: 6pt;
+    margin-bottom: 14pt;
+  }
+
+  .figure {
+    aspect-ratio: auto;
+    height: 120pt;
+    border-bottom: 1pt solid #777;
+  }
+
+  .dose {
+    border: 1pt solid #777;
+    background: #f5f5f5;
+  }
+
+  .dose div {
+    background: #fff;
+  }
+
+  .safety {
+    border: 1pt solid #d97706;
+    background: #fffbeb !important;
+    color: #92400e !important;
+    page-break-inside: avoid;
+  }
+
+  /* Expand link targets, but not tel: or mailto: — they read as noise. */
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 85%;
+    color: #444;
+  }
+}

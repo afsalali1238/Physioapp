@@ -1,0 +1,21 @@
+---
+/**
+ * Compatibility route (A-014). `/find-my-area/` is canonical.
+ *
+ * This used to be a byte-for-byte copy of `find-my-area.astro` differing only
+ * in `<title>` and meta description — two URLs serving the same page, with
+ * "Find where it hurts" as the title. Non-negotiable #5 bans diagnosis and
+ * symptom framing "including comments, identifiers, filenames", and a duplicate
+ * page also splits the canonical URL for anything that indexes it.
+ *
+ * Kept as a redirect rather than deleted because A-014 names it a compatibility
+ * route: a patient may already have the old link. The filename stays for that
+ * reason alone; nothing links here, and nothing renders here.
+ */
+export const prerender = true;
+---
+<meta http-equiv="refresh" content="0; url=/find-my-area/" />
+<link rel="canonical" href="/find-my-area/" />
+<meta name="robots" content="noindex, follow" />
+<title>Redirecting to the body area finder</title>
+<p>This page has moved. <a href="/find-my-area/">Continue to the body area finder</a>.</p>

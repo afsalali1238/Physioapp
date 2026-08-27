@@ -1,0 +1,340 @@
+---
+/**
+ * ShareModal.astro — Accessible dialog for QR code and link sharing.
+ * Module H1: Clinic handoff and patient sharing.
+ */
+---
+
+<dialog id="shareDialog" class="share-dialog" aria-labelledby="shareDialogTitle" aria-modal="true">
+  <div class="dialog-content">
+    <header class="dialog-header">
+      <h2 id="shareDialogTitle" class="dialog-title">Share Exercise</h2>
+      <button type="button" class="btn-close" id="shareCloseBtn" aria-label="Close share dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </header>
+
+    <div class="dialog-body">
+      <p id="shareItemName" class="share-item-name"></p>
+
+      <div class="qr-container">
+        <canvas id="shareQrCanvas" class="qr-canvas" width="200" height="200" aria-label="QR Code"></canvas>
+        <p class="qr-note">Scan with a smartphone camera to open on mobile.</p>
+      </div>
+
+      <div class="url-box">
+        <label for="shareUrlInput" class="url-label">Direct Link</label>
+        <div class="url-input-wrap">
+          <input type="text" id="shareUrlInput" class="url-input" readonly />
+          <button type="button" class="btn-copy" id="shareCopyBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-copy" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span id="shareCopyText">Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="share-actions">
+        <button type="button" class="btn-print" id="sharePrintBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          <span>Print Handout</span>
+        </button>
+      </div>
+
+      <p class="share-privacy-note">
+        This link points to general physiotherapy handbook instructions. No patient records or health data are stored.
+      </p>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .share-dialog {
+    border: none;
+    border-radius: var(--r, 14px);
+    background: var(--surface);
+    color: var(--ink);
+    padding: 0;
+    max-width: 440px;
+    width: calc(100% - 32px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.24);
+  }
+
+  .share-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+  }
+
+  .dialog-content {
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+  }
+
+  .dialog-title {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: calc(20px * var(--scale));
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .btn-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-2);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .btn-close:hover {
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  .btn-close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .share-item-name {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(17px * var(--scale));
+    color: var(--ink);
+    margin: 0 0 8px;
+  }
+
+  .qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .qr-canvas {
+    max-width: 180px;
+    max-height: 180px;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 8px;
+  }
+
+  .qr-note {
+    font-size: calc(12.5px * var(--scale));
+    color: var(--ink-2);
+    margin: 10px 0 0;
+  }
+
+  .url-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .url-label {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(12px * var(--scale));
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+  }
+
+  .url-input-wrap {
+    display: flex;
+    gap: 8px;
+  }
+
+  .url-input {
+    flex: 1;
+    font-family: var(--f-mono);
+    font-size: calc(13px * var(--scale));
+    padding: 8px 12px;
+    background: var(--ground);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--ink);
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+
+  .btn-copy, .btn-print {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: calc(14px * var(--scale));
+    border-radius: 8px;
+    padding: 0 16px;
+    min-height: 44px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .btn-copy {
+    background: var(--brand);
+    color: var(--brand-ink, #ffffff);
+    border: none;
+  }
+
+  .btn-copy:hover {
+    filter: brightness(1.1);
+  }
+
+  .btn-copy svg, .btn-print svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .share-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-print {
+    flex: 1;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+
+  .btn-print:hover {
+    background: var(--surface-2);
+  }
+
+  .share-privacy-note {
+    font-size: calc(11.5px * var(--scale));
+    color: var(--ink-3);
+    margin: 0;
+    line-height: 1.4;
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+  }
+</style>
+
+<script>
+  (() => {
+    const dialog = document.getElementById('shareDialog') as HTMLDialogElement | null;
+    const closeBtn = document.getElementById('shareCloseBtn');
+    const nameEl = document.getElementById('shareItemName');
+    const canvas = document.getElementById('shareQrCanvas') as HTMLCanvasElement | null;
+    const urlInput = document.getElementById('shareUrlInput') as HTMLInputElement | null;
+    const copyBtn = document.getElementById('shareCopyBtn');
+    const copyText = document.getElementById('shareCopyText');
+    const printBtn = document.getElementById('sharePrintBtn');
+
+    if (!dialog) return;
+
+    let lastFocusedElement: HTMLElement | null = null;
+
+    closeBtn?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+
+    dialog.addEventListener('close', () => {
+      if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+        lastFocusedElement.focus();
+      }
+    });
+
+    copyBtn?.addEventListener('click', async () => {
+      if (!urlInput) return;
+      try {
+        let copied = false;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          try {
+            await navigator.clipboard.writeText(urlInput.value);
+            copied = true;
+          } catch {
+            // fallback
+          }
+        }
+        if (!copied) {
+          urlInput.select();
+          document.execCommand('copy');
+        }
+        if (copyText) {
+          const original = copyText.textContent;
+          copyText.textContent = 'Copied!';
+          setTimeout(() => {
+            copyText.textContent = original;
+          }, 2000);
+        }
+      } catch (err) {
+        urlInput.select();
+      }
+    });
+
+    printBtn?.addEventListener('click', () => {
+      dialog.close();
+      window.print();
+    });
+
+    // Custom event interface to open modal from any card or button
+    window.addEventListener('open-share-modal', (async (e: CustomEvent<{ name: string; url: string }>) => {
+      const { name, url } = e.detail || {};
+      if (!url) return;
+
+      if (document.activeElement && document.activeElement !== document.body) {
+        lastFocusedElement = document.activeElement as HTMLElement;
+      }
+
+      if (nameEl) nameEl.textContent = name || 'Physiotherapy Exercise';
+      if (urlInput) urlInput.value = url;
+      if (copyText) copyText.textContent = 'Copy';
+
+      if (canvas) {
+        try {
+          // Dynamic import of qrcode module to avoid bundling into global patient-page JS
+          const QRCodeModule = await import('qrcode');
+          const QRCode = QRCodeModule.default || QRCodeModule;
+          await QRCode.toCanvas(canvas, url, {
+            width: 180,
+            margin: 1,
+            color: {
+              dark: '#12433A',
+              light: '#FFFFFF',
+            },
+          });
+        } catch (err) {
+          console.error('QR rendering failed:', err);
+        }
+      }
+
+      dialog.showModal();
+    }) as unknown as EventListener);
+  })();
+</script>

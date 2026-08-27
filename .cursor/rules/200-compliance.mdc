@@ -1,0 +1,41 @@
+---
+description: UAE regulatory compliance — the rules that must never be relaxed to get a build green
+globs: **/*.astro,**/*.ts,**/*.tsx,**/*.md
+alwaysApply: false
+---
+
+# Never relax the compliance check
+
+`patient-library/src/lib/compliance.ts` is the one real implementation: **52 word-boundary rules**
+in four groups — 8 superlatives, 4 outcome claims, 5 booking CTAs, 36 condition names. It encodes
+the DHA advertising content standards, the MOHAP booking-CTA rule, and the no-condition-names rule.
+
+**A build that goes green because a rule was loosened has removed the product's core legal
+constraint, silently and invisibly. Fix the content, never the check.**
+
+Import that module. Never re-implement it and never write a second blocklist — two files already
+carry their own weaker `includes()` lists and all 36 condition names pass both, which is exactly
+the failure mode the module's own header warns about.
+
+## What patient-facing copy must not contain
+
+- **No superlatives or outcome claims** — "best", "safest", "guaranteed", "cure", "eliminates".
+- **No booking calls to action** — "book now", "schedule an appointment". These reclassify the site
+  as medical advertisement under MOHAP.
+- **No condition or diagnosis names** — sciatica, arthritis, frozen shoulder, herniated disc,
+  tennis elbow, plantar fasciitis, and 30 more. Navigation is **by body area, never by condition**
+  (decision D-001), and that applies to comments, identifiers, filenames and commit messages too.
+- Alt text is checked as well: it is read aloud to patients, so it is patient-facing copy.
+
+## Other locked product decisions
+
+- **No analytics, accounts, tracking or backend** (D-007). Two `localStorage` keys are permitted —
+  last chosen area and text size — and nothing else. The Vercel `webAnalytics` flag is not coming
+  back; do not restore `astro.config.mjs` from git history, which still contains it.
+- **17px base font. Areas sort head to toe, never alphabetically** (D-014).
+- **The site describes body areas, never the patient.** It does not name a condition, suggest a
+  cause, or estimate severity. Open decision D8 is whether a regulator reads this as education or
+  as advertisement, and the body map is the most exposed surface on the site.
+
+Decisions live in `anatomy-explorer/memory.md` (A-001..A-014) and `patient-library/memory.md`
+(D-001..D-028). Append a new entry rather than silently reversing an old one.

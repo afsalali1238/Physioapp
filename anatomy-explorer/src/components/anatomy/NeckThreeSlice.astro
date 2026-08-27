@@ -1,0 +1,295 @@
+---
+import { getBodyRegions } from '../../data/anatomy/body-regions';
+import { getAssetForRegion, getDraftPreviewAsset } from '../../lib/anatomy/asset-registry';
+import { BODY_REGION_VISUALS, CAMERA_PRESETS } from '../../lib/anatomy/model-registry';
+
+interface Props { previewMode?: boolean; }
+
+const { previewMode = false } = Astro.props;
+const regions = (await getBodyRegions()).filter((r) => BODY_REGION_VISUALS.some((v) => v.regionId === r.id));
+const asset = previewMode
+  ? getDraftPreviewAsset('all', 'locator')
+  : getAssetForRegion('all', 'locator');
+---
+
+<section
+  class="anatomy-slice"
+  data-anatomy-slice
+  data-regions={JSON.stringify(regions.map(({ id, areaId, name }) => ({ id, areaId, name })))}
+  data-asset-url={asset?.url ?? ''}
+  data-preview-mode={previewMode ? 'true' : 'false'}
+  aria-labelledby="anatomy-title"
+>
+  <div class="slice-head">
+    <div><p class="eyebrow">3D body guide</p><h2 id="anatomy-title">Choose a body area</h2></div>
+    <span class="review-note">Anatomical accuracy awaiting clinician approval</span>
+  </div>
+  <div class="stage-wrap">
+    <div class="stage" data-stage>
+      <div class="loading" data-loading role="status">Loading the body view…</div>
+      <canvas data-canvas aria-label="Interactive full-body anatomy view"></canvas>
+      <div class="error" data-error hidden role="alert"></div>
+    </div>
+    <div class="controls" aria-label="Anatomy controls">
+      <div class="orientation" role="group" aria-label="Body orientation">
+        <button type="button" data-orientation="front" aria-pressed="true">Front</button>
+        <button type="button" data-orientation="back" aria-pressed="false">Back</button>
+        <button type="button" data-reset>Reset</button>
+      </div>
+      <p class="selected" data-selected aria-live="polite">Select a highlighted region</p>
+      <a class="continue-link" data-continue hidden>Continue</a>
+      <button type="button" class="fallback-button" data-fallback>Use simple view</button>
+    </div>
+  </div>
+  <div class="semantic-fallback" data-semantic>
+    <h3>Choose a body area</h3>
+    <p>The same region is available without 3D.</p>
+    <ul>{regions.map((r) => <li><a href={`/area/${r.areaId}/`} data-region-link={r.id}>{r.name}</a></li>)}</ul>
+  </div>
+</section>
+
+<script>
+  import { checkCapabilities } from '../../lib/anatomy/capabilities';
+  import { BODY_REGION_VISUALS, CAMERA_PRESETS } from '../../lib/anatomy/model-registry';
+  const root = document.querySelector<HTMLElement>('[data-anatomy-slice]');
+  if (root) {
+    const canvas = root.querySelector<HTMLCanvasElement>('[data-canvas]')!;
+    const loading = root.querySelector<HTMLElement>('[data-loading]')!;
+    const error = root.querySelector<HTMLElement>('[data-error]')!;
+    const selected = root.querySelector<HTMLElement>('[data-selected]')!;
+    const continueLink = root.querySelector<HTMLAnchorElement>('[data-continue]')!;
+    const resetButton = root.querySelector<HTMLButtonElement>('[data-reset]')!;
+    const fallback = root.querySelector<HTMLButtonElement>('[data-fallback]')!;
+    const semantic = root.querySelector<HTMLElement>('[data-semantic]')!;
+    const orientationButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-orientation]')];
+    const caps = checkCapabilities();
+    const assetUrl = root.dataset.assetUrl ?? '';
+    const previewMode = root.dataset.previewMode === 'true';
+    const qa = previewMode ? new URLSearchParams(location.search).get('qa') : null;
+    const regions = JSON.parse(root.dataset.regions ?? '[]') as { id: string; areaId: string; name: string }[];
+    let cleanup = () => {};
+
+    const showFallback = (message = 'Use the accessible body-area controls below.') => {
+      cleanup();
+      loading.hidden = true;
+      error.textContent = message;
+      error.hidden = false;
+      canvas.hidden = true;
+      semantic.hidden = false;
+    };
+    fallback.addEventListener('click', () => showFallback('Simple view selected.'));
+
+    const initialize = async () => {
+      if (!assetUrl) return showFallback('No approved 3D asset is available.');
+      if (qa === 'webgl-failure' || !caps.webgl) return showFallback('WebGL is unavailable on this device.');
+      if (caps.lowMemory) return showFallback('This device is using the simpler body-area view.');
+      if (qa === 'loading') return;
+
+      try {
+        const THREE = await import('three');
+        const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color('#f4f1eb');
+        const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
+        camera.position.set(0, 1.2, 5.5);
+        camera.lookAt(0, 0.45, 0);
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        const group = new THREE.Group();
+        scene.add(group);
+        scene.add(new THREE.HemisphereLight('#fffaf2', '#786b60', 2));
+        const loader = new GLTFLoader();
+        const gltf = await loader.loadAsync(qa === 'asset-failure' ? '/anatomy/models/missing.glb' : assetUrl);
+        group.add(gltf.scene);
+
+        let frame = 0;
+        let disposed = false;
+        let currentAngle = 0;
+        let pointerStartX: number | null = null;
+        let dragged = false;
+        let activeRegionName = '';
+        const selectable = new Map<string, any>();
+        const originalColors = new Map<any, number>();
+        for (const visual of BODY_REGION_VISUALS) {
+          for (const meshName of visual.meshNames) {
+            const object: any = gltf.scene.getObjectByName(meshName);
+            if (!object?.isMesh) continue;
+            object.material = object.material.clone();
+            selectable.set(meshName, object);
+            if (object.material?.color) originalColors.set(object, object.material.color.getHex());
+          }
+        }
+        const render = () => { if (!disposed) renderer.render(scene, camera); };
+        const resize = () => {
+          const rect = canvas.getBoundingClientRect();
+          if (rect.width <= 0 || rect.height <= 0) return false;
+          renderer.setSize(rect.width, rect.height, false);
+          camera.aspect = rect.width / rect.height;
+          camera.updateProjectionMatrix();
+          render();
+          return true;
+        };
+        const setPressed = (back: boolean) => orientationButtons.forEach((button) => {
+          button.setAttribute('aria-pressed', String((button.dataset.orientation === 'back') === back));
+        });
+        const orient = (back: boolean) => {
+          if (frame) cancelAnimationFrame(frame);
+          const target = back ? Math.PI : 0;
+          selected.textContent = `${back ? 'Back' : 'Front'} view${activeRegionName ? ` · ${activeRegionName} selected` : ''}`;
+          setPressed(back);
+          if (caps.reducedMotion) {
+            currentAngle = target;
+            group.rotation.y = target;
+            render();
+            return;
+          }
+          const start = performance.now();
+          const from = currentAngle;
+          const duration = 220;
+          const animate = (now: number) => {
+            const progress = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            currentAngle = from + (target - from) * eased;
+            group.rotation.y = currentAngle;
+            render();
+            if (progress < 1) frame = requestAnimationFrame(animate);
+            else frame = 0;
+          };
+          frame = requestAnimationFrame(animate);
+        };
+        const setCamera = (name: keyof typeof CAMERA_PRESETS) => {
+          const preset = CAMERA_PRESETS[name];
+          camera.position.set(...preset.position);
+          camera.lookAt(...preset.target);
+          render();
+        };
+        const selectRegion = (regionId: string) => {
+          const region = regions.find((item) => item.id === regionId);
+          const visual = BODY_REGION_VISUALS.find((item) => item.regionId === regionId);
+          if (!region || !visual) return;
+          for (const [meshName, object] of selectable) {
+            const active = visual.meshNames.includes(meshName);
+            object.material.color.setHex(active ? 0xb84f35 : (originalColors.get(object) ?? 0xe07a5f));
+            object.material.emissive?.setHex(active ? 0x351007 : 0x000000);
+          }
+          activeRegionName = region.name;
+          selected.textContent = `${region.name} selected`;
+          continueLink.href = `/area/${region.areaId}/`;
+          continueLink.textContent = `Continue to ${region.name.toLowerCase()} content`;
+          continueLink.hidden = false;
+          for (const link of root.querySelectorAll<HTMLAnchorElement>('[data-region-link]')) {
+            if (link.dataset.regionLink === regionId) link.setAttribute('aria-current', 'true');
+            else link.removeAttribute('aria-current');
+          }
+          setCamera(visual.cameraPreset);
+        };
+        const reset = () => {
+          if (frame) cancelAnimationFrame(frame);
+          currentAngle = 0;
+          activeRegionName = '';
+          group.rotation.y = 0;
+          setPressed(false);
+          for (const [object, color] of originalColors) {
+            object.material.color.setHex(color);
+            object.material.emissive?.setHex(0x000000);
+          }
+          selected.textContent = 'Select a highlighted region';
+          continueLink.hidden = true;
+          for (const link of root.querySelectorAll<HTMLAnchorElement>('[data-region-link]')) link.removeAttribute('aria-current');
+          setCamera('full');
+        };
+        const onResize = () => resize();
+        const resizeObserver = new ResizeObserver(() => resize());
+        addEventListener('resize', onResize);
+        resizeObserver.observe(canvas);
+        const orientationHandlers = orientationButtons.map((button) => {
+          const handler = () => orient(button.dataset.orientation === 'back');
+          button.addEventListener('click', handler);
+          return { button, handler };
+        });
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+        const onPointerDown = (event: PointerEvent) => { pointerStartX = event.clientX; dragged = false; canvas.setPointerCapture(event.pointerId); };
+        const onPointerMove = (event: PointerEvent) => {
+          if (pointerStartX === null) return;
+          const delta = event.clientX - pointerStartX;
+          if (Math.abs(delta) < 6) return;
+          dragged = true;
+          currentAngle = Math.max(-Math.PI, Math.min(Math.PI, currentAngle + delta * 0.008));
+          group.rotation.y = currentAngle;
+          pointerStartX = event.clientX;
+          render();
+        };
+        const onPointerUp = (event: PointerEvent) => {
+          if (pointerStartX === null) return;
+          pointerStartX = null;
+          if (dragged) return;
+          const rect = canvas.getBoundingClientRect();
+          pointer.set(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1);
+          raycaster.setFromCamera(pointer, camera);
+          const hit: any = raycaster.intersectObjects([...selectable.values()], false)[0]?.object;
+          const visual = BODY_REGION_VISUALS.find((item) => item.hitMeshNames.includes(hit?.name));
+          if (visual) selectRegion(visual.regionId);
+        };
+        canvas.addEventListener('pointerdown', onPointerDown);
+        canvas.addEventListener('pointermove', onPointerMove);
+        canvas.addEventListener('pointerup', onPointerUp);
+        const onReset = () => reset();
+        resetButton.addEventListener('click', onReset);
+        const semanticHandlers = [...root.querySelectorAll<HTMLAnchorElement>('[data-region-link]')].map((link) => {
+          const handler = () => selectRegion(link.dataset.regionLink ?? '');
+          link.addEventListener('focus', handler);
+          return { link, handler };
+        });
+
+        cleanup = () => {
+          if (disposed) return;
+          disposed = true;
+          if (frame) cancelAnimationFrame(frame);
+          removeEventListener('resize', onResize);
+          resizeObserver.disconnect();
+          for (const { button, handler } of orientationHandlers) button.removeEventListener('click', handler);
+          canvas.removeEventListener('pointerdown', onPointerDown);
+          canvas.removeEventListener('pointermove', onPointerMove);
+          canvas.removeEventListener('pointerup', onPointerUp);
+          resetButton.removeEventListener('click', onReset);
+          for (const { link, handler } of semanticHandlers) link.removeEventListener('focus', handler);
+          gltf.scene.traverse((object: any) => {
+            if (!object.isMesh) return;
+            object.geometry?.dispose();
+            const materials = Array.isArray(object.material) ? object.material : [object.material];
+            for (const material of materials) {
+              if (!material) continue;
+              for (const value of Object.values(material)) if ((value as any)?.isTexture) (value as any).dispose();
+              material.dispose?.();
+            }
+          });
+          renderer.dispose();
+          renderer.forceContextLoss();
+        };
+        addEventListener('pagehide', cleanup, { once: true });
+        loading.hidden = true;
+        error.hidden = true;
+        resize();
+        orient(qa === 'back');
+        if (qa === 'neck') selectRegion('neck');
+      } catch {
+        showFallback('The 3D asset could not be loaded.');
+      }
+    };
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        initialize();
+      }, { rootMargin: '160px' });
+      observer.observe(root);
+    } else initialize();
+  }
+</script>
+
+<style>
+.anatomy-slice{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:20px;margin:24px 0}.slice-head{display:flex;justify-content:space-between;gap:16px;align-items:start}.eyebrow{margin:0;color:var(--ink-3);font:600 11px var(--f-display);letter-spacing:.14em;text-transform:uppercase}.slice-head h2{margin:5px 0 0;font:700 25px var(--f-display)}.review-note{font-size:12px;color:var(--ink-3);max-width:25ch;text-align:right}.stage-wrap{display:grid;grid-template-columns:minmax(220px,1fr) 170px;gap:16px;margin-top:18px}.stage{min-height:340px;position:relative;border-radius:12px;background:#f4f1eb;overflow:hidden}.stage canvas{width:100%;height:340px;display:block;touch-action:none}.loading,.error{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--ink-2)}.controls{display:grid;align-content:start;gap:12px}.orientation{display:flex;flex-wrap:wrap;gap:4px}.orientation button,.fallback-button,.continue-link{min-height:44px;border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:8px 10px;cursor:pointer}.orientation button[aria-pressed=true]{background:var(--brand);color:var(--brand-ink)}.selected{font-size:14px}.continue-link{display:grid;place-items:center;text-align:center;text-decoration:none;background:var(--brand);color:var(--brand-ink);font-weight:700}.continue-link[hidden]{display:none}.fallback-button{font-weight:600}.semantic-fallback{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}.semantic-fallback[hidden]{display:none}.semantic-fallback a[aria-current=true]{font-weight:700;text-decoration-thickness:3px}@media(max-width:600px){.stage-wrap{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.selected{grid-column:1/-1}.slice-head{display:block}.review-note{text-align:left;margin-top:8px}}
+.loading[hidden],.error[hidden],canvas[hidden]{display:none}
+</style>

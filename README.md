@@ -1,43 +1,49 @@
-# Astro Starter Kit: Minimal
+# pshyapp
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Patient-facing physiotherapy education for a clinic in the UAE: an interactive body-area locator
+in front of a clinician-reviewed stretching and exercise library. Astro, deployed on Vercel,
+content synced from the physiotherapist's Google Sheet.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Two folders, and they have opposite rules.
 
-## 🚀 Project Structure
+| Folder | What it is | Status |
+|---|---|---|
+| `anatomy-explorer/` | **The product.** The unified app — locator plus library, one build. | **Build here.** All new work. |
+| `patient-library/` | The live exercise and stretching site the unified app is being built from. | **Live, and reference-only.** Read it, copy out of it, never edit it. |
 
-Inside of your Astro project, you'll see the following folders and files:
+## Where the work is
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+`anatomy-explorer/` is the merged product (decisions A-011, A-012, A-014). It is where every
+change goes.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+`patient-library/` is **deployed right now** — the physiotherapist is entering clinical content
+into it and patients have been sent the link. It is not deprecated and it is not being deleted. It
+stays as the working reference and the rollback target. Treat it as a library you happen to have
+source access to: read it, learn the contract, copy code into `anatomy-explorer/`, leave the
+original alone.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+`anatomy-explorer/PORT-CHECKLIST.md` lists everything still to bring across, in order, with the
+known defect to fix on each. Start there.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Working here
 
-## 🧞 Commands
+`cd` into the folder you are working on. **Never run a build or install from the repository root**
+— there is no `package.json` here.
 
-All commands are run from the root of the project, from a terminal:
+**Read `AGENTS.md` before touching either folder.** It is the canonical rules file; `CLAUDE.md` and
+`GEMINI.md` beside it are pointers to it, and each folder has its own `AGENTS.md` with local
+detail. Cursor rules are in `.cursor/rules/`. The short version:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- Content lives in the Google Sheet, not the repo — `src/data/*.json` is generated.
+- Never invent clinical content. Anything clinical ships as `draft` with no reviewer named.
+- Never relax the compliance check. Fix the content instead.
+- Navigation is by body area, never by condition. No analytics, accounts or backend.
+- Neither folder is committed yet, so **never run `git clean -fd` at this root.**
 
-## 👀 Want to learn more?
+## Known state, 2026-08-26
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Neither folder is tracked in git — the split was done with plain `mv` and never committed, so
+committing both trees is the first thing worth doing. `anatomy-explorer/` currently imports JSON
+directly out of `patient-library/`, which cannot deploy and needs replacing with a real port. CI
+still runs at the repository root, where there is no `package.json`, so it is red. `AGENTS.md` has
+the full picture and is kept current.

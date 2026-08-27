@@ -1,0 +1,15 @@
+---
+import Base from '../../../layouts/Base.astro';
+import NeckThreeSlice from '../../../components/anatomy/NeckThreeSlice.astro';
+---
+
+<Base title="PREVIEW | Neck anatomy" description="Internal draft anatomy review surface.">
+  <div class="preview-banner">PREVIEW MODE — DRAFT ASSET — DO NOT SHARE WITH PATIENTS</div>
+  <h1>Neck anatomy review</h1>
+  <NeckThreeSlice previewMode />
+</Base>
+
+<style>
+  .preview-banner { margin: 18px 0; padding: 12px; border: 2px solid #b45309; background: #fff7ed; color: #7c2d12; font-weight: 700; text-align: center; }
+  h1 { font-family: var(--f-display); font-size: calc(28px * var(--scale)); }
+</style>

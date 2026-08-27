@@ -1,0 +1,26 @@
+[
+  {
+    "id": "exercise-neck-1",
+    "area_id": "neck",
+    "section": "exercise",
+    "name_en": "Neck Primary",
+    "order": 1,
+    "status": "published"
+  },
+  {
+    "id": "exercise-neck-2",
+    "area_id": "neck",
+    "section": "exercise",
+    "name_en": "Neck Duplicate",
+    "order": 2,
+    "status": "published"
+  },
+  {
+    "id": "exercise-overcapacity",
+    "area_id": "overcapacity",
+    "section": "exercise",
+    "name_en": "Overcapacity Area",
+    "order": 3,
+    "status": "published"
+  }
+]

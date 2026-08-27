@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.output/
+.vercel/
+.shots/
+*.log
+.DS_Store
+package-lock.json
+reference/body-geometry/*.png
+reference/body-geometry/out.html
+../patient-library/node_modules/
+../patient-library/dist/
+../patient-library/src/assets/images/**

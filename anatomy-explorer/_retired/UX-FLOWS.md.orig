@@ -1,0 +1,87 @@
+# Unified UX Flows
+
+## Home
+
+Primary card: **Find a body area** — “Tap a general area to explore education and exercises.” Secondary cards: **Stretching** and **Exercise Protocols**. Persistent disclaimer; no booking CTA.
+
+The header also provides Handbook search. Search results are grouped into Body areas, Stretching,
+and Exercises. Search uses approved names and synonyms only and does not accept free-text symptom
+descriptions as a diagnostic query.
+
+## Clinician-shared link and QR flow
+
+1. Physiotherapist selects a published area or exercise in clinic mode.
+2. They choose Copy link, Show QR, Print, or Open patient view.
+3. The patient opens the canonical URL directly at the intended content.
+4. The page names the area and section, highlights the exact exercise, and retains Back to area and Handbook home actions.
+5. The page displays general educational framing and its own safety line; it does not claim an assignment is stored.
+
+QR codes must have a visible text URL and short content label. A scan must never route through a
+marketing page, account creation, or the 3D locator before showing the intended exercise.
+
+## Visual locator
+
+### Locate
+
+Show the full-body 3D human when capability and performance checks pass. Provide front/back controls, constrained drag rotation, reset, “Use simple view,” loading progress, and a semantic list of available published regions. The list is always present in the DOM. The simple illustrated map renders first and stays available while 3D loads.
+
+### Confirm region
+
+The selected broad region receives outline/tint and a persistent label; the camera moves to its stored focus. Use everyday language: “You selected the right shoulder.” Offer Continue to exact location, Choose another area, and I’m not sure. This teaches orientation, not cause.
+
+### Precision decision
+
+Load the approved regional model or detailed 2D view on demand. Show zones only when reviewed zone-specific content, safety guidance, or structure education exists. Selecting a zone highlights it without immediately committing. If exact zones add no meaningful reviewed difference, show one broad-region confirmation instead. “I’m not sure” retains the broad selection.
+
+### Confirm exact place
+
+Ask: **“Is this the exact place you feel discomfort?”** Show the selected side, region, and zone in text and visually. Actions: Yes, this is the place; Not quite; and I’m not sure. Confirmation never claims that the selected point identifies a structure or condition.
+
+Clarification: “This helps you choose what to read. It does not identify the cause.”
+
+### Safety gate
+
+Show approved red-flag triggers. A positive trigger enters a stop screen with no route to exercise content. Browser back cannot silently bypass the gate.
+
+### Area result
+
+Show “About this body area,” location and approved structures, normal role, common ways discomfort may be described, cautious common scenarios, aggravating activities, when to seek help, and links to separate Stretching and Exercise Protocols sections. Add: “Your selected location is a general guide and does not determine the cause or the right exercise for you.” Never say “your diagnosis,” “the cause,” or present a scenario as the explanation for this user.
+
+## Direct library flow
+
+Home → section → area → item cards. Areas are published-only, head-to-toe ordered, and absent when they contain no published items. Every item has a stable anchor.
+
+Each area behaves as a handbook chapter. Use a segmented control or anchored chapter navigation:
+About this area, Stretching, and Exercises. Preserve the selected 3D location as optional context,
+but never filter or rank exercises from that selection unless a reviewed mapping explicitly exists.
+
+## Exercise card
+
+1. Responsive demonstration image with body-position alt text.
+2. Number and exercise type.
+3. Name.
+4. Dosage cells containing only supplied values.
+5. Start, Movement, Keep in mind/Direction, Return labels as applicable.
+6. “Works on …” target-muscle line.
+7. Always-present warning-toned safety line.
+8. Local-only “Mark as done” and explanation.
+
+### Exercise media interaction
+
+Show a stable approved poster first. If approved motion exists, expose Play/Pause and Replay in the
+same fixed 4:3 area. Do not autoplay. Motion remains muted, stops off-screen, and only one card plays
+at a time. Reduced-motion users receive the still by default. Instructions and dosage remain fully
+usable if motion fails or is disabled.
+
+Draft preview has a persistent “Unreviewed draft” banner and exposes review state, sources, and
+unresolved questions. Draft styling must not resemble production approval.
+
+## Clinician mode
+
+An unlisted `/clinic` route provides a tablet-friendly search and picker for published areas and
+exercises. Actions: Copy link, Show QR, Print handout, and Open patient view. It uses the published
+snapshot and cannot edit content, record patients, or imply that a recommendation has been stored.
+
+## Fallbacks and motion
+
+No WebGL uses the same SVG map and data. Slow assets show the simple map immediately. Failed regional loading keeps the broad selection and offers the semantic zone list. Unknown or internal discomfort receives cautious guidance, never a diagnosis. Selection transitions 150–250ms; zoom 250–450ms and cancellable; no auto-rotation; respect reduced motion.

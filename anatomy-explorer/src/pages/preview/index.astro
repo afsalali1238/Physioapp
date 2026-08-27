@@ -1,0 +1,148 @@
+---
+export const prerender = false;
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { getPreviewData } from '../../lib/sheets';
+import { getLocale, useTranslations } from '../../lib/locale';
+import type { Area } from '../../lib/types';
+
+const lang = getLocale(Astro.url);
+const t = useTranslations(lang);
+
+const sheetId = process.env.SHEET_ID;
+
+let exercises: any[] = [];
+let stretching: any[] = [];
+let errorMsg = '';
+let sourceLabel = 'validated local snapshot';
+
+if (sheetId) {
+  try {
+    const { areas } = await getPreviewData(sheetId);
+    exercises = areas.filter(a => a.section === 'exercise');
+    stretching = areas.filter(a => a.section === 'stretching');
+    sourceLabel = 'clinician Google Sheet';
+  } catch (err: any) {
+    errorMsg = err.message || 'Failed to fetch preview data from Google Sheets.';
+  }
+} else {
+  const areas = (await getCollection('areas'))
+    .map((entry) => entry.data)
+    .filter((area) => area.status !== 'retired')
+    .sort((a, b) => a.order - b.order);
+  exercises = areas.filter((area) => area.section === 'exercise');
+  stretching = areas.filter((area) => area.section === 'stretching');
+}
+---
+
+<Base title="PREVIEW | Physiotherapy Library" description="Preview of draft and published content.">
+  <div class="preview-banner">PREVIEW MODE — DO NOT SHARE WITH PATIENTS</div>
+  
+  <div class="hero">
+    <h1>Preview mode</h1>
+    <p>Viewing all published and draft content from the {sourceLabel}.</p>
+  </div>
+
+  {!sheetId && (
+    <div class="source-notice">
+      Local review is active. Configure <code>SHEET_ID</code> only when you need to compare against the live sheet.
+    </div>
+  )}
+
+  {errorMsg ? (
+    <div class="setup-notice">
+      <h2>Google Sheet Fetch Error</h2>
+      <p>{errorMsg}</p>
+    </div>
+  ) : (
+    <>
+      <section class="mb-4">
+        <h2 class="section-title">Stretching</h2>
+        <div class="grid">
+          {stretching.map((area: Area) => (
+            <a href={`/preview/stretching/${area.area_id}`} class="choice">
+              <span>{area.name_en} {area.status === 'draft' ? '(Draft)' : ''}</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="rtl-flip"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="mb-4">
+        <h2 class="section-title">Exercises</h2>
+        <div class="grid">
+          {exercises.map((area: Area) => (
+            <a href={`/preview/exercise/${area.area_id}`} class="choice">
+              <span>{area.name_en} {area.status === 'draft' ? '(Draft)' : ''}</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="rtl-flip"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+          ))}
+        </div>
+      </section>
+    </>
+  )}
+</Base>
+
+<style>
+  .preview-banner {
+    background: #DC2626;
+    color: white;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px;
+    letter-spacing: 0.05em;
+  }
+  .mb-4 { margin-bottom: 24px; }
+  .section-title { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
+  .grid { display: flex; flex-direction: column; gap: 12px; }
+  .choice {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--surface); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 20px; font-weight: 600; font-size: 18px;
+    text-decoration: none;
+  }
+  .choice:hover { border-color: var(--brand); color: var(--brand); }
+
+  .setup-notice {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+  }
+  .source-notice {
+    margin: 16px 0 24px;
+    padding: 12px 14px;
+    border-inline-start: 4px solid var(--brand);
+    background: var(--surface-2);
+    color: var(--ink-2);
+    font-size: calc(15px * var(--scale));
+  }
+  .source-notice code {
+    font-family: var(--f-mono);
+  }
+  .setup-notice h2 {
+    font-family: var(--f-display);
+    font-size: calc(20px * var(--scale));
+    margin: 0 0 10px;
+    color: var(--ink);
+  }
+  .setup-notice p {
+    font-size: calc(15.5px * var(--scale));
+    color: var(--ink-2);
+    margin: 0 0 10px;
+    line-height: 1.5;
+  }
+  .setup-notice code {
+    font-family: var(--f-mono);
+    background: var(--surface-2);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .setup-notice a {
+    color: var(--brand);
+    font-weight: 600;
+  }
+</style>

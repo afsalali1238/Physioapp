@@ -1,0 +1,106 @@
+---
+/**
+ * Section index — the list of body areas inside Stretching or Exercise.
+ *
+ * Ported from patient-library with three changes:
+ *  1. Areas come from `lib/library.ts`, which applies the "published AND has
+ *     published items" rule in one place, so an empty area can never render as
+ *     a live card that leads to an empty page.
+ *  2. Every path is built by `lib/section.ts`. No `/exercise` or `/exercises`
+ *     string literal survives in this file — that is the naming trap.
+ *  3. Unpublished and empty areas stay out of the patient-facing index.
+ */
+import Base from '../layouts/Base.astro';
+import BackLink from '../components/BackLink.astro';
+import { getPublishedAreas, getPublishedItemCount } from '../lib/library';
+import { SECTIONS, SECTION_COPY, areaPath, isSection, type Section } from '../lib/section';
+
+export async function getStaticPaths() {
+  return SECTIONS.map((section) => ({ params: { section } }));
+}
+
+const { section: raw } = Astro.params;
+if (!isSection(raw)) throw new Error(`Unknown section: ${raw}`);
+const section: Section = raw;
+const copy = SECTION_COPY[section];
+
+const live = await getPublishedAreas(section);
+
+const cards = await Promise.all(
+  live.map(async (area) => ({
+    ...area,
+    count: await getPublishedItemCount(section, area.area_id),
+  })),
+);
+---
+
+<Base title={`${copy.title} | Physiotherapy`} description={copy.lede}>
+  <BackLink href="/" label="Home" />
+
+  <div class="hero">
+    <h1>{copy.title}</h1>
+    <p>{copy.lede}</p>
+  </div>
+
+  <div class="areas">
+    {cards.map((area) => (
+      <a href={areaPath(section, area.area_id)} class="area">
+        <span class="area-name">{area.name_en}</span>
+        <span class="n">{area.count} {area.count === 1 ? copy.itemNoun : `${copy.itemNoun}s`}</span>
+      </a>
+    ))}
+  </div>
+
+  {cards.length === 0 && (
+    <p class="empty">
+      Nothing has been published in this section yet. Your physiotherapist adds
+      areas here as they are reviewed.
+    </p>
+  )}
+</Base>
+
+<style>
+.hero { padding: 8px 0 24px; }
+.hero h1 {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: calc(clamp(28px, 7.5vw, 40px) * var(--scale));
+  line-height: 1.08;
+  letter-spacing: -.02em;
+  margin: 0 0 10px;
+  text-wrap: balance;
+}
+.hero p { margin: 0; color: var(--ink-2); max-width: 56ch; font-size: calc(17px * var(--scale)); }
+
+.areas { display: grid; gap: 9px; grid-template-columns: 1fr; margin-top: 10px; }
+@media (min-width: 560px) { .areas { grid-template-columns: 1fr 1fr; } }
+
+.area {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 15px 17px; text-decoration: none; color: inherit; min-height: 62px;
+  font-size: calc(17.5px * var(--scale)); font-weight: 600;
+  transition: border-color .12s ease;
+}
+.area:hover { border-color: var(--line-2); }
+.area:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+.area .n {
+  font-family: var(--f-mono); font-size: calc(12px * var(--scale)); color: var(--ink-3);
+  font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.area.soon { background: transparent; border-style: dashed; color: var(--ink-3); font-weight: 500; }
+.area.soon:hover { border-color: var(--line); }
+.area.soon .n {
+  font-size: calc(11px * var(--scale)); letter-spacing: .08em; text-transform: uppercase;
+  font-family: var(--f-display);
+}
+
+.empty {
+  margin: 18px 0 0; padding: 16px 18px; border: 1px dashed var(--line);
+  border-radius: 12px; color: var(--ink-2); font-size: calc(15.5px * var(--scale));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .area { transition: none; }
+}
+</style>

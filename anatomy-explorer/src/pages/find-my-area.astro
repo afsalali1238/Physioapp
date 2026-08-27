@@ -1,0 +1,19 @@
+---
+/**
+ * The locator route. A-014 makes this the canonical entrance;
+ * `/find-my-pain/` redirects here.
+ */
+import Base from '../layouts/Base.astro';
+import BackLink from '../components/BackLink.astro';
+import AnatomyLocator from '../components/AnatomyLocator.astro';
+import NeckThreeSlice from '../components/anatomy/NeckThreeSlice.astro';
+---
+
+<Base
+  title="Find a body area | Physiotherapy"
+  description="Choose the body area your physiotherapist pointed to, from a body map or a plain list."
+>
+  <BackLink href="/" label="Home" />
+  <AnatomyLocator />
+  <NeckThreeSlice />
+</Base>

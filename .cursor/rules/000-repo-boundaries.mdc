@@ -1,0 +1,36 @@
+---
+description: Repository boundaries — which folder to build in, and which is live and read-only
+alwaysApply: true
+---
+
+# Boundaries
+
+Two folders, opposite rules. The canonical rules file is `AGENTS.md` at the repository root — read
+it before non-trivial work. Each folder has its own `AGENTS.md` with local detail; the root file
+wins on any disagreement.
+
+- **`anatomy-explorer/` is the build target.** All new work goes here. Its `AGENTS.md` lists the
+  current defects; its `PORT-CHECKLIST.md` lists what still needs bringing across and in what order.
+- **`patient-library/` is live and reference-only.** It is deployed, a physiotherapist is entering
+  clinical content into it, and patients have the link. **Read it and copy out of it. Never edit,
+  refactor, reformat or delete anything in it.** It is not deprecated — it is the rollback target.
+  If a task seems to require editing it, stop and ask.
+
+## Copy code in; never import across the boundary
+
+`anatomy-explorer/src/lib/library.ts` currently imports
+`../../../patient-library/src/data/areas.json`. Do not add more of these and do not build on it.
+It cannot deploy — Vercel with Root Directory `anatomy-explorer` never uploads files above that
+folder — and it bypasses the Zod schemas, `validate.ts` and the compliance gate.
+
+## Destructive git commands are unsafe here
+
+Neither folder is committed; `git ls-files` returns zero for both, so there is no reflog to recover
+from. **Never run `git clean -fd`, `git clean -fdx`, or `git checkout -- .` at the repository
+root.** `git reset --hard` is survivable; `git clean` is not.
+
+## Config changes are never a side effect
+
+Do not modify `astro.config.mjs`, `package.json`, lockfiles, `tsconfig.json` or `.github/` while
+doing something else. An agent deleted `astro.config.mjs` mid-task once and the Vercel adapter and
+sitemap were missing for days. If a task genuinely needs a config change, say so and stop.

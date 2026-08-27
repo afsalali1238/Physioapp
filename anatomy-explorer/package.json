@@ -1,0 +1,42 @@
+{
+  "name": "anatomy-explorer",
+  "private": true,
+  "type": "module",
+  "version": "0.2.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "prebuild": "npm run check:all",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check --minimumSeverity error",
+    "check:compliance": "tsx scripts/check-compliance.ts",
+    "check:anatomy": "tsx scripts/check-anatomy.ts",
+    "check:images": "tsx scripts/check-images.ts",
+    "check:all": "npm run check:compliance && npm run check:anatomy && npm run check:images",
+    "sync:content": "tsx scripts/sync-content.ts",
+    "qr": "tsx scripts/generate-qr.ts",
+    "astro": "astro",
+    "figures:render": "tsx scripts/render-poses.ts"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/vercel": "^11.0.7",
+    "astro": "^7.2.4",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/papaparse": "^5.5.2",
+    "@types/qrcode": "^1.5.6",
+    "dotenv": "^17.4.2",
+    "papaparse": "^5.6.0",
+    "playwright": "^1.62.1",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "qrcode": "^1.5.4",
+    "tsx": "^4.23.12",
+    "typescript": "^5.8.3"
+  }
+}

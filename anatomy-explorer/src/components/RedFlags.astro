@@ -1,0 +1,94 @@
+---
+/**
+ * The eight red flags, on the last screen before a patient does an exercise.
+ *
+ * ── Why this exists ────────────────────────────────────────────────────────
+ * A-007 puts the safety check "before any exercise handoff". It was built as
+ * the first screen of the locator — but walking the app as a patient shows the
+ * home page offers two routes that never touch the locator: "Stretching" and
+ * "Exercise Protocols" go section → area → items directly. On those routes the
+ * eight triggers were never shown at all.
+ *
+ * So the gate on the locator is not sufficient on its own. This panel puts the
+ * same eight triggers on the page that actually hands over the exercises,
+ * whichever route reached it.
+ *
+ * It is a panel, not a second blocking gate. A patient opens this page every
+ * day; a wall they must tap through daily is a wall they stop reading by the
+ * third day, and an ignored gate is worse than a read notice. The blocking gate
+ * stays on the locator, where it is a first-visit orientation step.
+ *
+ * The triggers are the same `SAFETY_RULES` data, so there is one list. They are
+ * still `status: 'draft'` — the wording needs the physiotherapist (A-007) — and
+ * `check:anatomy` reports that on every build.
+ *
+ * **Styled deliberately quiet.** The first version used the full `--warn-bg`
+ * alarm block. Stacked under the persistent disclaimer banner it made two solid
+ * yellow panels and pushed the first exercise a screen and a half down — and
+ * alarm styling on something a patient sees every single day is how a warning
+ * becomes wallpaper. It now reads as a bordered notice with a warning rule and
+ * heading: same words, same position, far less shouting.
+ */
+import { SAFETY_RULES } from '../data/anatomy/safety-rules';
+
+const publishedRules = SAFETY_RULES.filter((rule) => rule.status === 'published');
+---
+
+{publishedRules.length > 0 && <section class="flags" aria-labelledby="flags-title">
+  <h2 id="flags-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    Do not do these today if any of this is true
+  </h2>
+  <ul>
+    {publishedRules.map((rule) => <li>{rule.optionLabel}</li>)}
+  </ul>
+  <p>Contact the clinic instead, or emergency services if it is severe.</p>
+</section>}
+
+<style>
+  .flags {
+    margin: 18px 0 4px;
+    padding: 14px 16px 15px;
+    background: var(--surface);
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+    border-inline-start: 3px solid var(--warn);
+    border-radius: 10px;
+  }
+
+  .flags h2 {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin: 0 0 9px;
+    color: var(--warn);
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: calc(14.5px * var(--scale));
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .flags h2 svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+
+  .flags ul {
+    margin: 0;
+    padding-inline-start: 1.05rem;
+    display: grid;
+    gap: 3px;
+    font-size: calc(14px * var(--scale));
+    line-height: 1.38;
+  }
+  @media (min-width: 560px) {
+    .flags ul { grid-template-columns: 1fr 1fr; column-gap: 22px; }
+  }
+  .flags li::marker { color: var(--warn); }
+
+  .flags p {
+    margin: 10px 0 0;
+    color: var(--ink);
+    font-size: calc(14px * var(--scale));
+    font-weight: 600;
+  }
+</style>
