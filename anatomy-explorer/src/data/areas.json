@@ -5,7 +5,7 @@
     "section": "exercise",
     "name_en": "Ankle",
     "order": 6,
-    "status": "draft"
+    "status": "published"
   },
   {
     "id": "exercise-elbow",
@@ -13,7 +13,7 @@
     "section": "exercise",
     "name_en": "Elbow",
     "order": 8,
-    "status": "draft"
+    "status": "published"
   },
   {
     "id": "exercise-hip",
@@ -21,7 +21,7 @@
     "section": "exercise",
     "name_en": "Hip",
     "order": 5,
-    "status": "draft"
+    "status": "published"
   },
   {
     "id": "exercise-knee",
@@ -29,7 +29,7 @@
     "section": "exercise",
     "name_en": "Knee",
     "order": 4,
-    "status": "draft"
+    "status": "published"
   },
   {
     "id": "exercise-lower-back",
@@ -37,7 +37,7 @@
     "section": "exercise",
     "name_en": "Lower Back",
     "order": 3,
-    "status": "draft"
+    "status": "published"
   },
   {
     "id": "exercise-neck",
@@ -63,7 +63,7 @@
     "section": "exercise",
     "name_en": "Wrist",
     "order": 7,
-    "status": "draft"
+    "status": "published"
   },
   {
     "id": "stretching-ankle",
@@ -71,7 +71,7 @@
     "section": "stretching",
     "name_en": "Ankle",
     "order": 6,
-    "status": "draft"
+    "status": "published"
   },
   {
     "id": "stretching-elbow",
@@ -79,7 +79,7 @@
     "section": "stretching",
     "name_en": "Elbow",
     "order": 8,
-    "status": "draft"
+    "status": "published"
   },
   {
     "id": "stretching-hip",
@@ -87,7 +87,7 @@
     "section": "stretching",
     "name_en": "Hip",
     "order": 5,
-    "status": "draft"
+    "status": "published"
   },
   {
     "id": "stretching-knee",
@@ -95,7 +95,7 @@
     "section": "stretching",
     "name_en": "Knee",
     "order": 4,
-    "status": "draft"
+    "status": "published"
   },
   {
     "id": "stretching-lower-back",
@@ -103,7 +103,7 @@
     "section": "stretching",
     "name_en": "Lower Back",
     "order": 3,
-    "status": "draft"
+    "status": "published"
   },
   {
     "id": "stretching-neck",
@@ -129,6 +129,6 @@
     "section": "stretching",
     "name_en": "Wrist",
     "order": 7,
-    "status": "draft"
+    "status": "published"
   }
 ]
