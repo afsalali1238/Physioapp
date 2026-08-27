@@ -49,6 +49,26 @@ if (sheetId) {
     </div>
   )}
 
+  <section class="mb-4" aria-labelledby="visual-preview-title">
+    <h2 class="section-title" id="visual-preview-title">Visual prototypes</h2>
+    <div class="grid visual-grid">
+      <a href="/preview/anatomy/neck/" class="choice">
+        <span>
+          <strong>Full-body 3D locator</strong>
+          <small>Draft model, neck and shoulder selection, simple-view fallback</small>
+        </span>
+        <span class="prototype-chip">Prototype</span>
+      </a>
+      <a href="/preview/motion/ex-neck-02/" class="choice">
+        <span>
+          <strong>Exercise movement player</strong>
+          <small>Poster, play, pause, replay and reduced-motion behavior</small>
+        </span>
+        <span class="prototype-chip">Prototype</span>
+      </a>
+    </div>
+  </section>
+
   {errorMsg ? (
     <div class="setup-notice">
       <h2>Google Sheet Fetch Error</h2>
@@ -104,6 +124,20 @@ if (sheetId) {
     text-decoration: none;
   }
   .choice:hover { border-color: var(--brand); color: var(--brand); }
+  .choice > span:first-child { display: grid; gap: 4px; }
+  .choice strong { font: inherit; }
+  .choice small { color: var(--ink-2); font-size: calc(13px * var(--scale)); font-weight: 400; }
+  .prototype-chip {
+    flex: none;
+    border: 1px solid #b45309;
+    color: #7c2d12;
+    background: #fff7ed;
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-size: calc(11px * var(--scale));
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
 
   .setup-notice {
     background: var(--surface);

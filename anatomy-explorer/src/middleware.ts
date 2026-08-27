@@ -4,6 +4,17 @@ export const onRequest = defineMiddleware((context, next) => {
   const url = new URL(context.request.url);
   
   if (url.pathname.startsWith('/preview')) {
+    const expectedPassword = import.meta.env.PREVIEW_PASSWORD;
+    const isLocal = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
+
+    if (!expectedPassword && isLocal) {
+      return next();
+    }
+
+    if (!expectedPassword) {
+      return new Response('Preview unavailable: PREVIEW_PASSWORD is not configured.', { status: 503 });
+    }
+
     const authHeader = context.request.headers.get('authorization');
     
     if (!authHeader || !authHeader.startsWith('Basic ')) {
@@ -17,9 +28,6 @@ export const onRequest = defineMiddleware((context, next) => {
 
     const base64Credentials = authHeader.split(' ')[1];
     const [user, pwd] = Buffer.from(base64Credentials, 'base64').toString('utf-8').split(':');
-    
-    // The expected password can be configured via Vercel env variables, defaulting to 'draft'
-    const expectedPassword = import.meta.env.PREVIEW_PASSWORD || 'draft';
     
     if (user !== 'clinician' || pwd !== expectedPassword) {
       return new Response('Unauthorized', {
