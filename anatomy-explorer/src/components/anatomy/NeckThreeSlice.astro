@@ -2,11 +2,22 @@
 import { getBodyRegions } from '../../data/anatomy/body-regions';
 import { getAssetForRegion, getDraftPreviewAsset } from '../../lib/anatomy/asset-registry';
 import { BODY_REGION_VISUALS, CAMERA_PRESETS } from '../../lib/anatomy/model-registry';
+import { GEOMETRY_REGIONS } from '../../lib/anatomy/geometry/regions';
 
 interface Props { previewMode?: boolean; }
 
 const { previewMode = false } = Astro.props;
-const regions = (await getBodyRegions()).filter((r) => BODY_REGION_VISUALS.some((v) => v.regionId === r.id));
+const publishedRegions = await getBodyRegions();
+const regions = BODY_REGION_VISUALS.map((visual) => {
+  const published = publishedRegions.find((region) => region.id === visual.regionId);
+  const geometry = GEOMETRY_REGIONS.find((region) => region.id === visual.regionId)!;
+  return {
+    id: visual.regionId,
+    areaId: published?.areaId ?? geometry.areaId,
+    name: published?.name ?? geometry.label,
+    available: Boolean(published),
+  };
+});
 const asset = previewMode
   ? getDraftPreviewAsset('all', 'locator')
   : getAssetForRegion('all', 'locator');
@@ -15,7 +26,7 @@ const asset = previewMode
 <section
   class="anatomy-slice"
   data-anatomy-slice
-  data-regions={JSON.stringify(regions.map(({ id, areaId, name }) => ({ id, areaId, name })))}
+  data-regions={JSON.stringify(regions)}
   data-asset-url={asset?.url ?? ''}
   data-preview-mode={previewMode ? 'true' : 'false'}
   aria-labelledby="anatomy-title"
@@ -44,7 +55,10 @@ const asset = previewMode
   <div class="semantic-fallback" data-semantic>
     <h3>Choose a body area</h3>
     <p>The same region is available without 3D.</p>
-    <ul>{regions.map((r) => <li><a href={`/area/${r.areaId}/`} data-region-link={r.id}>{r.name}</a></li>)}</ul>
+    <ul>{regions.map((r) => <li>{r.available
+      ? <a href={`/area/${r.areaId}/`} data-region-link={r.id}>{r.name}</a>
+      : <button type="button" data-region-link={r.id}>{r.name} <span>Preview only</span></button>
+    }</li>)}</ul>
   </div>
 </section>
 
@@ -66,7 +80,7 @@ const asset = previewMode
     const assetUrl = root.dataset.assetUrl ?? '';
     const previewMode = root.dataset.previewMode === 'true';
     const qa = previewMode ? new URLSearchParams(location.search).get('qa') : null;
-    const regions = JSON.parse(root.dataset.regions ?? '[]') as { id: string; areaId: string; name: string }[];
+    const regions = JSON.parse(root.dataset.regions ?? '[]') as { id: string; areaId: string; name: string; available: boolean }[];
     let cleanup = () => {};
 
     const showFallback = (message = 'Use the accessible body-area controls below.') => {
@@ -108,7 +122,10 @@ const asset = previewMode
         let pointerStartX: number | null = null;
         let dragged = false;
         let activeRegionName = '';
+        let cameraFrame = 0;
+        const cameraTarget = new THREE.Vector3(0, 0.45, 0);
         const selectable = new Map<string, any>();
+        const hitTargets: any[] = [];
         const originalColors = new Map<any, number>();
         for (const visual of BODY_REGION_VISUALS) {
           for (const meshName of visual.meshNames) {
@@ -117,6 +134,17 @@ const asset = previewMode
             object.material = object.material.clone();
             selectable.set(meshName, object);
             if (object.material?.color) originalColors.set(object, object.material.color.getHex());
+            const hitTarget = new THREE.Mesh(
+              object.geometry.clone(),
+              new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }),
+            );
+            hitTarget.name = `hit-${meshName}`;
+            hitTarget.userData.regionId = visual.regionId;
+            hitTarget.position.copy(object.position);
+            hitTarget.quaternion.copy(object.quaternion);
+            hitTarget.scale.copy(object.scale).multiplyScalar(visual.regionId === 'neck' ? 1.65 : 1.45);
+            object.parent?.add(hitTarget);
+            hitTargets.push(hitTarget);
           }
         }
         const render = () => { if (!disposed) renderer.render(scene, camera); };
@@ -159,9 +187,30 @@ const asset = previewMode
         };
         const setCamera = (name: keyof typeof CAMERA_PRESETS) => {
           const preset = CAMERA_PRESETS[name];
-          camera.position.set(...preset.position);
-          camera.lookAt(...preset.target);
-          render();
+          if (cameraFrame) cancelAnimationFrame(cameraFrame);
+          const fromPosition = camera.position.clone();
+          const fromTarget = cameraTarget.clone();
+          const toPosition = new THREE.Vector3(...preset.position);
+          const toTarget = new THREE.Vector3(...preset.target);
+          if (caps.reducedMotion) {
+            camera.position.copy(toPosition);
+            cameraTarget.copy(toTarget);
+            camera.lookAt(toTarget);
+            render();
+            return;
+          }
+          const started = performance.now();
+          const animateCamera = (now: number) => {
+            const progress = Math.min(1, (now - started) / 260);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            camera.position.lerpVectors(fromPosition, toPosition, eased);
+            cameraTarget.lerpVectors(fromTarget, toTarget, eased);
+            camera.lookAt(cameraTarget);
+            render();
+            if (progress < 1) cameraFrame = requestAnimationFrame(animateCamera);
+            else cameraFrame = 0;
+          };
+          cameraFrame = requestAnimationFrame(animateCamera);
         };
         const selectRegion = (regionId: string) => {
           const region = regions.find((item) => item.id === regionId);
@@ -174,10 +223,15 @@ const asset = previewMode
           }
           activeRegionName = region.name;
           selected.textContent = `${region.name} selected`;
-          continueLink.href = `/area/${region.areaId}/`;
-          continueLink.textContent = `Continue to ${region.name.toLowerCase()} content`;
-          continueLink.hidden = false;
-          for (const link of root.querySelectorAll<HTMLAnchorElement>('[data-region-link]')) {
+          if (region.available) {
+            continueLink.href = `/area/${region.areaId}/`;
+            continueLink.textContent = `Continue to ${region.name.toLowerCase()} content`;
+            continueLink.hidden = false;
+          } else {
+            continueLink.hidden = true;
+            selected.textContent = `${region.name} selected · preview only`;
+          }
+          for (const link of root.querySelectorAll<HTMLElement>('[data-region-link]')) {
             if (link.dataset.regionLink === regionId) link.setAttribute('aria-current', 'true');
             else link.removeAttribute('aria-current');
           }
@@ -185,6 +239,7 @@ const asset = previewMode
         };
         const reset = () => {
           if (frame) cancelAnimationFrame(frame);
+          if (cameraFrame) cancelAnimationFrame(cameraFrame);
           currentAngle = 0;
           activeRegionName = '';
           group.rotation.y = 0;
@@ -227,16 +282,15 @@ const asset = previewMode
           const rect = canvas.getBoundingClientRect();
           pointer.set(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1);
           raycaster.setFromCamera(pointer, camera);
-          const hit: any = raycaster.intersectObjects([...selectable.values()], false)[0]?.object;
-          const visual = BODY_REGION_VISUALS.find((item) => item.hitMeshNames.includes(hit?.name));
-          if (visual) selectRegion(visual.regionId);
+          const hit: any = raycaster.intersectObjects(hitTargets, false)[0]?.object;
+          if (hit?.userData.regionId) selectRegion(hit.userData.regionId);
         };
         canvas.addEventListener('pointerdown', onPointerDown);
         canvas.addEventListener('pointermove', onPointerMove);
         canvas.addEventListener('pointerup', onPointerUp);
         const onReset = () => reset();
         resetButton.addEventListener('click', onReset);
-        const semanticHandlers = [...root.querySelectorAll<HTMLAnchorElement>('[data-region-link]')].map((link) => {
+        const semanticHandlers = [...root.querySelectorAll<HTMLElement>('[data-region-link]')].map((link) => {
           const handler = () => selectRegion(link.dataset.regionLink ?? '');
           link.addEventListener('focus', handler);
           return { link, handler };
@@ -272,8 +326,9 @@ const asset = previewMode
         error.hidden = true;
         resize();
         orient(qa === 'back');
-        if (qa === 'neck') selectRegion('neck');
-      } catch {
+        if (qa === 'neck' || qa === 'shoulder-l' || qa === 'shoulder-r') selectRegion(qa);
+      } catch (caught) {
+        if (previewMode) console.error('Anatomy preview initialization failed.', caught);
         showFallback('The 3D asset could not be loaded.');
       }
     };
@@ -290,6 +345,6 @@ const asset = previewMode
 </script>
 
 <style>
-.anatomy-slice{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:20px;margin:24px 0}.slice-head{display:flex;justify-content:space-between;gap:16px;align-items:start}.eyebrow{margin:0;color:var(--ink-3);font:600 11px var(--f-display);letter-spacing:.14em;text-transform:uppercase}.slice-head h2{margin:5px 0 0;font:700 25px var(--f-display)}.review-note{font-size:12px;color:var(--ink-3);max-width:25ch;text-align:right}.stage-wrap{display:grid;grid-template-columns:minmax(220px,1fr) 170px;gap:16px;margin-top:18px}.stage{min-height:340px;position:relative;border-radius:12px;background:#f4f1eb;overflow:hidden}.stage canvas{width:100%;height:340px;display:block;touch-action:none}.loading,.error{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--ink-2)}.controls{display:grid;align-content:start;gap:12px}.orientation{display:flex;flex-wrap:wrap;gap:4px}.orientation button,.fallback-button,.continue-link{min-height:44px;border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:8px 10px;cursor:pointer}.orientation button[aria-pressed=true]{background:var(--brand);color:var(--brand-ink)}.selected{font-size:14px}.continue-link{display:grid;place-items:center;text-align:center;text-decoration:none;background:var(--brand);color:var(--brand-ink);font-weight:700}.continue-link[hidden]{display:none}.fallback-button{font-weight:600}.semantic-fallback{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}.semantic-fallback[hidden]{display:none}.semantic-fallback a[aria-current=true]{font-weight:700;text-decoration-thickness:3px}@media(max-width:600px){.stage-wrap{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.selected{grid-column:1/-1}.slice-head{display:block}.review-note{text-align:left;margin-top:8px}}
+.anatomy-slice{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:20px;margin:24px 0}.slice-head{display:flex;justify-content:space-between;gap:16px;align-items:start}.eyebrow{margin:0;color:var(--ink-3);font:600 11px var(--f-display);letter-spacing:.14em;text-transform:uppercase}.slice-head h2{margin:5px 0 0;font:700 25px var(--f-display)}.review-note{font-size:12px;color:var(--ink-3);max-width:25ch;text-align:right}.stage-wrap{display:grid;grid-template-columns:minmax(220px,1fr) 170px;gap:16px;margin-top:18px}.stage{min-height:340px;position:relative;border-radius:12px;background:#f4f1eb;overflow:hidden}.stage canvas{width:100%;height:340px;display:block;touch-action:none}.loading,.error{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--ink-2)}.controls{display:grid;align-content:start;gap:12px}.orientation{display:flex;flex-wrap:wrap;gap:4px}.orientation button,.fallback-button,.continue-link{min-height:44px;border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:8px 10px;cursor:pointer}.orientation button[aria-pressed=true]{background:var(--brand);color:var(--brand-ink)}.selected{font-size:14px}.continue-link{display:grid;place-items:center;text-align:center;text-decoration:none;background:var(--brand);color:var(--brand-ink);font-weight:700}.continue-link[hidden]{display:none}.fallback-button{font-weight:600}.semantic-fallback{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}.semantic-fallback[hidden]{display:none}.semantic-fallback a[aria-current=true],.semantic-fallback button[aria-current=true]{font-weight:700;text-decoration:underline;text-decoration-thickness:3px}.semantic-fallback button{font:inherit;color:inherit;background:transparent;border:0;padding:4px 0;cursor:pointer}.semantic-fallback button span{font-size:.78em;color:var(--ink-3)}@media(max-width:600px){.stage-wrap{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.selected{grid-column:1/-1}.slice-head{display:block}.review-note{text-align:left;margin-top:8px}}
 .loading[hidden],.error[hidden],canvas[hidden]{display:none}
 </style>

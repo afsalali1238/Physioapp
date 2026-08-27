@@ -74,6 +74,9 @@ async function runCase(name, url, width, height, setup = '') {
 const cases = [
   ['desktop-front', base, 1440, 1100, ''],
   ['desktop-back', `${base}?qa=back`, 1440, 1100, ''],
+  ['desktop-neck-selected', `${base}?qa=neck`, 1440, 1100, ''],
+  ['desktop-left-shoulder-selected', `${base}?qa=shoulder-l`, 1440, 1100, ''],
+  ['desktop-right-shoulder-selected', `${base}?qa=shoulder-r`, 1440, 1100, ''],
   ['mobile-360-front', base, 360, 800, ''],
   ['reduced-motion-back', `${base}?qa=back`, 1440, 1100, ''],
   ['webgl-failure', `${base}?qa=webgl-failure`, 1440, 1100, ''],
