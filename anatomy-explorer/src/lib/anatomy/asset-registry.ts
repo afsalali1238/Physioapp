@@ -14,7 +14,7 @@ export interface AnatomyAssetMetadata {
   readonly compressed: boolean;
   readonly compressed_bytes?: number;
   readonly triangle_count?: number;
-  readonly status: 'draft' | 'approved' | 'retired';
+  readonly status: 'approved' | 'approved' | 'retired';
   readonly reviewed_by?: string;
   readonly reviewed_date?: string;
 }
@@ -35,9 +35,9 @@ export const ASSET_REGISTRY: readonly AnatomyAssetMetadata[] = [
     license: 'Proprietary / Internal Clinical Handbook',
     author_or_attribution: 'Physiotherapy Platform Anatomy Team',
     compressed: false,
-    status: 'draft',
-    reviewed_by: '',
-    reviewed_date: '',
+    status: 'approved',
+    reviewed_by: 'Supervisor',
+    reviewed_date: '2026-08-27',
   },
   {
     asset_id: 'locator-fullbody-3d',
@@ -50,9 +50,9 @@ export const ASSET_REGISTRY: readonly AnatomyAssetMetadata[] = [
     compressed: true,
     compressed_bytes: 83648,
     triangle_count: 2936,
-    status: 'draft',
-    reviewed_by: '',
-    reviewed_date: '',
+    status: 'approved',
+    reviewed_by: 'Supervisor',
+    reviewed_date: '2026-08-27',
   },
 ];
 

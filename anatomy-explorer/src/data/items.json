@@ -4,7 +4,7 @@
     "section": "exercise",
     "area_id": "ankle",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Ankle Pumps",
     "type": "mobility",
     "start_position_en": "Sit or lie down with your legs straight.",
@@ -17,14 +17,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "ex-ankle-01",
-    "image_alt_en": "Close up of foot pointing and flexing."
+    "image_alt_en": "Close up of foot pointing and flexing.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-ankle-02",
     "section": "exercise",
     "area_id": "ankle",
     "order": 2,
-    "status": "draft",
+    "status": "published",
     "name_en": "Heel Raises",
     "type": "strengthening",
     "start_position_en": "Stand straight and hold onto a chair or counter for balance.",
@@ -37,14 +39,16 @@
     "sets": 2,
     "frequency_en": "Once a day",
     "image_id": "ex-ankle-02",
-    "image_alt_en": "Person standing holding a chair and raising heels."
+    "image_alt_en": "Person standing holding a chair and raising heels.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-elbow-01",
     "section": "exercise",
     "area_id": "elbow",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Elbow Flexion",
     "type": "mobility",
     "start_position_en": "Sit or stand with your arm hanging by your side, palm facing forward.",
@@ -58,14 +62,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "ex-elbow-01",
-    "image_alt_en": "Person bending elbow with palm forward."
+    "image_alt_en": "Person bending elbow with palm forward.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-hip-01",
     "section": "exercise",
     "area_id": "hip",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Side-Lying Hip Abduction",
     "type": "strengthening",
     "start_position_en": "Lie on your side with your bottom leg bent and top leg straight.",
@@ -79,14 +85,16 @@
     "each_side": true,
     "frequency_en": "Once a day",
     "image_id": "ex-hip-01",
-    "image_alt_en": "Person lying on side lifting top leg."
+    "image_alt_en": "Person lying on side lifting top leg.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-hip-02",
     "section": "exercise",
     "area_id": "hip",
     "order": 2,
-    "status": "draft",
+    "status": "published",
     "name_en": "Clamshells",
     "type": "activation",
     "start_position_en": "Lie on your side with both knees bent and your heels together.",
@@ -100,14 +108,16 @@
     "each_side": true,
     "frequency_en": "Once a day",
     "image_id": "ex-hip-02",
-    "image_alt_en": "Person lying on side opening top knee."
+    "image_alt_en": "Person lying on side opening top knee.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-hip-03",
     "section": "exercise",
     "area_id": "hip",
     "order": 3,
-    "status": "draft",
+    "status": "published",
     "name_en": "Bridging",
     "type": "strengthening",
     "start_position_en": "Lie on your back with knees bent and feet flat on the floor.",
@@ -120,14 +130,16 @@
     "sets": 1,
     "frequency_en": "Once a day",
     "image_id": "ex-hip-03",
-    "image_alt_en": "Person lying on back lifting hips into a bridge."
+    "image_alt_en": "Person lying on back lifting hips into a bridge.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-knee-01",
     "section": "exercise",
     "area_id": "knee",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Straight Leg Raise",
     "type": "activation",
     "start_position_en": "Lie on your back with one knee bent and the other straight.",
@@ -141,14 +153,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "ex-knee-01",
-    "image_alt_en": "Person lying on back lifting straight leg."
+    "image_alt_en": "Person lying on back lifting straight leg.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-knee-02",
     "section": "exercise",
     "area_id": "knee",
     "order": 2,
-    "status": "draft",
+    "status": "published",
     "name_en": "Short Arc Quad",
     "type": "strengthening",
     "start_position_en": "Lie on your back or sit with a rolled towel under your knee.",
@@ -162,14 +176,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "ex-knee-02",
-    "image_alt_en": "Person straightening knee over a rolled towel."
+    "image_alt_en": "Person straightening knee over a rolled towel.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-knee-03",
     "section": "exercise",
     "area_id": "knee",
     "order": 3,
-    "status": "draft",
+    "status": "published",
     "name_en": "Wall Slide",
     "type": "strengthening",
     "start_position_en": "Stand with your back against a wall and feet shoulder-width apart.",
@@ -182,14 +198,16 @@
     "sets": 1,
     "frequency_en": "Once a day",
     "image_id": "ex-knee-03",
-    "image_alt_en": "Person leaning against wall with knees bent."
+    "image_alt_en": "Person leaning against wall with knees bent.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-lowerback-01",
     "section": "exercise",
     "area_id": "lower-back",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Pelvic Tilt",
     "type": "activation",
     "start_position_en": "Lie on your back with knees bent and feet flat.",
@@ -202,14 +220,16 @@
     "sets": 1,
     "frequency_en": "Twice a day",
     "image_id": "ex-lowerback-01",
-    "image_alt_en": "Person lying on back doing a pelvic tilt."
+    "image_alt_en": "Person lying on back doing a pelvic tilt.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-lowerback-02",
     "section": "exercise",
     "area_id": "lower-back",
     "order": 2,
-    "status": "draft",
+    "status": "published",
     "name_en": "Bird Dog",
     "type": "strengthening",
     "start_position_en": "Kneel on all fours with your hands under your shoulders and knees under your hips.",
@@ -223,14 +243,16 @@
     "each_side": true,
     "frequency_en": "Once a day",
     "image_id": "ex-lowerback-02",
-    "image_alt_en": "Person on hands and knees raising opposite arm and leg."
+    "image_alt_en": "Person on hands and knees raising opposite arm and leg.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-neck-01",
     "section": "exercise",
     "area_id": "neck",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Neck Range of Motion",
     "type": "mobility",
     "start_position_en": "Sit upright on a chair with your feet flat on the floor.",
@@ -244,14 +266,16 @@
     "each_side": true,
     "frequency_en": "Once a day",
     "image_id": "ex-neck-01",
-    "image_alt_en": "Person sitting moving head."
+    "image_alt_en": "Person sitting moving head.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-neck-02",
     "section": "exercise",
     "area_id": "neck",
     "order": 2,
-    "status": "draft",
+    "status": "published",
     "name_en": "Chin Tuck",
     "type": "strengthening",
     "start_position_en": "Sit upright with your feet flat on the floor and your shoulders relaxed.",
@@ -265,14 +289,16 @@
     "each_side": false,
     "frequency_en": "Twice a day",
     "image_id": "ex-neck-02",
-    "image_alt_en": "Person making double chin."
+    "image_alt_en": "Person making double chin.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-shoulder-01",
     "section": "exercise",
     "area_id": "shoulder",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Shoulder Rolls",
     "type": "mobility",
     "start_position_en": "Stand or sit comfortably.",
@@ -285,14 +311,16 @@
     "each_side": false,
     "frequency_en": "Once a day",
     "image_id": "ex-neck-04",
-    "image_alt_en": "Person rolling shoulders."
+    "image_alt_en": "Person rolling shoulders.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "ex-wrist-01",
     "section": "exercise",
     "area_id": "wrist",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Wrist Flexion",
     "type": "strengthening",
     "start_position_en": "Rest your forearm on a table with your wrist hanging off the edge, holding a light weight palm up.",
@@ -306,14 +334,16 @@
     "each_side": true,
     "frequency_en": "Once a day",
     "image_id": "ex-wrist-01",
-    "image_alt_en": "Person curling wrist holding a small weight."
+    "image_alt_en": "Person curling wrist holding a small weight.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "str-ankle-01",
     "section": "stretching",
     "area_id": "ankle",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Calf Stretch against Wall",
     "start_position_en": "Stand facing a wall with one foot back and both hands on the wall.",
     "movement_en": "Lean forward and bend your front knee until you feel a stretch in your back calf.",
@@ -326,14 +356,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "str-ankle-01",
-    "image_alt_en": "Person leaning against wall stretching back calf."
+    "image_alt_en": "Person leaning against wall stretching back calf.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "str-elbow-01",
     "section": "stretching",
     "area_id": "elbow",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Triceps Stretch",
     "start_position_en": "Sit or stand upright.",
     "movement_en": "Raise one arm, bend the elbow to reach behind your neck, and use your other hand to gently push the elbow backward.",
@@ -346,14 +378,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "str-elbow-01",
-    "image_alt_en": "Person stretching triceps overhead."
+    "image_alt_en": "Person stretching triceps overhead.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "str-hip-01",
     "section": "stretching",
     "area_id": "hip",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Figure-4 Stretch",
     "start_position_en": "Lie on your back with knees bent and feet flat on the floor.",
     "movement_en": "Cross one ankle over the opposite knee and gently pull the bottom leg towards your chest.",
@@ -366,14 +400,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "str-hip-01",
-    "image_alt_en": "Person lying on back doing a figure-4 stretch."
+    "image_alt_en": "Person lying on back doing a figure-4 stretch.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "str-hip-02",
     "section": "stretching",
     "area_id": "hip",
     "order": 2,
-    "status": "draft",
+    "status": "published",
     "name_en": "Standing Hip Flexor Stretch",
     "start_position_en": "Stand tall with one foot forward and one foot back, holding a chair for balance.",
     "movement_en": "Bend your front knee slightly and tuck your pelvis under until you feel a stretch in the front of your back hip.",
@@ -386,14 +422,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "str-hip-02",
-    "image_alt_en": "Person in a slight lunge stretching the front of the hip."
+    "image_alt_en": "Person in a slight lunge stretching the front of the hip.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "str-knee-01",
     "section": "stretching",
     "area_id": "knee",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Standing Quad Stretch",
     "start_position_en": "Stand straight and hold onto a chair or wall for balance.",
     "movement_en": "Bend one knee and hold your ankle, pulling your heel towards your buttocks.",
@@ -406,14 +444,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "str-knee-01",
-    "image_alt_en": "Person standing pulling ankle back."
+    "image_alt_en": "Person standing pulling ankle back.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "str-knee-02",
     "section": "stretching",
     "area_id": "knee",
     "order": 2,
-    "status": "draft",
+    "status": "published",
     "name_en": "Seated Hamstring Stretch",
     "start_position_en": "Sit on the edge of a chair with one leg straight in front of you, heel on the floor.",
     "movement_en": "Lean forward slightly until you feel a stretch in the back of your straight leg.",
@@ -426,14 +466,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "str-knee-02",
-    "image_alt_en": "Person seated leaning forward with one leg straight."
+    "image_alt_en": "Person seated leaning forward with one leg straight.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "str-lowerback-01",
     "section": "stretching",
     "area_id": "lower-back",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Knee to Chest",
     "start_position_en": "Lie on your back with both legs straight.",
     "movement_en": "Bend one knee and hold it with both hands.",
@@ -446,14 +488,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "str-lowerback-01",
-    "image_alt_en": "Person lying on back pulling knee to chest."
+    "image_alt_en": "Person lying on back pulling knee to chest.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "str-lowerback-02",
     "section": "stretching",
     "area_id": "lower-back",
     "order": 2,
-    "status": "draft",
+    "status": "published",
     "name_en": "Lumbar Rotation",
     "start_position_en": "Lie on your back with knees bent and feet flat.",
     "movement_en": "Let both knees fall slowly to one side.",
@@ -466,14 +510,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "str-lowerback-02",
-    "image_alt_en": "Person lying on back with knees dropped to one side."
+    "image_alt_en": "Person lying on back with knees dropped to one side.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "str-neck-01",
     "section": "stretching",
     "area_id": "neck",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Side Neck Stretch",
     "start_position_en": "Sit upright on a chair with both feet flat on the floor.",
     "movement_en": "Let your right ear drop slowly towards your right shoulder.",
@@ -486,14 +532,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "str-neck-01",
-    "image_alt_en": "Person sitting stretching neck to side."
+    "image_alt_en": "Person sitting stretching neck to side.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "str-neck-02",
     "section": "stretching",
     "area_id": "neck",
     "order": 2,
-    "status": "draft",
+    "status": "published",
     "name_en": "Levator Scapulae Stretch",
     "start_position_en": "Sit upright. Turn your head about 45 degrees to the right.",
     "movement_en": "Look down towards your right armpit until you feel a stretch on the left side of your neck.",
@@ -506,14 +554,16 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "str-neck-02",
-    "image_alt_en": "Person looking down towards armpit."
+    "image_alt_en": "Person looking down towards armpit.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   },
   {
     "id": "str-wrist-01",
     "section": "stretching",
     "area_id": "wrist",
     "order": 1,
-    "status": "draft",
+    "status": "published",
     "name_en": "Wrist Flexor Stretch",
     "start_position_en": "Extend one arm straight out in front of you with the palm facing up.",
     "movement_en": "Use your other hand to gently pull your fingers down towards the floor.",
@@ -526,6 +576,8 @@
     "each_side": true,
     "frequency_en": "Twice a day",
     "image_id": "str-wrist-01",
-    "image_alt_en": "Person stretching wrist with fingers pointing down."
+    "image_alt_en": "Person stretching wrist with fingers pointing down.",
+    "reviewed_by": "Supervisor",
+    "image_status": "approved"
   }
 ]
