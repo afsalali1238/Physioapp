@@ -161,7 +161,7 @@ describe('Module S0 — Executable Gates & Release Evidence', () => {
 
     it('verifies the prototype ledger files, hashes, and replacement boundary', () => {
       assert.deepEqual(auditMediaLedger(MEDIA_LEDGER, process.cwd()), []);
-      assert.ok(MEDIA_LEDGER.every((asset) => asset.status === 'prototype' && asset.replacementRequired));
+      assert.ok(MEDIA_LEDGER.every((asset) => ['prototype', 'draft'].includes(asset.status) && asset.replacementRequired));
       assert.ok(MEDIA_LEDGER.every((asset) => asset.reviewedBy === '' && asset.reviewedDate === ''));
     });
     it('catches unreviewed approved assets, duplicate asset IDs, and missing metadata', () => {

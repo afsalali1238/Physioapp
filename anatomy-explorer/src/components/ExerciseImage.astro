@@ -59,7 +59,11 @@ const usableAlt = typeof alt === 'string' && alt.trim().length > 0 ? alt.trim() 
  * website rather than as work in progress, and it is the wrong fact.
  */
 const onDisk = imageId ? await getImage(imageId) : null;
-const resolved = mayRender && usableAlt ? onDisk : null;
+// A 1x1 file is a build placeholder, not a usable clinical illustration.
+// Treat it as unavailable so Astro does not upscale an empty pixel into a
+// full-size figure on patient or preview pages.
+const isPlaceholder = Boolean(onDisk && onDisk.width <= 1 && onDisk.height <= 1);
+const resolved = mayRender && usableAlt && !isPlaceholder ? onDisk : null;
 const isSvg = typeof resolved?.src === 'string' && resolved.src.endsWith('.svg');
 
 /**
@@ -75,6 +79,8 @@ const slotReason = !imageId
       ? 'Picture waiting to be checked by your physiotherapist'
       : !onDisk
         ? 'Picture not added yet'
+        : isPlaceholder
+          ? 'Picture not added yet'
         : 'Picture awaiting approval';
 ---
 

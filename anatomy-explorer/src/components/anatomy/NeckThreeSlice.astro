@@ -23,7 +23,7 @@ const asset = previewMode
   : getAssetForRegion('all', 'locator');
 ---
 
-<section
+{(asset || previewMode) && <section
   class="anatomy-slice"
   data-anatomy-slice
   data-regions={JSON.stringify(regions)}
@@ -60,7 +60,7 @@ const asset = previewMode
       : <button type="button" data-region-link={r.id}>{r.name} <span>Preview only</span></button>
     }</li>)}</ul>
   </div>
-</section>
+</section>}
 
 <script>
   import { checkCapabilities } from '../../lib/anatomy/capabilities';

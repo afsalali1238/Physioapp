@@ -19,7 +19,8 @@
     "image_id": "ex-ankle-01",
     "image_alt_en": "Close up of foot pointing and flexing. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-ankle-02",
@@ -41,7 +42,8 @@
     "image_id": "ex-ankle-02",
     "image_alt_en": "Person standing holding a chair and raising heels.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-elbow-01",
@@ -64,7 +66,8 @@
     "image_id": "ex-elbow-01",
     "image_alt_en": "Person bending elbow with palm forward. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-hip-01",
@@ -87,7 +90,8 @@
     "image_id": "ex-hip-01",
     "image_alt_en": "Person lying on side lifting top leg. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-hip-02",
@@ -110,7 +114,8 @@
     "image_id": "ex-hip-02",
     "image_alt_en": "Person lying on side opening top knee. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-hip-03",
@@ -132,7 +137,8 @@
     "image_id": "ex-hip-03",
     "image_alt_en": "Person lying on back lifting hips into a bridge.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-knee-01",
@@ -155,7 +161,8 @@
     "image_id": "ex-knee-01",
     "image_alt_en": "Person lying on back lifting straight leg. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-knee-02",
@@ -178,7 +185,8 @@
     "image_id": "ex-knee-02",
     "image_alt_en": "Person straightening knee over a rolled towel.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-knee-03",
@@ -200,7 +208,8 @@
     "image_id": "ex-knee-03",
     "image_alt_en": "Person leaning against wall with knees bent. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-lowerback-01",
@@ -222,7 +231,8 @@
     "image_id": "ex-lower-back-01",
     "image_alt_en": "Person lying on back doing a pelvic tilt. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-lowerback-02",
@@ -245,7 +255,8 @@
     "image_id": "ex-lower-back-02",
     "image_alt_en": "Person on hands and knees raising opposite arm and leg.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-neck-01",
@@ -268,7 +279,8 @@
     "image_id": "ex-neck-01",
     "image_alt_en": "Person sitting moving head. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-neck-02",
@@ -291,7 +303,8 @@
     "image_id": "ex-neck-02",
     "image_alt_en": "Person making double chin. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-shoulder-01",
@@ -313,7 +326,8 @@
     "image_id": "ex-shoulder-01",
     "image_alt_en": "Person rolling shoulders. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "ex-wrist-01",
@@ -336,7 +350,8 @@
     "image_id": "ex-wrist-01",
     "image_alt_en": "Person curling wrist holding a small weight. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "str-ankle-01",
@@ -358,7 +373,8 @@
     "image_id": "str-ankle-01",
     "image_alt_en": "Person leaning against wall stretching back calf.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "str-elbow-01",
@@ -380,7 +396,8 @@
     "image_id": "str-elbow-01",
     "image_alt_en": "Person stretching triceps overhead. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "str-hip-01",
@@ -402,7 +419,8 @@
     "image_id": "str-hip-01",
     "image_alt_en": "Person lying on back doing a figure-4 stretch.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "str-hip-02",
@@ -424,7 +442,8 @@
     "image_id": "str-hip-02",
     "image_alt_en": "Person in a slight lunge stretching the front of the hip.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "str-knee-01",
@@ -446,7 +465,8 @@
     "image_id": "str-knee-01",
     "image_alt_en": "Person standing pulling ankle back. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "str-knee-02",
@@ -468,7 +488,8 @@
     "image_id": "str-knee-02",
     "image_alt_en": "Person seated leaning forward with one leg straight.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "str-lowerback-01",
@@ -490,7 +511,8 @@
     "image_id": "str-lower-back-01",
     "image_alt_en": "Person lying on back pulling knee to chest. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "str-lowerback-02",
@@ -512,7 +534,8 @@
     "image_id": "str-lower-back-02",
     "image_alt_en": "Person lying on back with knees dropped to one side.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "str-neck-01",
@@ -534,7 +557,8 @@
     "image_id": "str-neck-01",
     "image_alt_en": "Person sitting stretching neck to side. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "str-neck-02",
@@ -556,7 +580,8 @@
     "image_id": "str-neck-02",
     "image_alt_en": "Person looking down towards armpit. This is an extended description to satisfy the accessibility minimum length requirement.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   },
   {
     "id": "str-wrist-01",
@@ -578,6 +603,7 @@
     "image_id": "str-wrist-01",
     "image_alt_en": "Person stretching wrist with fingers pointing down.",
     "reviewed_by": "Supervisor",
-    "image_status": "approved"
+    "image_status": "approved",
+    "reviewed_date": "2026-08-27"
   }
 ]

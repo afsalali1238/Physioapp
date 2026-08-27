@@ -209,6 +209,22 @@ export function validateItems(items: readonly ItemRow[], areas: readonly AreaRow
           'is published with no reviewed_by. Content reaches patients only after a clinician signs it off — keep it status: draft until then.',
       });
     }
+
+    if (!item.reviewed_date || String(item.reviewed_date).trim() === '') {
+      findings.push({
+        level: 'error',
+        rule: 'undated-published-item',
+        where: `item "${item.id}"`,
+        message: 'is published with no reviewed_date.',
+      });
+    } else if (!/^\d{4}-\d{2}-\d{2}$/.test(String(item.reviewed_date).trim())) {
+      findings.push({
+        level: 'error',
+        rule: 'invalid-review-date',
+        where: `item "${item.id}"`,
+        message: 'reviewed_date must be in YYYY-MM-DD format.',
+      });
+    }
   }
 
   return findings;
