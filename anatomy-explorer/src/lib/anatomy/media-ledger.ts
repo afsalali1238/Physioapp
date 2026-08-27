@@ -33,10 +33,10 @@ export const MEDIA_LEDGER: readonly MediaLedgerEntry[] = [
     fileHash: '3456cce3f8127b0e3ed8f9dad1adceabe52a01449c1e7f3ce0f6fa53583cf9b6', bytes: 984, replacementRequired: true, referenceSources: [], reviewedBy: '', reviewedDate: '', notes: 'Accessible fallback; clinician visual review pending.',
   },
   {
-    assetId: 'locator-fullbody-3d', path: '/anatomy/models/human-body-locator.glb', kind: 'anatomy-model',
+    assetId: 'locator-fullbody-3d', path: '/anatomy/models/human-body-locator-optimized.glb', kind: 'anatomy-model',
     status: 'prototype', sourceUrl: 'Deterministic simplified anatomical capsule mesh', generationMethod: 'original',
     license: 'Internal Web Distribution License', attribution: 'Anatomy Explorer 3D Geometry Project',
-    fileHash: '01c946c5ff8c54c1642f94b215ba9a816bc6d2be742a404d8048e806112aeacb', bytes: 83648,
+    fileHash: '50a5f28e74c15908e47935eb318e7ba5bb4e131d56fac3340a3d73fc7f1185f8', bytes: 66180,
     replacementRequired: true, referenceSources: [], reviewedBy: '', reviewedDate: '', notes: 'Temporary locator blockout; clinician visual review pending.',
   },
   {
