@@ -9,8 +9,10 @@
       "Edit(../patient-library/**)",
       "Write(../src/**)",
       "Edit(../src/**)",
-      "Write(src/data/library/**)",
-      "Edit(src/data/library/**)"
+      "Write(src/data/items.json)",
+      "Edit(src/data/items.json)",
+      "Write(src/data/areas.json)",
+      "Edit(src/data/areas.json)"
     ],
     "ask": [
       "Bash(git push:*)",

@@ -161,7 +161,7 @@ const slotReason = !imageId
 
   .slot {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    min-height: 180px;
     background-color: var(--slot);
     border: 1px dashed var(--slot-line);
     border-radius: var(--r-inner);
@@ -183,5 +183,11 @@ const slotReason = !imageId
 
   .slot small {
     font-size: calc(var(--fs-micro) * var(--scale));
+  }
+
+  @media (min-width: 780px) {
+    .slot {
+      min-height: 220px;
+    }
   }
 </style>

@@ -43,7 +43,7 @@ export const ASSET_REGISTRY: readonly AnatomyAssetMetadata[] = [
     asset_id: 'locator-fullbody-3d',
     regionId: 'all',
     kind: 'locator',
-    url: '/anatomy/models/human-body-locator.glb',
+    url: '/anatomy/models/human-body-locator-optimized.glb',
     source_url_or_provider: 'Deterministic simplified anatomical capsule mesh',
     license: 'Internal Web Distribution License',
     author_or_attribution: 'Anatomy Explorer 3D Geometry Project',

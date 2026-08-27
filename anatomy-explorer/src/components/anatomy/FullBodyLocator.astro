@@ -82,8 +82,10 @@ const asset = previewMode
     const qa = previewMode ? new URLSearchParams(location.search).get('qa') : null;
     const regions = JSON.parse(root.dataset.regions ?? '[]') as { id: string; areaId: string; name: string; available: boolean }[];
     let cleanup = () => {};
+    let cancelled = false;
 
     const showFallback = (message = 'Use the accessible body-area controls below.') => {
+      cancelled = true;
       cleanup();
       loading.hidden = true;
       error.textContent = message;
@@ -101,12 +103,15 @@ const asset = previewMode
 
       try {
         const THREE = await import('three');
+        if (cancelled) return;
         const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
+        if (cancelled) return;
         const scene = new THREE.Scene();
         scene.background = new THREE.Color('#f4f1eb');
         const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
         camera.position.set(0, 1.2, 5.5);
         camera.lookAt(0, 0.45, 0);
+        const cameraTarget = new THREE.Vector3(0, 0.45, 0);
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
         renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
         const group = new THREE.Group();
@@ -114,7 +119,21 @@ const asset = previewMode
         scene.add(new THREE.HemisphereLight('#fffaf2', '#786b60', 2));
         const loader = new GLTFLoader();
         const gltf = await loader.loadAsync(qa === 'asset-failure' ? '/anatomy/models/missing.glb' : assetUrl);
+        if (cancelled) return;
         group.add(gltf.scene);
+
+        // Fit the complete model into the stage. The blockout's dimensions can
+        // change between prototype exports, so fixed camera coordinates caused
+        // heads or legs to be cropped on narrow screens.
+        const bounds = new THREE.Box3().setFromObject(gltf.scene);
+        const center = bounds.getCenter(new THREE.Vector3());
+        const size = bounds.getSize(new THREE.Vector3());
+        const maxSize = Math.max(size.x, size.y, size.z);
+        const fitDistance = (maxSize / 2) / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 1.18;
+        group.position.sub(center);
+        camera.position.set(0, 0, fitDistance);
+        cameraTarget.set(0, 0, 0);
+        camera.lookAt(cameraTarget);
 
         let frame = 0;
         let disposed = false;
@@ -123,7 +142,6 @@ const asset = previewMode
         let dragged = false;
         let activeRegionName = '';
         let cameraFrame = 0;
-        const cameraTarget = new THREE.Vector3(0, 0.45, 0);
         const selectable = new Map<string, any>();
         const hitTargets: any[] = [];
         const originalColors = new Map<any, number>();

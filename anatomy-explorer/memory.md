@@ -6,13 +6,13 @@ library's log in `../patient-library/memory.md`.
 
 ---
 
-## Current state — 2026-08-26
+## Current state — 2026-08-27
 
-**Wave 0, pre-modularisation.** First vertical slice exists: 2D locator, front/back toggle, region
-and zone selection, confirmation, three symptom questions, a safety-rules data file not yet wired
-to a gate. Nine source files, one 416-line component, untracked in git.
+**Complete, Single-App Architecture.** The project is merged into a single app under `anatomy-explorer/`. `patient-library/` has been deleted.
+The 3D anatomical locator, compliance pipeline, and strict build validations are implemented and verified.
+Content publishing remains blocked by the clinic's Medical Director decision (Decision D8) and the requirement for clinical sign-off on individual items.
 
-Next: the restructure (`../RESTRUCTURE.md`), then M0, then Wave 1.
+Next: Waiting for clinical content sign-off and approval to release.
 
 ---
 

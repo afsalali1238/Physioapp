@@ -49,6 +49,14 @@ const {
     {!Astro.url.pathname.startsWith('/preview') && <meta name="robots" content="index, follow" />}
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#0ea5e9" />
+    <script is:inline>
+      try {
+        const s = localStorage.getItem('physio-scale');
+        if (s === '1' || s === '1.15' || s === '1.3') {
+          document.documentElement.style.setProperty('--scale', s);
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
