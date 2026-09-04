@@ -32,7 +32,17 @@ jobs:
         cache-dependency-path: anatomy-explorer/package-lock.json
 
     - name: Install dependencies
-      run: npm ci
+      # `npm ci`, not `npm install`: strict cold install from the lockfile.
+      # (Vercel production builds already succeed with plain `npm install`;
+      # if this step ever fails while Vercel is green, the lockfile has
+      # drifted from package.json again — regenerate it with one healthy
+      # `npm install` and commit the result, do not relax this to install.)
+      run: |
+        node --version
+        npm --version
+        pwd
+        ls
+        npm ci
 
     - name: Typecheck
       run: npm run typecheck
