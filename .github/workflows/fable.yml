@@ -19,6 +19,9 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
     - uses: actions/checkout@v4
@@ -49,7 +52,22 @@ jobs:
       run: dotnet tool install --global fable
 
     - name: Compile F# to JS
-      run: $HOME/.dotnet/tools/fable Client.fsproj --outDir build
+      # Output is teed to a file so the failure reporter below can quote it.
+      run: |
+        $HOME/.dotnet/tools/fable Client.fsproj --outDir build 2>&1 | tee "$RUNNER_TEMP/fable.log"
+        test ${PIPESTATUS[0]} -eq 0
+
+    # The sandbox that authors this repo cannot download Actions logs, so a
+    # red compile posts its own error text back onto the PR as a comment.
+    - name: Report compile error to PR
+      if: failure()
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        PR=$(gh pr list --head "${{ github.head_ref || github.ref_name }}" --json number --jq '.[0].number // empty')
+        if [ -z "$PR" ]; then echo "no PR for this branch, skipping report"; exit 0; fi
+        { echo '### Fable compile failed'; echo; echo '```'; tail -n 60 "$RUNNER_TEMP/fable.log"; echo '```'; } > "$RUNNER_TEMP/pr-body.md"
+        gh pr comment "$PR" --body-file "$RUNNER_TEMP/pr-body.md"
 
     - name: Render static page
       run: node scripts/render.mjs
