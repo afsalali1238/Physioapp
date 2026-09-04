@@ -23,10 +23,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Use .NET 8
+    # Both runtimes: the Fable global tool floats to latest stable, so it
+    # may target a newer framework than the library itself (net8.0).
+    # Installing 8 + 9 covers either direction (7-second host failure seen
+    # 2026-09-04 when only 8 was present).
+    - name: Use .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: |
+          8.0.x
+          9.0.x
 
     - name: Use Node.js
       uses: actions/setup-node@v4
