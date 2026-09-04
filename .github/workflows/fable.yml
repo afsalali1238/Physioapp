@@ -123,7 +123,9 @@ jobs:
 
     - name: Run runtime QA
       id: qa
-      run: npm run qa 2>&1 | tee "$RUNNER_TEMP/qa.log" || echo "QA_FAILED=1" >> "$GITHUB_ENV"
+      run: |
+        set -o pipefail
+        npm run qa 2>&1 | tee "$RUNNER_TEMP/qa.log" || echo "QA_FAILED=1" >> "$GITHUB_ENV"
 
     - name: Report QA to PR
       if: always()
