@@ -1,0 +1,56 @@
+name: Fable
+
+# The from-scratch F# rebuild. Independent of the Astro app's CI:
+# this compiles F# with Fable and renders the static demo page.
+on:
+  push:
+    paths:
+      - 'physio-fable/**'
+      - '.github/workflows/fable.yml'
+  pull_request:
+    paths:
+      - 'physio-fable/**'
+      - '.github/workflows/fable.yml'
+
+defaults:
+  run:
+    working-directory: physio-fable
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    # No lockfile yet (fresh project) — plain install, same as Vercel uses.
+    - name: Install JS dependencies
+      run: npm install
+
+    # Latest stable Fable, deliberately unpinned: pin only when a release
+    # breaks us, so the scaffold never rots on a yanked exact version.
+    - name: Install Fable
+      run: dotnet tool install --global fable
+
+    - name: Compile F# to JS
+      run: $HOME/.dotnet/tools/fable Client.fsproj --outDir build
+
+    - name: Render static page
+      run: node scripts/render.mjs
+
+    - name: Upload demo site
+      uses: actions/upload-artifact@v4
+      with:
+        name: physio-fable-site
+        path: physio-fable/dist
+        retention-days: 7
