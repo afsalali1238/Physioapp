@@ -1,0 +1,27 @@
+{
+  "asset_id": "anatomy-region-maps-v0",
+  "source_url_or_provider": "Generated from anatomy-explorer geometry (skeleton.ts + regions.ts)",
+  "license": "Original work — no third-party assets used. Free to relicense within this project.",
+  "author_or_attribution": "Generated in-project",
+  "software_and_version": "generate-region-maps.mjs (this folder)",
+  "derived_from": [
+    "src/lib/anatomy/geometry/skeleton.ts",
+    "src/lib/anatomy/geometry/regions.ts",
+    "src/data/areas.json"
+  ],
+  "areas": [
+    "neck",
+    "shoulder",
+    "elbow",
+    "wrist",
+    "lower-back",
+    "hip",
+    "knee",
+    "ankle"
+  ],
+  "format": "SVG",
+  "reviewed_by": "",
+  "reviewed_date": "",
+  "status": "draft",
+  "note": "Navigation aid, not a clinical illustration. Not wired into the app. Not clinically reviewed."
+}

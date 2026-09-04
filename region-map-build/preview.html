@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomy region maps — preview</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #f1f5f9; color: #1f2937;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    font-size: 17px; line-height: 1.5;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 28px 20px 64px; }
+  header h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.02em; }
+  header p { margin: 0 0 20px; color: #64748b; max-width: 60ch; }
+  .draft {
+    display: inline-block; font-size: 12.5px; letter-spacing: .04em; text-transform: uppercase;
+    color: #92400e; background: #fef3c7; border: 1px solid #fcd34d;
+    border-radius: 999px; padding: 4px 11px; margin-bottom: 22px;
+  }
+  .grid { display: grid; gap: 28px; }
+  @media (min-width: 760px) { .grid { grid-template-columns: 300px 1fr; align-items: start; } }
+  .panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px; }
+  .toggle { display: inline-flex; gap: 2px; padding: 3px; background: #e2e8f0; border-radius: 10px; margin-bottom: 14px; }
+  .toggle button {
+    cursor: pointer; border: 0; background: transparent; color: #64748b;
+    font: 600 14px system-ui; padding: 8px 18px; border-radius: 8px; min-height: 40px;
+  }
+  .toggle button.on { background: #fff; color: #1f2937; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  svg.map { width: 100%; max-width: 280px; height: auto; display: block; margin: 0 auto; }
+  .hint { color: #64748b; font-size: 13px; text-align: center; margin: 10px 0 0; }
+  .list-title { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #64748b; margin: 0 0 10px; }
+  ul.areas { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+  ul.areas button {
+    width: 100%; text-align: left; cursor: pointer; display: grid;
+    grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 11px;
+    padding: 12px 14px; min-height: 52px; font: inherit; color: inherit;
+  }
+  ul.areas button:hover, ul.areas button.on { border-color: #b45309; }
+  ul.areas button.on { background: #fff7ed; }
+  .num { font: 12px ui-monospace, monospace; color: #64748b; }
+  .nm { font-weight: 600; }
+  .nm .ar { color: #64748b; font-weight: 500; margin-left: 6px; }
+  .na { font: 11px ui-monospace, monospace; color: #94a3b8; }
+  .zones { margin: 16px 0 0; padding: 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; }
+  .zones h3 { margin: 0 0 8px; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #64748b; }
+  .zones ul { margin: 0; padding-left: 18px; }
+  .zones li { margin: 2px 0; }
+  .zones .empty { color: #64748b; }
+  footer { margin-top: 28px; color: #64748b; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Anatomy region maps</h1>
+    <p>Generated from the app's own joint geometry. Tap an area in the list or on the body; use Front / Back to switch views. This is a preview of the asset — nothing here is wired into the site.</p>
+    <span class="draft">Draft · not clinically reviewed</span>
+  </header>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="toggle" role="group" aria-label="Body view">
+        <button data-view="front" class="on">Front</button>
+        <button data-view="back">Back</button>
+      </div>
+      <div id="mapHost"></div>
+      <p class="hint">Lower back appears on the Back view only.</p>
+    </div>
+
+    <div>
+      <p class="list-title">Body areas · head to toe</p>
+      <ul class="areas" id="areaList"></ul>
+      <div class="zones" id="zones">
+        <h3>Where it covers</h3>
+        <p class="empty">Select an area to see the zones it includes.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>Region names come from <code>areas.json</code>; geometry from <code>geometry/skeleton.ts</code> + <code>regions.ts</code>. Zone descriptions are the app's own navigation labels.</footer>
+</div>
+
+<script>
+const DATA = {"viewBox":"0 0 240 620","C":{"bg":"#ffffff","body":"#c7d0dc","detail":"#7c8aa0","brand":"#b45309","ink":"#1f2937","muted":"#64748b"},"silhouette":{"filled":["M120 20 C137 20 151 36 151 57 C151 79 137 94 120 94 C103 94 89 79 89 57 C89 36 103 20 120 20 Z","M74 134 C96 124 144 124 166 134 L170 182 L158 238 L162 268 L160 300 C150 314 90 314 80 300 L78 268 L82 238 L70 182 Z"],"strokes":[{"d":"M120 96 L120 122","w":32},{"d":"M58 134 L46 228","w":30},{"d":"M182 134 L194 228","w":30},{"d":"M46 228 L40 314","w":24},{"d":"M194 228 L200 314","w":24},{"d":"M40 314 L37 358","w":22},{"d":"M200 314 L203 358","w":22},{"d":"M96 302 L94 442","w":44},{"d":"M144 302 L146 442","w":44},{"d":"M94 442 L93 552","w":32},{"d":"M146 442 L147 552","w":32},{"d":"M93 552 L68 578","w":21},{"d":"M147 552 L172 578","w":21}]},"detail":{"front":["M120 140 L120 292","M96 178 C108 190 132 190 144 178","M100 248 C110 256 130 256 140 248","M100 440 L114 440 M126 440 L140 440"],"back":["M120 132 L120 300","M92 150 L120 142 L148 150","M96 186 C108 176 132 176 144 186","M92 292 C106 306 134 306 148 292","M100 452 L114 452 M126 452 L140 452"]},"areas":[{"areaId":"neck","name_en":"Neck","name_ar":"الرقبة","zones":["Back of neck","Side of neck","Base of neck and top of shoulders"],"byView":{"front":[{"d":"M120 102 L120 126","w":40}],"back":[{"d":"M120 102 L120 126","w":40}]}},{"areaId":"shoulder","name_en":"Shoulder","name_ar":"الكتف","zones":["Front of shoulder","Top of shoulder","Back of shoulder","Outside of the upper arm"],"byView":{"front":[{"d":"M58 134 L55.12 156.56","w":40},{"d":"M182 134 L184.88 156.56","w":40}],"back":[{"d":"M58 134 L55.12 156.56","w":40},{"d":"M182 134 L184.88 156.56","w":40}]}},{"areaId":"elbow","name_en":"Elbow","name_ar":null,"zones":["Outer elbow","Inner elbow","Point of the elbow"],"byView":{"front":[{"d":"M47.68 214.84 L45.04 241.76","w":34},{"d":"M192.32 214.84 L194.96 241.76","w":34}],"back":[{"d":"M47.68 214.84 L45.04 241.76","w":34},{"d":"M192.32 214.84 L194.96 241.76","w":34}]}},{"areaId":"wrist","name_en":"Wrist","name_ar":null,"zones":["Back of wrist","Palm side of wrist","Thumb side of wrist"],"byView":{"front":[{"d":"M40.72 303.68 L40 314","w":30},{"d":"M199.28 303.68 L200 314","w":30}],"back":[{"d":"M40.72 303.68 L40 314","w":30},{"d":"M199.28 303.68 L200 314","w":30}]}},{"areaId":"lower-back","name_en":"Lower Back","name_ar":null,"zones":["Centre of lower back","One side of lower back","Low down, towards the buttock"],"byView":{"front":[],"back":[{"d":"M120 236 L120 278","w":56}]}},{"areaId":"hip","name_en":"Hip","name_ar":null,"zones":["Front of hip and groin","Side of hip","Back of hip and buttock"],"byView":{"front":[{"d":"M80 296 L95.8 316","w":44},{"d":"M160 296 L144.2 316","w":44}],"back":[{"d":"M80 296 L95.8 316","w":44},{"d":"M160 296 L144.2 316","w":44}]}},{"areaId":"knee","name_en":"Knee","name_ar":null,"zones":["Front of knee and kneecap","Inner side of knee","Outer side of knee","Back of knee"],"byView":{"front":[{"d":"M94.2 428 L93.89 454.1","w":44},{"d":"M145.8 428 L146.11 454.1","w":44}],"back":[{"d":"M94.2 428 L93.89 454.1","w":44},{"d":"M145.8 428 L146.11 454.1","w":44}]}},{"areaId":"ankle","name_en":"Ankle","name_ar":null,"zones":["Outer ankle","Inner ankle","Front of ankle","Back of ankle and heel cord"],"byView":{"front":[{"d":"M93.1 541 L93 552","w":34},{"d":"M146.9 541 L147 552","w":34}],"back":[{"d":"M93.1 541 L93 552","w":34},{"d":"M146.9 541 L147 552","w":34}]}}]};
+let view = 'front';
+let selected = null;
+
+const host = document.getElementById('mapHost');
+const list = document.getElementById('areaList');
+const zonesBox = document.getElementById('zones');
+
+function pathEl(d, attrs) {
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  p.setAttribute('d', d);
+  for (const [k, v] of Object.entries(attrs)) p.setAttribute(k, v);
+  return p;
+}
+
+function renderMap() {
+  host.innerHTML = '';
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', DATA.viewBox);
+  svg.setAttribute('class', 'map');
+  svg.setAttribute('aria-hidden', 'true');
+
+  // silhouette
+  for (const d of DATA.silhouette.filled) svg.appendChild(pathEl(d, { fill: DATA.C.body }));
+  for (const s of DATA.silhouette.strokes)
+    svg.appendChild(pathEl(s.d, { fill: 'none', stroke: DATA.C.body, 'stroke-width': s.w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+  // detail
+  for (const d of DATA.detail[view])
+    svg.appendChild(pathEl(d, { fill: 'none', stroke: DATA.C.detail, 'stroke-width': 1.5, 'stroke-linecap': 'round', opacity: 0.5 }));
+  // hotspots
+  for (const area of DATA.areas) {
+    const shapes = area.byView[view];
+    if (!shapes.length) continue;
+    const on = selected === area.areaId;
+    for (const s of shapes) {
+      if (on) svg.appendChild(pathEl(s.d, { fill: 'none', stroke: DATA.C.brand, 'stroke-width': s.w + 12, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: 0.16 }));
+      const p = pathEl(s.d, { fill: 'none', stroke: DATA.C.brand, 'stroke-width': s.w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: on ? 0.92 : 0.3, style: 'cursor:pointer;transition:opacity .12s' });
+      p.addEventListener('click', () => select(area.areaId));
+      p.addEventListener('mouseenter', () => { if (!selected) hoverPaint(area.areaId, true); });
+      p.addEventListener('mouseleave', () => { if (!selected) hoverPaint(area.areaId, false); });
+      svg.appendChild(p);
+    }
+  }
+  host.appendChild(svg);
+}
+
+function hoverPaint(areaId, on) {
+  for (const btn of list.querySelectorAll('button')) {
+    if (btn.dataset.area === areaId) btn.classList.toggle('on', on);
+  }
+}
+
+function renderList() {
+  list.innerHTML = '';
+  DATA.areas.forEach((area, i) => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.dataset.area = area.areaId;
+    btn.className = selected === area.areaId ? 'on' : '';
+    const ar = area.name_ar ? '<span class="ar" dir="rtl">' + area.name_ar + '</span>' : '';
+    const onFront = area.byView.front.length > 0;
+    const onBack = area.byView.back.length > 0;
+    const where = onFront && onBack ? 'front · back' : onFront ? 'front' : 'back';
+    btn.innerHTML = '<span class="num">' + String(i + 1).padStart(2, '0') + '</span>'
+      + '<span class="nm">' + area.name_en + ar + '</span>'
+      + '<span class="na">' + where + '</span>';
+    btn.addEventListener('click', () => select(area.areaId));
+    btn.addEventListener('mouseenter', () => { if (!selected) previewArea(area.areaId, true); });
+    btn.addEventListener('mouseleave', () => { if (!selected) previewArea(area.areaId, false); });
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+}
+
+// Light hover preview on the map without committing a selection.
+let hovered = null;
+function previewArea(areaId, on) {
+  hovered = on ? areaId : null;
+  const prev = selected;
+  selected = on ? areaId : null;
+  renderMap();
+  selected = prev;
+}
+
+function select(areaId) {
+  selected = selected === areaId ? null : areaId;
+  const area = DATA.areas.find((a) => a.areaId === areaId);
+  // If the area only shows on the other view, switch to it.
+  if (selected && area && !area.byView[view].length) {
+    view = area.byView.front.length ? 'front' : 'back';
+    syncToggle();
+  }
+  renderMap();
+  renderList();
+  renderZones();
+}
+
+function renderZones() {
+  const area = DATA.areas.find((a) => a.areaId === selected);
+  if (!area) {
+    zonesBox.innerHTML = '<h3>Where it covers</h3><p class="empty">Select an area to see the zones it includes.</p>';
+    return;
+  }
+  const items = area.zones.map((z) => '<li>' + z + '</li>').join('');
+  zonesBox.innerHTML = '<h3>' + area.name_en + ' — where it covers</h3><ul>' + items + '</ul>';
+}
+
+function syncToggle() {
+  for (const b of document.querySelectorAll('.toggle button')) b.classList.toggle('on', b.dataset.view === view);
+}
+
+for (const b of document.querySelectorAll('.toggle button')) {
+  b.addEventListener('click', () => { view = b.dataset.view; syncToggle(); renderMap(); renderList(); });
+}
+
+renderMap();
+renderList();
+renderZones();
+</script>
+</body>
+</html>

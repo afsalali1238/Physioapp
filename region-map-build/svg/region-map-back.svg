@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 620" role="img" aria-labelledby="t d">
+  <title id="t">Body-area map — back view</title>
+  <desc id="d">Neutral body silhouette with the published body areas marked. Navigation aid, not a clinical illustration.</desc>
+  <rect width="240" height="620" fill="#ffffff"/>
+  <g class="silhouette">
+    <path d="M120 20 C137 20 151 36 151 57 C151 79 137 94 120 94 C103 94 89 79 89 57 C89 36 103 20 120 20 Z" fill="#c7d0dc"/>
+    <path d="M74 134 C96 124 144 124 166 134 L170 182 L158 238 L162 268 L160 300 C150 314 90 314 80 300 L78 268 L82 238 L70 182 Z" fill="#c7d0dc"/>
+    <path d="M120 96 L120 122" fill="none" stroke="#c7d0dc" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M58 134 L46 228" fill="none" stroke="#c7d0dc" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M182 134 L194 228" fill="none" stroke="#c7d0dc" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M46 228 L40 314" fill="none" stroke="#c7d0dc" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M194 228 L200 314" fill="none" stroke="#c7d0dc" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 314 L37 358" fill="none" stroke="#c7d0dc" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M200 314 L203 358" fill="none" stroke="#c7d0dc" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M96 302 L94 442" fill="none" stroke="#c7d0dc" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M144 302 L146 442" fill="none" stroke="#c7d0dc" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M94 442 L93 552" fill="none" stroke="#c7d0dc" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M146 442 L147 552" fill="none" stroke="#c7d0dc" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M93 552 L68 578" fill="none" stroke="#c7d0dc" stroke-width="21" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M147 552 L172 578" fill="none" stroke="#c7d0dc" stroke-width="21" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g class="detail">
+    <path d="M120 132 L120 300" fill="none" stroke="#7c8aa0" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <path d="M92 150 L120 142 L148 150" fill="none" stroke="#7c8aa0" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <path d="M96 186 C108 176 132 176 144 186" fill="none" stroke="#7c8aa0" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <path d="M92 292 C106 306 134 306 148 292" fill="none" stroke="#7c8aa0" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <path d="M100 452 L114 452 M126 452 L140 452" fill="none" stroke="#7c8aa0" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  </g>
+  <g class="hotspots">
+    <path d="M120 102 L120 126" fill="none" stroke="#b45309" stroke-width="40" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M120 236 L120 278" fill="none" stroke="#b45309" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M58 134 L55.12 156.56" fill="none" stroke="#b45309" stroke-width="40" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M47.68 214.84 L45.04 241.76" fill="none" stroke="#b45309" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M40.72 303.68 L40 314" fill="none" stroke="#b45309" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M80 296 L95.8 316" fill="none" stroke="#b45309" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M94.2 428 L93.89 454.1" fill="none" stroke="#b45309" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M93.1 541 L93 552" fill="none" stroke="#b45309" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M182 134 L184.88 156.56" fill="none" stroke="#b45309" stroke-width="40" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M192.32 214.84 L194.96 241.76" fill="none" stroke="#b45309" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M199.28 303.68 L200 314" fill="none" stroke="#b45309" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M160 296 L144.2 316" fill="none" stroke="#b45309" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M145.8 428 L146.11 454.1" fill="none" stroke="#b45309" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+    <path d="M146.9 541 L147 552" fill="none" stroke="#b45309" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+  </g>
+</svg>

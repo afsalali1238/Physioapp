@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 648" role="img" aria-labelledby="t d">
+  <title id="t">Knee — body-area map</title>
+  <desc id="d">Body silhouette (front view) with the Knee area highlighted. Navigation aid, not a clinical illustration.</desc>
+  <rect width="240" height="648" fill="#ffffff"/>
+  <g class="silhouette">
+    <path d="M120 20 C137 20 151 36 151 57 C151 79 137 94 120 94 C103 94 89 79 89 57 C89 36 103 20 120 20 Z" fill="#c7d0dc"/>
+    <path d="M74 134 C96 124 144 124 166 134 L170 182 L158 238 L162 268 L160 300 C150 314 90 314 80 300 L78 268 L82 238 L70 182 Z" fill="#c7d0dc"/>
+    <path d="M120 96 L120 122" fill="none" stroke="#c7d0dc" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M58 134 L46 228" fill="none" stroke="#c7d0dc" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M182 134 L194 228" fill="none" stroke="#c7d0dc" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M46 228 L40 314" fill="none" stroke="#c7d0dc" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M194 228 L200 314" fill="none" stroke="#c7d0dc" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 314 L37 358" fill="none" stroke="#c7d0dc" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M200 314 L203 358" fill="none" stroke="#c7d0dc" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M96 302 L94 442" fill="none" stroke="#c7d0dc" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M144 302 L146 442" fill="none" stroke="#c7d0dc" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M94 442 L93 552" fill="none" stroke="#c7d0dc" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M146 442 L147 552" fill="none" stroke="#c7d0dc" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M93 552 L68 578" fill="none" stroke="#c7d0dc" stroke-width="21" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M147 552 L172 578" fill="none" stroke="#c7d0dc" stroke-width="21" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g class="detail">
+    <path d="M120 140 L120 292" fill="none" stroke="#7c8aa0" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <path d="M96 178 C108 190 132 190 144 178" fill="none" stroke="#7c8aa0" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <path d="M100 248 C110 256 130 256 140 248" fill="none" stroke="#7c8aa0" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <path d="M100 440 L114 440 M126 440 L140 440" fill="none" stroke="#7c8aa0" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  </g>
+  <g class="highlight">
+    <path d="M94.2 428 L93.89 454.1" fill="none" stroke="#b45309" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" opacity="0.16"/>
+    <path d="M94.2 428 L93.89 454.1" fill="none" stroke="#b45309" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/>
+    <path d="M145.8 428 L146.11 454.1" fill="none" stroke="#b45309" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" opacity="0.16"/>
+    <path d="M145.8 428 L146.11 454.1" fill="none" stroke="#b45309" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/>
+  </g>
+  <text x="120" y="636" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24" font-weight="600" fill="#1f2937">Knee</text>
+
+</svg>
