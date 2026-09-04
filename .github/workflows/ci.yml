@@ -42,7 +42,19 @@ jobs:
         npm --version
         pwd
         ls
-        npm ci
+        # Verbose log is tailed into the job output and uploaded, so a fast
+        # failure like this one leaves evidence instead of a bare exit code.
+        npm ci --loglevel verbose > "$RUNNER_TEMP/npm-install.log" 2>&1 || INSTALL_FAILED=1
+        tail -n 60 "$RUNNER_TEMP/npm-install.log"
+        if [ "${INSTALL_FAILED:-0}" = "1" ]; then exit 1; fi
+
+    - name: Upload install log on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: npm-install-log
+        path: ${{ runner.temp }}/npm-install.log
+        retention-days: 3
 
     - name: Typecheck
       run: npm run typecheck
