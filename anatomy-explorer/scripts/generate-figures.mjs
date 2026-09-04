@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK_ONLY = process.argv.includes('--check');
 
-const { EXERCISE_FIGURES, figuresMissing } = await import(
+const { EXERCISE_FIGURES, figureItemFor } = await import(
   '../src/data/anatomy/exercise-figures.ts'
 );
 const { figureInnerSVG, figureViewBox, figureKeyPoints } = await import(
@@ -35,8 +35,16 @@ const items = JSON.parse(readFileSync(join(ROOT, 'src/data/items.json'), 'utf8')
 const published = items.filter((i) => i.status === 'published');
 
 // 1. Coverage: every published item needs a figure; no orphan specs.
-for (const id of figuresMissing(published.map((i) => i.id))) {
-  fail(`No figure spec for published item "${id}".`);
+// Resolved by image_id through figureItemFor — the exact path
+// ExerciseImage.astro takes at runtime — so the gate cannot pass while a
+// patient route renders an empty slot (as happened with ex-lower-back-02).
+for (const item of published) {
+  if (!figureItemFor(item.image_id)) {
+    fail(
+      `No figure resolves for published item "${item.id}" ` +
+        `(image_id "${item.image_id}").`,
+    );
+  }
 }
 const itemIds = new Set(items.map((i) => i.id));
 for (const id of Object.keys(EXERCISE_FIGURES)) {

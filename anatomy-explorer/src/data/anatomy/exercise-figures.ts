@@ -241,7 +241,9 @@ export function figuresMissing(ids: readonly string[]): string[] {
  */
 const FIGURE_ALIASES: Record<string, string> = {
   'ex-lower-back-01': 'ex-lowerback-01',
+  'ex-lower-back-02': 'ex-lowerback-02',
   'str-lower-back-01': 'str-lowerback-01',
+  'str-lower-back-02': 'str-lowerback-02',
 };
 
 /** Item id whose figure illustrates `imageId`, or undefined. */
