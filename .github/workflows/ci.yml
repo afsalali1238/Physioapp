@@ -6,30 +6,39 @@ on:
   pull_request:
     branches: [ main ]
 
+# The app lives in anatomy-explorer/, not at the repo root — every step
+# runs there. (The old workflow ran at the root, where there is no
+# package.json, so setup-node's npm cache lookup failed before anything
+# else could run. It also pinned Node 20 while the app requires >= 22,
+# called a `lint` script that does not exist, and ran `sync:content`,
+# which pulls the live sheet and rewrites content files — a manual
+# operation, not a PR check.)
+defaults:
+  run:
+    working-directory: anatomy-explorer
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
         cache: 'npm'
-        
+        cache-dependency-path: anatomy-explorer/package-lock.json
+
     - name: Install dependencies
       run: npm ci
-      
-    - name: Lint
-      run: npm run lint
-      
-    # Environment variables for sync-content
-    - name: Sync content test
-      run: npm run sync:content
-      env:
-        SHEET_ID: ${{ secrets.SHEET_ID }}
-        
+
+    - name: Typecheck
+      run: npm run typecheck
+
+    - name: Content and asset gates
+      run: npm run check:all
+
     - name: Build
       run: npm run build
