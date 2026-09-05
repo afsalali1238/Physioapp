@@ -79,6 +79,16 @@ now reads image headers and reports sub-8px stubs, because 24 published rows car
 warns by default and fails with `IMAGES_STRICT=1`, which CI sets on `main`. Fixing it means the
 clinician attaching the real figure — the data was not touched.
 
+**Motion claims are verified in `dist/`, not in the source.** The guide promised a reduced-motion
+fallback — a stepped rail instead of the countdown ring — and the component contained CSS that looked like
+it. What actually honoured the setting was `base.css`'s global `transition-duration: 0.01ms !important`,
+which left a ring that snaps once a second: not motion, not the promised presentation. Astro scopes
+component styles by attribute, so a selector that silently stops matching costs nothing at build time and
+shows up as an animation patients cannot turn off. So `grep dist/_astro/*.css` for the rule you think you
+shipped, as part of the change that adds it — a reduced-motion claim that has not been checked against the
+built CSS is not verified. (Playwright cannot run in this sandbox, so the built-CSS check is the strongest
+evidence available here, and it is still not a browser.)
+
 How to apply: never hand-draw anatomy or hand-place a hotspot coordinate; never let a component invent
 a tempo, rest interval or rep count the sheet did not supply; never persist patient activity anywhere
 (no storage keys beyond `physio-scale`).

@@ -119,6 +119,15 @@ So motion went in as three narrow families, documented in `DESIGN-SYSTEM.md`:
 `prefers-reduced-motion` kills all three, and anything the pacer communicates is _also_ in text, so
 reduced motion degrades to the same information, not less of it.
 
+This claim needed a fix of its own. Items 1 and 2 sit inside a `no-preference` query and die on their
+own; item 3 was being silenced only by `base.css`'s global `transition-duration: 0.01ms !important`, which
+leaves a countdown ring that snaps once a second — no animation, but not the promised fallback either. The
+guide now hides the ring under the setting and leaves the stepped rail as the progress display
+(`MovementGuide.astro`, last commit of this pass). Because Astro scopes component styles by attribute, a
+selector that quietly stops matching is free at build time, so the rule was checked in `dist/_astro/*.css`
+and not in the file: a reduced-motion promise that has only been read, not grepped, is not a promise
+anyone has verified.
+
 ### The follow-along guide (`MovementGuide.astro`)
 
 The substantive addition. Each item card's four prose fields become a step machine: Start → Move →
