@@ -21,7 +21,13 @@
     "sync:content": "tsx scripts/sync-content.ts",
     "qr": "tsx scripts/generate-qr.ts",
     "astro": "astro",
-    "figures:render": "tsx scripts/render-poses.ts"
+    "figures:render": "tsx scripts/render-poses.ts",
+    "lint": "prettier --check \"src/**/*.{astro,ts,css,json}\" \"scripts/**/*.ts\" \"*.md\"",
+    "format": "prettier --write \"src/**/*.{astro,ts,css,json}\" \"scripts/**/*.ts\"",
+    "test": "tsx --test tests/gates.test.ts tests/routes.test.ts",
+    "images:render": "tsx scripts/render-share-images.ts",
+    "images:items": "tsx scripts/render-item-figures.ts",
+    "crawl": "tsx scripts/crawl-routes.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
@@ -33,6 +39,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/papaparse": "^5.5.2",
     "@types/qrcode": "^1.5.6",
     "dotenv": "^17.4.2",
