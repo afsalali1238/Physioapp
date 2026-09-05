@@ -56,6 +56,33 @@ clinic, not a hundred and ten.
 
 Plan: https://claude.ai/code/artifact/057e5200-961b-42df-8de4-faad6805fdd1
 
+### A-022 · Figures are generated from the joint table, and only the sheet may time a rep
+**2026-09-05 · Arena agent**
+
+Two rules came out of the improvement pass, both about not trusting a picture you cannot check.
+
+**Every figure in the product is derived, not drawn.** `src/lib/anatomy/figures.ts` renders from
+`geometry/skeleton.ts`, so the area illustration on a card, the stand-in figure on a drafted row, the
+share card and the app icon are all the same body the locator marks — one joint table, one source of
+drift. The alternative is already documented in this repo's history: `IMAGE-TEST-VERDICT.md` rejected
+`ex-neck-02` because the drawn head sat forward of the shoulders, i.e. the picture contradicted the
+instruction next to it, and a patient reads the picture. Derivation also means the figures scale with
+`--scale`, follow dark mode through tokens, and cost ~2 KB instead of a 400 KB JPEG. The two
+text-to-image illustrations that remain (`public/anatomy/illustrations/`) are decorative, registered in
+`media-ledger.ts` as `draft` + `replacementRequired: true`, `alt=""`, and print-hidden.
+
+**Only a number the clinician wrote down may be timed.** The follow-along guide (`MovementGuide.astro`)
+auto-counts a step if and only if it came from `hold_seconds`; every other step waits for a tap. A
+reading pace is not a dosage. Related, and deliberately harsher than the last version: `check-images`
+now reads image headers and reports sub-8px stubs, because 24 published rows carried
+`image_status: approved` on a 1×1 placeholder and every gate stayed green on an empty frame. The gate
+warns by default and fails with `IMAGES_STRICT=1`, which CI sets on `main`. Fixing it means the
+clinician attaching the real figure — the data was not touched.
+
+How to apply: never hand-draw anatomy or hand-place a hotspot coordinate; never let a component invent
+a tempo, rest interval or rep count the sheet did not supply; never persist patient activity anywhere
+(no storage keys beyond `physio-scale`).
+
 ### A-020 · Content is drafted ahead of clinical review, and the boundary is a wall
 **2026-08-26 · Afsal**
 ~110 items are being drafted without waiting for the physiotherapist. This is fine and normal —
