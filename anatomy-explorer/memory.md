@@ -89,6 +89,13 @@ shipped, as part of the change that adds it — a reduced-motion claim that has 
 built CSS is not verified. (Playwright cannot run in this sandbox, so the built-CSS check is the strongest
 evidence available here, and it is still not a browser.)
 
+A length floor with no check on content gets satisfied by padding, and the padding is then what patients
+receive: 16 published `image_alt_en` values end with "This is an extended description to satisfy the
+accessibility minimum length requirement." because `validate.ts` requires 45 characters. Weakening the
+length rule to "fix" that is the wrong move — the fix is a real sentence about the position, which only
+someone who has seen the approved picture can write. The same rows also hold the inverse: the two that do
+have a file are 387 KB generated test renders marked `approved`.
+
 How to apply: never hand-draw anatomy or hand-place a hotspot coordinate; never let a component invent
 a tempo, rest interval or rep count the sheet did not supply; never persist patient activity anywhere
 (no storage keys beyond `physio-scale`).
