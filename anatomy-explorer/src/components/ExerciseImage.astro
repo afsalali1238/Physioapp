@@ -81,7 +81,7 @@ const slotReason = !imageId
         ? 'Picture not added yet'
         : isPlaceholder
           ? 'Picture not added yet'
-        : 'Picture awaiting approval';
+          : 'Picture awaiting approval';
 ---
 
 {
@@ -110,9 +110,7 @@ const slotReason = !imageId
         />
       )}
       {preview && !approved && (
-        <figcaption class="shot__flag">
-          Not approved — {imageStatus ?? 'no status'}
-        </figcaption>
+        <figcaption class="shot__flag">Not approved — {imageStatus ?? 'no status'}</figcaption>
       )}
     </figure>
   ) : (
