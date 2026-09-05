@@ -43,6 +43,7 @@ import {
   BONES,
   CYCLE_SECONDS,
   POSTURES,
+  actorBonesFor,
   arcFor,
   boneTimeline,
   fitFor,
@@ -62,6 +63,8 @@ const H = 560;
 const INK = {
   surface: '#FFFFFF',
   bone: '#5A6473',
+  /** Scenery: present, quieter, never animated. */
+  boneStill: '#ADB5C2',
   boneEnd: '#1D4ED8',
   ghost: '#C9CFDA',
   arc: '#1D4ED8',
@@ -133,6 +136,7 @@ function bones(pose: ReturnType<typeof poseJoints>, color: string, opacity: numb
 function animatedBody(plan: MotionPlan): string {
   const pose = poseJoints(POSTURES[plan.posture], frameAt(plan, 0), viewFor(plan));
   const moving = boneTimeline(plan);
+  const actors = actorBonesFor(plan);
 
   const build = (name: string): string => {
     const bone = BONES.find((entry) => entry.name === name)!;
@@ -144,12 +148,14 @@ function animatedBody(plan: MotionPlan): string {
     const shape = bone.round
       ? (() => {
           const [cx, cy] = pose.joints[`${name}:end`];
-          return `<circle cx="${r(cx)}" cy="${r(cy)}" r="${r(bone.length * 0.82)}" fill="${INK.bone}" />`;
+          const fill = actors.has(name) ? INK.bone : INK.boneStill;
+          return `<circle cx="${r(cx)}" cy="${r(cy)}" r="${r(bone.length * 0.82)}" fill="${fill}" />`;
         })()
       : (() => {
           const [ax, ay] = pose.joints[`${name}:start`];
           const [bx, by] = pose.joints[`${name}:end`];
-          return `<path d="M${r(ax)} ${r(ay)} L${r(bx)} ${r(by)}" stroke="${INK.bone}" stroke-width="${bone.width}" stroke-linecap="round" fill="none" />`;
+          const stroke = actors.has(name) ? INK.bone : INK.boneStill;
+          return `<path d="M${r(ax)} ${r(ay)} L${r(bx)} ${r(by)}" stroke="${stroke}" stroke-width="${bone.width}" stroke-linecap="round" fill="none" />`;
         })();
     const style = stops
       ? ` style="transform-origin:${r(origin[0])}px ${r(origin[1])}px;transform-box:view-box;animation:mv-${name} ${CYCLE_SECONDS}s linear infinite"`
@@ -248,8 +254,8 @@ ${style}
     <g class="ghost">
       ${bones(startPose, INK.ghost, 0.95)}
     </g>
-    <g class="end" opacity="0.4">
-      ${bones(endPose, INK.boneEnd, 0.55)}
+    <g class="end" opacity="0.62">
+      ${bones(endPose, INK.boneEnd, 0.72)}
     </g>
     <g class="focus">
       ${start.focus.map((point) => `<circle cx="${r(point[0])}" cy="${r(point[1])}" r="21" fill="${INK.focus}" />`).join('\n      ')}

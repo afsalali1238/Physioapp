@@ -360,6 +360,10 @@ mismatches the first time it ran — each of which would have rendered as a limb
 which is the failure a reviewer's eye slides over. `npm run images:movement` regenerates,
 `npm run images:movement:manifest` re-pins.
 
+**Scenery is quieter than the exercise.** `actorBonesFor(plan)` is the one definition of "the moving bones plus everything
+hanging off them"; the file writer and the page both dim its complement, because a supine figure is mostly
+leg and an evenly inked body does not say which limb the row is about.
+
 **What is deliberately not claimed.** No degrees are printed, ever: amplitudes are drawing constants, and
 the one row whose text says 45 degrees is the one figure allowed to say it. The cycle is 4.4 s of
 *shape*, not dosage — `hold_seconds` still comes only from the sheet, and the figure pauses while the

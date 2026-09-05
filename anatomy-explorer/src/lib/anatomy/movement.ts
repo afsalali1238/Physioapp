@@ -437,5 +437,28 @@ export function floorFor(scenes: readonly Scene[]): number {
   return rnd(Math.max(...scenes.map((scene) => scene.bounds.maxY)) + 8);
 }
 
+/** The bones a plan drives directly. */
+export function movingBonesFor(plan: MotionPlan): Set<string> {
+  return new Set(boneTimeline(plan).keys());
+}
+
+/**
+ * Moving bones, plus everything hanging off them. A hand attached to a moving forearm
+ * is part of the movement; a torso with a moving arm on it is scenery.
+ *
+ * This exists because a supine figure is mostly leg: with every bone inked the same
+ * weight, a reader cannot tell which limb the row is about. Both the file writer and
+ * the page dim the complement of this set, from this definition.
+ */
+export function actorBonesFor(plan: MotionPlan): Set<string> {
+  const actors = new Set<string>();
+  const mark = (name: string): void => {
+    actors.add(name);
+    for (const child of BONES) if (child.parent === name) mark(child.name);
+  };
+  for (const bone of movingBonesFor(plan)) mark(bone);
+  return actors;
+}
+
 export { planFor, POSTURES, BONES };
 export type { MotionPlan };

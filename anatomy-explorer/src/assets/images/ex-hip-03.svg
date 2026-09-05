@@ -85,21 +85,21 @@
       <path d="M276.1 373.7 L276.1 483.7" stroke="#C9CFDA" stroke-opacity="0.95" stroke-width="14" stroke-linecap="round" fill="none" />
       <path d="M281.1 483.7 L282.3 447.7" stroke="#C9CFDA" stroke-opacity="0.95" stroke-width="11" stroke-linecap="round" fill="none" />
     </g>
-    <g class="end" opacity="0.4">
-      <path d="M150 452 L-24 452" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="26" stroke-linecap="round" fill="none" />
-      <circle cx="-54" cy="452" r="24.6" fill="#1D4ED8" opacity="0.55" />
-      <path d="M-29 452 L65.5 458.6" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="13" stroke-linecap="round" fill="none" />
-      <path d="M60.5 458.6 L146.5 464.6" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="11" stroke-linecap="round" fill="none" />
-      <path d="M141.5 464.6 L185.5 467.7" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="10" stroke-linecap="round" fill="none" />
-      <path d="M-19 452 L75.5 458.6" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="13" stroke-linecap="round" fill="none" />
-      <path d="M80.5 458.6 L166.5 464.6" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="11" stroke-linecap="round" fill="none" />
-      <path d="M171.5 464.6 L215.5 467.7" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="10" stroke-linecap="round" fill="none" />
-      <path d="M145 452 L261.1 373.7" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="17" stroke-linecap="round" fill="none" />
-      <path d="M256.1 373.7 L256.1 483.7" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="14" stroke-linecap="round" fill="none" />
-      <path d="M251.1 483.7 L252.3 447.7" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="11" stroke-linecap="round" fill="none" />
-      <path d="M155 452 L271.1 373.7" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="17" stroke-linecap="round" fill="none" />
-      <path d="M276.1 373.7 L276.1 483.7" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="14" stroke-linecap="round" fill="none" />
-      <path d="M281.1 483.7 L282.3 447.7" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="11" stroke-linecap="round" fill="none" />
+    <g class="end" opacity="0.62">
+      <path d="M150 452 L-24 452" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="26" stroke-linecap="round" fill="none" />
+      <circle cx="-54" cy="452" r="24.6" fill="#1D4ED8" opacity="0.72" />
+      <path d="M-29 452 L65.5 458.6" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="13" stroke-linecap="round" fill="none" />
+      <path d="M60.5 458.6 L146.5 464.6" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="11" stroke-linecap="round" fill="none" />
+      <path d="M141.5 464.6 L185.5 467.7" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="10" stroke-linecap="round" fill="none" />
+      <path d="M-19 452 L75.5 458.6" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="13" stroke-linecap="round" fill="none" />
+      <path d="M80.5 458.6 L166.5 464.6" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="11" stroke-linecap="round" fill="none" />
+      <path d="M171.5 464.6 L215.5 467.7" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="10" stroke-linecap="round" fill="none" />
+      <path d="M145 452 L261.1 373.7" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="17" stroke-linecap="round" fill="none" />
+      <path d="M256.1 373.7 L256.1 483.7" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="14" stroke-linecap="round" fill="none" />
+      <path d="M251.1 483.7 L252.3 447.7" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="11" stroke-linecap="round" fill="none" />
+      <path d="M155 452 L271.1 373.7" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="17" stroke-linecap="round" fill="none" />
+      <path d="M276.1 373.7 L276.1 483.7" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="14" stroke-linecap="round" fill="none" />
+      <path d="M281.1 483.7 L282.3 447.7" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="11" stroke-linecap="round" fill="none" />
     </g>
     <g class="focus">
       <circle cx="150" cy="452" r="21" fill="rgba(240, 190, 110, 0.45)" />

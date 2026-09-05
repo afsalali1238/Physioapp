@@ -86,21 +86,21 @@
       <path d="M148 354 L148 464" stroke="#C9CFDA" stroke-opacity="0.95" stroke-width="14" stroke-linecap="round" fill="none" />
       <path d="M153 464 L116.9 464" stroke="#C9CFDA" stroke-opacity="0.95" stroke-width="11" stroke-linecap="round" fill="none" />
     </g>
-    <g class="end" opacity="0.4">
-      <path d="M138 214 L138 40" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="26" stroke-linecap="round" fill="none" />
-      <circle cx="138" cy="10" r="24.6" fill="#1D4ED8" opacity="0.55" />
-      <path d="M133 40 L123.1 134.2" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="13" stroke-linecap="round" fill="none" />
-      <path d="M118.1 134.2 L103.1 219.1" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="11" stroke-linecap="round" fill="none" />
-      <path d="M98.1 219.1 L90.5 262.6" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="10" stroke-linecap="round" fill="none" />
-      <path d="M143 40 L133.1 134.2" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="13" stroke-linecap="round" fill="none" />
-      <path d="M138.1 134.2 L123.1 219.1" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="11" stroke-linecap="round" fill="none" />
-      <path d="M128.1 219.1 L120.5 262.6" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="10" stroke-linecap="round" fill="none" />
-      <path d="M133 214 L133 354" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="17" stroke-linecap="round" fill="none" />
-      <path d="M128 354 L128 464" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="14" stroke-linecap="round" fill="none" />
-      <path d="M123 464 L86.9 464" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="11" stroke-linecap="round" fill="none" />
-      <path d="M143 214 L143 354" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="17" stroke-linecap="round" fill="none" />
-      <path d="M148 354 L148 464" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="14" stroke-linecap="round" fill="none" />
-      <path d="M153 464 L116.9 464" stroke="#1D4ED8" stroke-opacity="0.55" stroke-width="11" stroke-linecap="round" fill="none" />
+    <g class="end" opacity="0.62">
+      <path d="M138 214 L138 40" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="26" stroke-linecap="round" fill="none" />
+      <circle cx="138" cy="10" r="24.6" fill="#1D4ED8" opacity="0.72" />
+      <path d="M133 40 L123.1 134.2" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="13" stroke-linecap="round" fill="none" />
+      <path d="M118.1 134.2 L103.1 219.1" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="11" stroke-linecap="round" fill="none" />
+      <path d="M98.1 219.1 L90.5 262.6" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="10" stroke-linecap="round" fill="none" />
+      <path d="M143 40 L133.1 134.2" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="13" stroke-linecap="round" fill="none" />
+      <path d="M138.1 134.2 L123.1 219.1" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="11" stroke-linecap="round" fill="none" />
+      <path d="M128.1 219.1 L120.5 262.6" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="10" stroke-linecap="round" fill="none" />
+      <path d="M133 214 L133 354" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="17" stroke-linecap="round" fill="none" />
+      <path d="M128 354 L128 464" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="14" stroke-linecap="round" fill="none" />
+      <path d="M123 464 L86.9 464" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="11" stroke-linecap="round" fill="none" />
+      <path d="M143 214 L143 354" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="17" stroke-linecap="round" fill="none" />
+      <path d="M148 354 L148 464" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="14" stroke-linecap="round" fill="none" />
+      <path d="M153 464 L116.9 464" stroke="#1D4ED8" stroke-opacity="0.72" stroke-width="11" stroke-linecap="round" fill="none" />
     </g>
     <g class="focus">
       <circle cx="133" cy="354" r="21" fill="rgba(240, 190, 110, 0.45)" />

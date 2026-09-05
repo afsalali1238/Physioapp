@@ -286,6 +286,27 @@ export const POSTURES: Record<string, Posture> = {
     view: 'side',
     angles: { legL: 0, shinL: 0, footL: 92, legR: -34, shinR: 124, footR: 92, armL: 4, armR: 4 },
   }),
+  /**
+   * Supine with the knee supported on a roll: thigh resting slightly raised, heel on
+   * the floor, extending the knee lifts the heel. Anything written as "towel under the
+   * knee" starts here, because on the feet-flat supine baseline the same numbers read
+   * as a bridging leg, which is a different exercise.
+   */
+  SUPINE_KNEE_SUPPORT: pose({
+    support: 'floor',
+    root: [150, 452],
+    tilt: -90,
+    angles: {
+      legL: -16,
+      shinL: 58,
+      footL: 92,
+      legR: -16,
+      shinR: 58,
+      footR: 92,
+      armL: 4,
+      armR: 4,
+    },
+  }),
   /** On the side, knees stacked. The near leg is the working one. */
   SIDE_LYING: pose({
     support: 'floor',
@@ -546,7 +567,7 @@ export const PLANS: Record<string, MotionPlan> = {
     ],
   },
   'ex-knee-02': {
-    posture: 'SUPINE',
+    posture: 'SUPINE_KNEE_SUPPORT',
     side: 'left',
     focus: ['kneeL', 'ankleL'],
     from: {
@@ -556,8 +577,8 @@ export const PLANS: Record<string, MotionPlan> = {
       safety: 'Keep the back of your knee firmly against the towel.',
     },
     steps: [
-      { bone: 'shinL', from: 124, to: 96, dwell: 0.4, label: 'straighten' },
-      { bone: 'shinL', from: 96, to: 124, dwell: 0.14, label: 'relax' },
+      { bone: 'shinL', from: 58, to: 12, dwell: 0.4, label: 'straighten' },
+      { bone: 'shinL', from: 12, to: 58, dwell: 0.14, label: 'relax' },
     ],
   },
   'ex-knee-03': {

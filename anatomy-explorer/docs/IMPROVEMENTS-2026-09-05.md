@@ -267,6 +267,14 @@ schematic → honest empty slot) because alphabetical glob order used to let a 6
 pauses every figure while a hold counts down and while it is off-screen; `prefers-reduced-motion` and
 print get the two static states.
 
+**Scenery is quieter than the exercise.** A supine row is mostly leg, and with every bone inked the same
+weight the reader cannot tell which limb the sentence is about — so `actorBonesFor(plan)` in
+`movement.ts` defines the moving bones plus everything hanging off them, and both the file writer and the
+page draw the complement in a lighter grey. One definition, two renderers: "what is the actor" cannot
+drift between the card and the page. The same pass rebased `ex-knee-02` (short arc quad) onto a new
+`SUPINE_KNEE_SUPPORT` posture, because on the feet-flat supine baseline the correct shin numbers read as
+a bridging leg — a different exercise — which is the sort of thing only a screenshot review catches.
+
 **Gates added** (`scripts/check-poses.ts`, wired into `check:all` and therefore `prebuild`): quote drift
 against `items.json`, first-step angle must equal the posture's resting angle, every focus joint must
 resolve on the posed body, and every file must match `src/data/anatomy/figure-manifest.json`

@@ -19,6 +19,7 @@
  * always wins).
  */
 import {
+  actorBonesFor,
   arcFor,
   boneTimeline,
   fitFor,
@@ -43,6 +44,8 @@ const plan = planFor(itemId);
 
 const COLOR = {
   bone: '#5A6473',
+  /** Everything that is not the exercise, drawn so the eye goes past it. */
+  still: '#ADB5C2',
   ghost: '#C9CFDA',
   support: '#E2E5EB',
   focus: 'rgba(240, 190, 110, 0.45)',
@@ -65,6 +68,7 @@ if (plan) {
     }
   }
   const moving = boneTimeline(plan);
+  const actors = actorBonesFor(plan);
   view = {
     start,
     fit,
@@ -75,6 +79,7 @@ if (plan) {
       ...bone,
       origin: origins.get(bone.name),
       animate: moving.has(bone.name),
+      actor: actors.has(bone.name),
     })),
     caption: plan.from.move ?? '',
     note: plan.note ?? '',
@@ -148,7 +153,7 @@ if (plan) {
                   cx={bone.circle.cx}
                   cy={bone.circle.cy}
                   r={bone.circle.r}
-                  fill={COLOR.bone}
+                  fill={bone.actor ? COLOR.bone : COLOR.still}
                   data-bone={bone.animate ? bone.name : undefined}
                   style={
                     bone.origin && bone.animate
@@ -159,7 +164,7 @@ if (plan) {
               ) : (
                 <path
                   d={bone.d}
-                  stroke={COLOR.bone}
+                  stroke={bone.actor ? COLOR.bone : COLOR.still}
                   stroke-width={bone.width}
                   stroke-linecap="round"
                   fill="none"
