@@ -181,17 +181,28 @@ npm run crawl               ✓ route crawl clean (anchors, legal, preview isola
    not exist**. Every layout claim here comes from reading generated HTML and rendering SVG through
    `@resvg/resvg-js` — not from looking at the site in a browser. The movement guide's interactions
    (countdown, rep counting, announcements) are **untested in a real browser**.
-2. **Deploy not performed.** `vercel whoami` reports "Logged out" here — there is no Vercel credential
-   in this sandbox, so nothing was published to a real domain. What is ready to deploy is: the
-   verified build, the fixed lockfile, and CI that now actually runs. Push branch → connect
-   `anatomy-explorer` as the Root Directory → set `PREVIEW_PASSWORD` (and `COMPLIANCE_STRICT=1` for
-   production). The 403-host fix in `astro.config.mjs` is dev-only and does not ship.
+2. **Deploying is not something this sandbox can do _to_ the project, but the branch is live.** There is no
+   Vercel credential here (`vercel whoami` → "Logged out"), so nothing here can set project env vars, attach
+   a domain or promote a build. What the repo's own GitHub App did, unprompted, is build and deploy the
+   pushed branch: `Vercel – heal` and `Vercel – healer` both pass on the preview URL. So the front end is
+   reviewable now, and the remaining deploy work is two settings — the project's Production Branch, and
+   `PREVIEW_PASSWORD`, without which `/preview` answers 503 by design.
+   Checking that 503 is what found a latent bug: the Basic-auth decoder called `Buffer.from`, which does not
+   exist in the Edge runtime the Vercel adapter ships middleware to, so the door would have thrown a 500
+   the moment a password was configured — every green build before that point, because the line was only
+   reachable once someone set the variable. It is now `src/lib/preview-auth.ts` (`atob` + `TextDecoder`,
+   constant-time compare, colon and non-ASCII safe) with eight unit tests, and `npm test` globs
+   `tests/**/*.test.ts` instead of naming two files: an enumerated list is how a new test file would have
+   been skipped forever.
+
 3. **The 24 stub images are still stubs.** Correctly: they are the clinician's to attach. The gate now
    says so loudly; the fix is not code.
 4. **`/preview` is guarded by middleware + HTTP Basic only when `PREVIEW_PASSWORD` is set** — with the
    variable unset, the routes return 503 (fail-closed) rather than exposing drafts, which is the right
-   default, but it means the preview queue in this sandbox is served by the dev server (localhost
-   bypass) and is not a production-safe configuration on its own.
+   default, and the review queue in this sandbox is therefore served by the dev server (loopback bypass).
+   Fail-closed on a misconfiguration is a decision, not an accident: an unset env var must not be able to
+   publish a drafted clinical row, so the deploy-time choice is to set the variable, never to relax the
+   guard. `127.0.0.1.evil.com` does not get the localhost bypass either.
 5. **The AI illustrations have unverified provenance.** They are registered `draft` +
    `replacementRequired`. A design asset for a clinical product should be commissioned or drawn from
    the same geometry as everything else — the generator already can, if that decision is made.
