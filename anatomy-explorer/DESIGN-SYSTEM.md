@@ -54,4 +54,7 @@ transitions, no carousels, no motion that competes with a dosage number. What is
   and it starts only on an explicit press.
 
 Everything motion says, text also says. `prefers-reduced-motion` removes the animation, never the information.
-Nothing is stored to make motion work: the guide holds its counts in the page and loses them on close.
+Concretely, in the one place motion carries information: the countdown ring is not slowed down but removed, and
+the rail under the guide head becomes the progress display — fed by the same per-second tick, with every number
+in its usual place. Nothing is stored to make motion work: the guide holds its counts in the page and loses them
+on close.

@@ -726,6 +726,22 @@ const uid = item.id.replace(/[^a-z0-9-]/gi, '');
     border: 0;
   }
 
+  /* Reduced motion: an equal presentation, not a slower one. base.css already
+     zeroes every duration globally, which would leave the ring snapping — so the
+     ring goes away entirely and the rail under the head becomes the progress
+     display, updated by the same per-second tick. The numbers never change. */
+  @media (prefers-reduced-motion: reduce) {
+    .mguide-timer svg {
+      display: none;
+    }
+    .mguide-timer {
+      background: transparent;
+    }
+    .progress-rail {
+      height: 7px;
+    }
+  }
+
   @media print {
     .mguide {
       border-style: dashed;
