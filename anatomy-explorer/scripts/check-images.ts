@@ -8,7 +8,7 @@ import path from 'path';
  * used to be checked: the file must exist, and the file must be a picture. It is
  * possible to satisfy the first with a 68-byte 1×1 PNG — which is exactly what
  * `src/assets/images` was full of, on rows whose `image_status` said `approved`.
- * The card then renders an empty frame and every gate in the repo stays green,
+ * The card then showed an empty frame and every gate in the repo stayed green,
  * because "approved" and "present" were treated as the same claim. They are not.
  *
  * So stubs are detected here. By default that is a loud warning, because the fix
@@ -189,7 +189,9 @@ function main() {
     const lines = stubs.map((s) => `    - ${s}`).join('\n');
     const message =
       `${stubs.length} published item image(s) are ${MIN_EDGE}px stubs or smaller — a placeholder, not a figure:\n${lines}\n` +
-      `    Their rows say image_status: approved, so the card renders an empty frame and every other gate stays green.\n` +
+      `    Their rows say image_status: approved. The card now shows a derived schematic instead\n` +
+      `    (lib/images.ts prefers it over the stub), so nothing looks broken to a patient — what\n` +
+      `    is missing is the photograph, and every other gate stays green on the stub.\n` +
       `    Fix by attaching the real figure, or by setting image_status back to pending until one exists.`;
     if (STRICT) {
       console.error(`ERROR: ${message}`);

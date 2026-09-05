@@ -1,3 +1,10 @@
+/**
+ * Deprecated prototype, kept for eyeballing only. Superseded by `src/lib/anatomy/poses.ts`
+ * (per-row movement plans), `src/lib/anatomy/movement.ts` (the kinematics) and
+ * `scripts/render-movement-figures.ts`, which `scripts/check-poses.ts` gates against the sheet.
+ * Nothing in the build reads either file. Do not author poses here: a second pose table is how
+ * a figure starts disagreeing with the sentence printed underneath it.
+ */
 // Prototype harness: render the real published items as posed figures and look at them.
 // Not part of the build. A-006's rule — render it and look at it.
 import { writeFileSync } from 'node:fs';

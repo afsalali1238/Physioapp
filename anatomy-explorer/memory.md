@@ -64,8 +64,9 @@ Two rules came out of the improvement pass, both about not trusting a picture yo
 **Every figure in the product is derived, not drawn.** `src/lib/anatomy/figures.ts` renders from
 `geometry/skeleton.ts`, so the area illustration on a card, the stand-in figure on a drafted row, the
 share card and the app icon are all the same body the locator marks — one joint table, one source of
-drift. The alternative is already documented in this repo's history: `IMAGE-TEST-VERDICT.md` rejected
-`ex-neck-02` because the drawn head sat forward of the shoulders, i.e. the picture contradicted the
+drift. The alternative is already documented in this repo's history: the archived image verdict
+(`docs/archive/legacy-2026-08-26/handoffs-v1/H-CLINICAL-SIGNOFF.md`) rejected `ex-neck-02` because the
+drawn head sat forward of the shoulders, i.e. the picture contradicted the
 instruction next to it, and a patient reads the picture. Derivation also means the figures scale with
 `--scale`, follow dark mode through tokens, and cost ~2 KB instead of a 400 KB JPEG. The two
 text-to-image illustrations that remain (`public/anatomy/illustrations/`) are decorative, registered in
@@ -332,3 +333,44 @@ decision entry rather than quietly reversing.
 - **D8, inherited.** Whether a regulator reads this as education or advertisement. A body map is
   the most product-like surface on the site and therefore most exposed. No outcome claims, no
   condition names, no booking CTA.
+
+### A-023 · A figure animates on the page, and the page and the file share one arithmetic
+**2026-09-05 · Arena agent**
+
+The 24 published rows that used to render an empty frame now render a movement figure, and the figure
+moves. Two decisions made that worth more than the drawing itself.
+
+**One source of kinematics.** `src/lib/anatomy/movement.ts` owns the maths — `frameAt` (what the body
+looks like at time _t_), `boneTimeline` (when each bone moves, quantised to 0.1% of the cycle so a
+regenerated file is byte-stable), `sceneFor`, `fitFor`, `supportsFor`, `arcFor`. The SVG writer in
+`scripts/render-movement-figures.ts` and the browser component `MovementFigure.astro` both consume it: a
+screenshot of a card and the live page cannot disagree, because there is no second table of angles to
+drift. (The earlier prototype `geometry/pose.ts` + `scripts/render-poses.ts` is still in the tree, marked
+deprecated at the top of both files — nothing in the build reads them.)
+
+**The figure looks up its own row.** `MovementFigure.astro` takes an `itemId`, not a plan. Passing a plan
+in would let a page pair any drawing with any sentence; looking it up makes a mismatch structurally
+impossible, which is how the images died the first time.
+
+**A gate, not a screenshot.** `scripts/check-poses.ts` (in `check:all`, so in `prebuild`) fails the build
+unless: every plan quotes its row's text verbatim; every plan's first step starts at the angle its
+posture actually rests that bone at; every highlighted joint resolves on the posed body; and every
+figure on disk matches `src/data/anatomy/figure-manifest.json` byte for byte. It found three baseline
+mismatches the first time it ran — each of which would have rendered as a limb starting mid-movement,
+which is the failure a reviewer's eye slides over. `npm run images:movement` regenerates,
+`npm run images:movement:manifest` re-pins.
+
+**What is deliberately not claimed.** No degrees are printed, ever: amplitudes are drawing constants, and
+the one row whose text says 45 degrees is the one figure allowed to say it. The cycle is 4.4 s of
+*shape*, not dosage — `hold_seconds` still comes only from the sheet, and the figure pauses while the
+guide counts a hold (`data-figure-paused`), because a moving picture next to a number you are supposed
+to be reading is two instructions. Off-screen figures are paused by an IntersectionObserver; reduced
+motion and print both fall back to the same two static states. The `astro:assets` pipeline is bypassed
+for schematics — it rasterises one frame and the animation is gone — and `lib/images.ts` now ranks
+candidates explicitly (usable raster > schematic > honest empty slot), because alphabetical glob order used
+to let a 68-byte PNG beat a checked figure.
+
+**Still human-owned, unchanged by any of this:** the 16 padded `image_alt_en` rows, the two heavy
+`approved` test renders, the draft safety/education rows, `clinic.ts` placeholders, legal `approvedBy`.
+A generated figure is labelled as one in the image, on the card, and in the manifest — it is an
+illustration awaiting clinician review, never a demonstration of technique.

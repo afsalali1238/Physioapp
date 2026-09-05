@@ -50,8 +50,12 @@ are open and are human, not technical.
    the build sandbox**, so no visual evidence packet exists for any of it. This is the biggest open gap.
 5. Obtain clinician/visual approval for region boundaries and orientation; keep all assets draft until then.
 6. ~~Complete a successful build and rendered route crawl, including legal/preview isolation.~~ **Closed.**
-7. **New:** 24 published rows carry `image_status: approved` on a 1×1 placeholder file. `check:images`
-   now reports it; the fix is attaching the real figures, not a code change.
+7. **Partly closed:** 24 published rows still carry `image_status: approved` on a 1×1 placeholder file,
+   but no longer render an empty frame — every published row now has a movement figure derived from its
+   own reviewed sentence (`npm run images:movement`), animated on the exercise page and gated against the
+   sheet by `scripts/check-poses.ts`. What remains is the human half: a clinician photographing or
+   drawing the real demonstration, and `image_status` staying `approved` only when they say so. A
+   generated schematic is labelled as one everywhere; it is not a demonstration of technique.
 8. **New:** the image metadata is worse than "missing" on 16 rows. Their `image_alt_en` ends with _"This
    is an extended description to satisfy the accessibility minimum length requirement."_ — padding written
    to get past `validate.ts`'s 45-character floor, now read aloud to patients. Trimming the sentence is

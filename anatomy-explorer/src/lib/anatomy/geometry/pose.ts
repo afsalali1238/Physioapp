@@ -1,6 +1,11 @@
 /**
  * A posable figure, driven by joint ANGLES rather than coordinates.
  *
+ * Not used by the build. The patient-facing figures come from
+ * `src/lib/anatomy/poses.ts` + `movement.ts` and are gated by `scripts/check-poses.ts`;
+ * this module is the earlier prototype, kept because the geometry it derives is still
+ * the clearest way to eyeball a joint chain. Do not author shipped poses here.
+ *
  * ── Why angles, and why this exists ────────────────────────────────────────
  * D-015 rejected AI-generated demonstration images after five of nine came back
  * clinically wrong — and, the part that matters, **all nine looked professional**.

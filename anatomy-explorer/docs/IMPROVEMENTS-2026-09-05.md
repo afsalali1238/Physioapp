@@ -79,7 +79,8 @@ Two kinds, and the distinction matters:
 
 **a) Deterministic figures, generated from the app's own geometry.** New `src/lib/anatomy/figures.ts`
 draws from `geometry/skeleton.ts` (the joint table every hotspot is anchored to) — so a figure cannot
-disagree with the body map, which is the failure mode `IMAGE-TEST-VERDICT.md` was written after. Used for:
+disagree with the body map, which is the failure mode the archived image verdict
+(`docs/archive/legacy-2026-08-26/handoffs-v1/H-CLINICAL-SIGNOFF.md`) was written after. Used for:
 
 - the area figure on every section card, area page hero and 404;
 - mini figures inside the home entrance cards;
@@ -231,3 +232,52 @@ npm run crawl               ✓ route crawl clean (anchors, legal, preview isola
 `DESIGN-SYSTEM.md`.
 
 </details>
+
+## 8. Figures that move, on the page (second pass, same date)
+
+The first pass reported the placeholder problem; this one closes the visible half of it. All 26 published
+rows now have a figure derived from their own reviewed text, and on the exercise page that figure
+animates through the range the sentence describes.
+
+**Why not a photograph.** The archived clinical sign-off records a photoreal render of `ex-neck-02`
+scored "FAIL — worst of the set": the head sat forward of the shoulders, the exact posture the chin tuck
+exists to correct, and it had passed a casual review because it looked professional. Correctness is the
+property a patient cannot verify, so it is the one that has to be structural. A row's plan states:
+posture, joint, direction, and that the movement runs between the two states the sentence names. It never
+states degrees, load, or duration.
+
+**The layers, and what each is for.**
+
+| Layer | Content | Why |
+| --- | --- | --- |
+| `supportsFor` | floor / wall / chair / counter under the body | a figure without its support implies the wrong exercise |
+| faded start pose | frame 0 | the state the sentence begins from |
+| solid end pose + dashed arc | frame 1, arc between | what "do this" means, readable in a screenshot or on paper |
+| live group | per-bone WAAPI keyframes from `boneTimeline` | the travel, which no static drawing can carry |
+| printed caption | the row's `movement_en`, escaped, wrapped | the figure carries its own provenance wherever it is pasted |
+
+**Shared arithmetic.** `src/lib/anatomy/movement.ts` is the only kinematics. The SVG writer and the Astro
+component read the same functions, so the file on disk and the page are the same drawing at different
+sizes — a 320 px card cannot legibly show a 420×620 diagram, so the figure is rendered at the size it is
+displayed rather than scaled down.
+
+**Animation is a capability, not a file.** Feeding an SVG through `astro:assets` rasterises one frame, so
+schematics bypass the optimisation pipeline; `lib/images.ts` ranks candidates explicitly (usable raster →
+schematic → honest empty slot) because alphabetical glob order used to let a 68-byte PNG win. The guide
+pauses every figure while a hold counts down and while it is off-screen; `prefers-reduced-motion` and
+print get the two static states.
+
+**Gates added** (`scripts/check-poses.ts`, wired into `check:all` and therefore `prebuild`): quote drift
+against `items.json`, first-step angle must equal the posture's resting angle, every focus joint must
+resolve on the posed body, and every file must match `src/data/anatomy/figure-manifest.json`
+(size + sha256) so nobody hand-edits a shipped figure. It caught three real baseline mismatches on its
+first run. `npm run images:movement` regenerates; `npm run images:movement:manifest` re-pins.
+
+**Tests** (`tests/movement.test.ts`, 13): frame endpoints per step, no teleporting limb between steps,
+keyframe quantisation (byte-stable regeneration), finite geometry for every bone at three points of the
+cycle, focus resolution, fit and floor invariants, support lines, and the shipped file being
+byte-identical to what the code generates with its caption escaped.
+
+**What this does not fix, and cannot from code:** the 16 padded `image_alt_en` rows, the two heavy
+`approved` test renders, `stretching/shoulder` published with no items, the draft safety/education rows,
+`clinic.ts` placeholders, legal `approvedBy`. Those are sheet and human decisions — see §6.

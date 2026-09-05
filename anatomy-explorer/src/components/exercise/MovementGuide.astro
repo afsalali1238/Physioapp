@@ -30,7 +30,10 @@
  * are gone. D-007 is not just about analytics; a record of what a patient
  * managed to do today is health data, and this app does not keep health data.
  */
+import MovementFigure from './MovementFigure.astro';
 import RegionFigure from '../anatomy/RegionFigure.astro';
+import { planFor } from '../../lib/anatomy/movement';
+import { pickFigure } from '../../lib/images';
 import { glyphForType } from '../../lib/anatomy/figures';
 
 interface GuideStep {
@@ -56,6 +59,8 @@ interface Props {
     sets?: number;
     rest_seconds?: number;
     each_side?: boolean;
+    /** Only to decide whether a real picture exists; the guide never draws one. */
+    image_id?: string;
   };
 }
 
@@ -88,6 +93,15 @@ const hasCountdown = steps.some((s) => s.seconds);
 const hasCounting = reps > 0 || sets > 1 || Boolean(item.each_side);
 const glyph = glyphForType(item.type);
 
+/**
+ * Whether this row has a movement schematic to show. `lib/images` decides the same
+ * way the picture beside it does, so the guide and the card can never disagree about
+ * whether a real photograph has arrived.
+ */
+const hasSchematic =
+  planFor(item.id) !== null &&
+  (item.image_id ? (await pickFigure(item.image_id))?.kind === 'schematic' : false);
+
 // A short id so the live region, the list and the buttons can reference each
 // other without assuming there is only one guide on the page.
 const uid = item.id.replace(/[^a-z0-9-]/gi, '');
@@ -96,6 +110,8 @@ const uid = item.id.replace(/[^a-z0-9-]/gi, '');
 <div
   class="mguide"
   data-guide
+  data-mguide
+  data-figure-paused="false"
   data-steps={steps.length}
   data-hold={item.hold_seconds ?? ''}
   data-reps={reps || ''}
@@ -134,7 +150,13 @@ const uid = item.id.replace(/[^a-z0-9-]/gi, '');
 
   <div class="mguide-grid">
     <div class="mguide-figure" data-figure>
-      <RegionFigure areaId={item.area_id} glyph={glyph} animated={false} zoom />
+      {
+        hasSchematic ? (
+          <MovementFigure itemId={item.id} compact />
+        ) : (
+          <RegionFigure areaId={item.area_id} glyph={glyph} animated={false} zoom />
+        )
+      }
     </div>
 
     {
@@ -252,7 +274,7 @@ const uid = item.id.replace(/[^a-z0-9-]/gi, '');
     const timer = root.querySelector<HTMLElement>('[data-timer]');
     const clock = root.querySelector<HTMLElement>('[data-clock]');
     const ring = root.querySelector<HTMLElement>('.ring-fill');
-    const figure = root.querySelector<HTMLElement>('[data-figure] .figure');
+    const figure = root.querySelector<HTMLElement>('[data-figure]');
     const rail = root.querySelector<HTMLElement>('[data-rail-fill]');
     const live = root.querySelector<HTMLElement>('[data-announce]');
     const runBtn = root.querySelector<HTMLButtonElement>('[data-run]');
@@ -332,9 +354,19 @@ const uid = item.id.replace(/[^a-z0-9-]/gi, '');
       );
     }
 
+    /**
+     * The looping figure is there to explain the movement. While a hold is counting
+     * down the patient is doing it, so the picture stops — a drawing that keeps
+     * waving during the rep competes with the thing it describes.
+     */
+    function setPaused(paused: boolean): void {
+      root.setAttribute('data-figure-paused', paused ? 'true' : 'false');
+    }
+
     function stopHold(): void {
       if (tick !== undefined) window.clearInterval(tick);
       tick = undefined;
+      setPaused(false);
       if (runLabel) runLabel.textContent = remaining > 0 ? 'Resume the hold' : 'Start the hold';
       if (figure) figure.removeAttribute('data-animate-glyph');
     }
@@ -369,6 +401,7 @@ const uid = item.id.replace(/[^a-z0-9-]/gi, '');
       const from = remaining > 0 ? remaining : seconds;
       const at = Date.now();
       if (runLabel) runLabel.textContent = 'Pause';
+      setPaused(true);
       tick = window.setInterval(() => {
         remaining = from - (Date.now() - at) / 1000;
         if (remaining <= 0) {
