@@ -52,6 +52,13 @@ are open and are human, not technical.
 6. ~~Complete a successful build and rendered route crawl, including legal/preview isolation.~~ **Closed.**
 7. **New:** 24 published rows carry `image_status: approved` on a 1×1 placeholder file. `check:images`
    now reports it; the fix is attaching the real figures, not a code change.
+8. **New:** the image metadata is worse than "missing" on 16 rows. Their `image_alt_en` ends with _"This
+   is an extended description to satisfy the accessibility minimum length requirement."_ — padding written
+   to get past `validate.ts`'s 45-character floor, now read aloud to patients. Trimming the sentence is
+   not the fix: it drops the alt under the floor. Each one needs a real description of the position and
+   which joint should feel it. And the only two rows with an actual file (`ex-neck-01`, `str-neck-02`)
+   point at 354–387 KB generated test renders marked `approved` — the class the v1 pilot verdict rejected.
+   `check:images` names all of it; `IMAGES_STRICT=1` fails the build on the alt text and the stubs.
 
 The proposed implementation defaults and exact review copy for the eight human decisions are in
 `docs/LAUNCH-DECISION-PACK.md`. They enable preview work but do not constitute human approval.

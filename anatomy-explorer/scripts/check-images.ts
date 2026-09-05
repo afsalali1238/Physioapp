@@ -136,6 +136,49 @@ function main() {
     }
   }
 
+  /**
+   * Two more ways an "approved" image is not finished, both of them live on this
+   * project's own published rows right now.
+   *
+   * **Alt text that talks about being written.** `validate.ts` sets a floor on alt
+   * length (`alt-text-too-thin`), because a patient who cannot see the figure has to
+   * be able to do the exercise from the description alone. A length floor with no
+   * check on what the text *is* can be satisfied by padding, and on 16 published
+   * rows it was: the alt ends "This is an extended description to satisfy the
+   * accessibility minimum length requirement." A screen reader reads that to a
+   * patient in place of the position. The durable fix is a rule in `compliance.ts`
+   * — not mine to add, since that file is the clinical contract — so it is named here.
+   *
+   * **Weight.** 1×1 stubs are the visible failure; 396 KB for one figure is the
+   * invisible one, and the same file was generated to be replaced. This is a warning
+   * even under `IMAGES_STRICT`, because a real photograph can legitimately be that
+   * size — a person decides, the number just has to be on the table.
+   */
+  const SCAFFOLD_ALT =
+    /minimum length|to satisfy|placeholder|lorem|dummy|test fixture|sample text|extended description|\bTBD\b|\bTODO\b/i;
+  const MAX_IMAGE_BYTES = 250_000;
+
+  const scaffolded: string[] = [];
+  const heavy: string[] = [];
+  let publishedImageBytes = 0;
+  for (const item of publishedItems) {
+    const alt = String(item.image_alt_en ?? '');
+    if (alt && SCAFFOLD_ALT.test(alt)) {
+      scaffolded.push(`${item.id}: "${alt.slice(0, 78).trimEnd()}${alt.length > 78 ? '…' : ''}"`);
+    }
+    const imageId = item.image_id;
+    if (!imageId) continue;
+    const file = fs
+      .readdirSync(imagesDir)
+      .find((f) => path.basename(f, path.extname(f)) === imageId);
+    if (!file) continue;
+    const bytes = fs.statSync(path.join(imagesDir, file)).size;
+    publishedImageBytes += bytes;
+    if (bytes > MAX_IMAGE_BYTES) {
+      heavy.push(`${imageId} (${(bytes / 1024).toFixed(0)} KB)`);
+    }
+  }
+
   console.log('--- Image Check Report ---');
   if (queued.length > 0) {
     console.log(
@@ -157,7 +200,32 @@ function main() {
   if (unreadable.length > 0) {
     console.warn(`WARNING: image dimensions could not be read for: ${unreadable.join(', ')}`);
   }
-  if (missing.length === 0 && orphans.length === 0 && stubs.length === 0) {
+  if (scaffolded.length > 0) {
+    const lines = scaffolded.map((x) => `    - ${x}`).join('\n');
+    const message =
+      `${scaffolded.length} published row(s) have alt text that describes its own\n` +
+      `    authoring instead of the picture, which a screen reader reads aloud to a patient:\n${lines}\n` +
+      `    Replace the padding with one sentence naming the position and the joint that should feel it.`;
+    if (STRICT) {
+      console.error(`ERROR: ${message}`);
+      process.exit(1);
+    }
+    console.warn(`WARNING (launch blocker; set IMAGES_STRICT=1 to fail the build): ${message}`);
+  }
+  if (heavy.length > 0) {
+    console.warn(
+      `WARNING: ${heavy.length} figure(s) over ${(MAX_IMAGE_BYTES / 1024).toFixed(0)} KB on published pages: ${heavy.join(', ')}\n` +
+        `    Published item figures weigh ${(publishedImageBytes / 1024).toFixed(0)} KB in total, against a\n` +
+        `    ~2 KB geometry-derived SVG. Warning by design: a real photo can be this size; a generated\n` +
+        `    stand-in that was meant to be replaced is not.`
+    );
+  }
+  if (
+    missing.length === 0 &&
+    orphans.length === 0 &&
+    stubs.length === 0 &&
+    scaffolded.length === 0
+  ) {
     console.log('All good. No missing or orphan images.');
   } else {
     if (missing.length > 0) {
